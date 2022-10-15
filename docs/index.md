@@ -15,7 +15,8 @@ pip install mkdocs-material
 * `mkdocs serve` - Start the live-reloading docs server.
 * `mkdocs build` - Build the documentation site.
 * `mkdocs -h` - Print help message and exit.
-* `mkdocs gh-deploy` - Pusht die Doku auf unsere Github-Pages.
+
+Manuelles Deployment ist nicht notwendig, wird von einer Github-Action erledigt sobald auf Master commited wird.
 
 ## Project layout
 Für den Anfang Doku-spezifische Markdown-Files in den `/docs`-Ordner, die zugehörigen Bilder in den `/docs/imgs`. Weitere Strukturierung gerne nach Bedarf.
