@@ -1,8 +1,9 @@
 site_name: Dokumentation Speiseplan NewTec
 nav:
-  - Getting Started: mkdocs_basics.md
+  - Getting Started: index.md
 theme:
   name: material
+  favicon: imgs/favicon.ico
 markdown_extensions:
   - admonition
   - pymdownx.details
