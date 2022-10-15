@@ -1,0 +1,10 @@
+site_name: Dokumentation Speiseplan NewTec
+nav:
+  - Getting Started: mkdocs_basics.md
+theme:
+  name: material
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - tables
