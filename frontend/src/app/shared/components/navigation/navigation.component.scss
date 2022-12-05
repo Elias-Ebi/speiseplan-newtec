@@ -1,0 +1,30 @@
+nav {
+  height: var(--headerHeight);
+  background-color: var(--clrPrimary);
+  color: var(--clrBackground);
+}
+
+.nav-container {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-container {
+  cursor: pointer;
+}
+
+.logo {
+  height: 2.5rem;
+}
+
+.links-container {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.link {
+  cursor: pointer;
+}
