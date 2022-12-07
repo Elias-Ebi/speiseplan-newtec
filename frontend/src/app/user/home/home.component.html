@@ -1,1 +1,18 @@
-<p>home works!</p>
+<div class="main-layout">
+  <section>
+    <h2 class="fs-title clr-primary">Schnelle Bestellung — Dienstag 25.10.22</h2>
+    <mat-divider class="section-divider"></mat-divider>
+    <div class="order-cards">
+      <app-order-card
+        *ngFor="let menu of menues"
+        [icon]="menu.icon"
+        [name]="menu.name"
+        [amount]="menu.amount"
+        [description]="menu.description"
+        [selected]="menu.ordered"
+        [ngClass]="{'selected': menu.ordered}"
+      >
+      </app-order-card>
+    </div>
+  </section>
+</div>

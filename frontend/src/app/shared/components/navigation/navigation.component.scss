@@ -16,13 +16,16 @@ nav {
 }
 
 .logo {
-  height: 2.5rem;
+  height: 3.75rem;
 }
 
 .links-container {
   display: flex;
   gap: 2rem;
-  align-items: center;
+
+  li {
+    height: fit-content;
+  }
 }
 
 .link {
