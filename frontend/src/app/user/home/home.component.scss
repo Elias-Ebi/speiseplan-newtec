@@ -1,0 +1,36 @@
+@use '@angular/material' as mat;
+
+section {
+  display: grid;
+  gap: 1rem;
+}
+
+.section-title {
+  color: var(--clrPrimary);
+}
+
+.section-divider {
+  border-color: var(--clrNeutral);
+}
+
+.order-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+app-order-card {
+  background-color: white;
+  border: 1px solid var(--clrLine);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  @include mat.elevation(1);
+
+  &:hover {
+    background-color: var(--clrLightBlueBackground);
+  }
+}
+
+.selected {
+  background-color: var(--clrLightBlueBackground);
+}

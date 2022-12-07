@@ -1,26 +1,21 @@
-/* vars */
-:root {
-  --headerHeight: 5rem;
-  --contentMaxWidth: 80rem;
-
-  /* colors */
-  --clrBackground: #FAFAFA;
-  --clrPrimary: #00629F;
-}
+@use "styles/css-reset";
+@use "styles/vars";
+@use "styles/font-styles";
+@use "styles/utils";
 
 /* global styles */
+body {
+  background-color: var(--clrBackground);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 .content-wrapper {
   width: 95%;
   max-width: var(--contentMaxWidth);
   margin: 0 auto;
 }
 
-html, body {
-  height: 100%;
-  background-color: var(--clrBackground);
-}
-
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+.main-layout {
+  display: grid;
+  gap: 2.5rem;
 }

@@ -30,8 +30,7 @@
             ],
             "styles": [
               "src/custom-theme.scss",
-              "src/styles.scss",
-              "src/css-reset.scss"
+              "src/styles.scss"
             ],
             "scripts": []
           },
