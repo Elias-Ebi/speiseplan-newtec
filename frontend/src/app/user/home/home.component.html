@@ -1,9 +1,24 @@
 <div class="main-layout">
-  <section>
+  <!-- Top Boxes -->
+  <section class="box-home-container">
+    <div class="box-home">
+      <h2 class="fs-title clr-primary">Verfügbare Räuberteller ({{rauberteller.length}})</h2>
+      <button mat-flat-button color="primary" class="fs-label">Anzeigen</button>
+    </div>
+
+    <div class="box-home">
+      <h2 class="fs-title clr-primary">Saldo {{date | monthName}} {{date.year}}</h2>
+      <h2 class="fs-title">{{saldo | euro}}</h2>
+    </div>
+  </section>
+
+  <!-- Schnelle Bestellung -->
+  <section class="section">
     <h2 class="fs-title clr-primary">Schnelle Bestellung — Dienstag 25.10.22</h2>
-    <mat-divider class="section-divider"></mat-divider>
-    <div class="order-cards">
+    <hr class="bg-neutral"/>
+    <div class="order-card-container">
       <app-order-card
+        class="mat-elevation-z1"
         *ngFor="let menu of menues"
         [icon]="menu.icon"
         [name]="menu.name"

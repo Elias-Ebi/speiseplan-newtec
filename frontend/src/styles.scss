@@ -3,10 +3,14 @@
 @use "styles/font-styles";
 @use "styles/utils";
 
-/* global styles */
 body {
   background-color: var(--clrBackground);
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+hr {
+  height: 0.0625rem;
+  background-color: var(--clrLine);
 }
 
 .content-wrapper {
