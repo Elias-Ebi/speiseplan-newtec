@@ -1,19 +1,24 @@
-@use '@angular/material' as mat;
+.box-home-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
 
-section {
+.box-home {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid var(--clrLine);
+  border-radius: 0.5rem;
+}
+
+.section {
   display: grid;
   gap: 1rem;
 }
 
-.section-title {
-  color: var(--clrPrimary);
-}
-
-.section-divider {
-  border-color: var(--clrNeutral);
-}
-
-.order-cards {
+.order-card-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
@@ -24,13 +29,12 @@ app-order-card {
   border: 1px solid var(--clrLine);
   border-radius: 0.5rem;
   cursor: pointer;
-  @include mat.elevation(1);
 
   &:hover {
-    background-color: var(--clrLightBlueBackground);
+    background-color: var(--clrLightBlue);
   }
 }
 
 .selected {
-  background-color: var(--clrLightBlueBackground);
+  background-color: var(--clrLightBlue);
 }
