@@ -31,3 +31,10 @@ nav {
 .link {
   cursor: pointer;
 }
+
+.user-switch-container {
+  transform: translateX(50%);
+  margin-right: 50%;
+  display: flex;
+  align-items: center;
+}
