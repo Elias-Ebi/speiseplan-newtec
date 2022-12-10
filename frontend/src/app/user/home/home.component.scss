@@ -1,0 +1,40 @@
+.box-home-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.box-home {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid var(--clrLine);
+  border-radius: 0.5rem;
+}
+
+.section {
+  display: grid;
+  gap: 1rem;
+}
+
+.order-card-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+app-order-card {
+  background-color: white;
+  border: 1px solid var(--clrLine);
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--clrLightBlue);
+  }
+}
+
+.selected {
+  background-color: var(--clrLightBlue);
+}

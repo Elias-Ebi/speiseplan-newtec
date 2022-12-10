@@ -1,0 +1,29 @@
+.card {
+  display: grid;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.main-header {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.food-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.selected-icon {
+  width: max-content;
+  height: max-content;
+  font-size: 2rem;
+  color: var(--clrSuccess);
+}

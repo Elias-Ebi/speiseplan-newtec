@@ -1,0 +1,25 @@
+@use "styles/css-reset";
+@use "styles/vars";
+@use "styles/font-styles";
+@use "styles/utils";
+
+body {
+  background-color: var(--clrBackground);
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+hr {
+  height: 0.0625rem;
+  background-color: var(--clrLine);
+}
+
+.content-wrapper {
+  width: 95%;
+  max-width: var(--contentMaxWidth);
+  margin: 0 auto;
+}
+
+.main-layout {
+  display: grid;
+  gap: 2.5rem;
+}
