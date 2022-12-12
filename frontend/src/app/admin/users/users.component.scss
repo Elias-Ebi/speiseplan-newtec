@@ -1,0 +1,14 @@
+.title-action-container {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    .add-user-button {
+        border-radius: 0.75rem;
+    }
+
+    .title {
+        cursor: default;
+    	  user-select: none;
+    }
+}
