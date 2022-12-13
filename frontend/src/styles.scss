@@ -1,7 +1,8 @@
 @use "styles/css-reset";
-@use "styles/vars";
+@use "styles/colors";
 @use "styles/font-styles";
 @use "styles/utils";
+@use "styles/material";
 
 body {
   background-color: var(--clrBackground);
@@ -15,11 +16,33 @@ hr {
 
 .content-wrapper {
   width: 95%;
-  max-width: var(--contentMaxWidth);
+  max-width: 80rem;
   margin: 0 auto;
 }
 
-.main-layout {
+.main-content {
   display: grid;
   gap: 2.5rem;
+  margin: 2.5rem 0;
+}
+
+.section {
+  display: grid;
+  gap: 1rem;
+}
+
+.section-headline-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-container {
+  display: grid;
+  gap: 1rem;
+}
+
+.icon-with-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
