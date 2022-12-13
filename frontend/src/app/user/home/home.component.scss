@@ -13,11 +13,6 @@
   border-radius: 0.5rem;
 }
 
-.section {
-  display: grid;
-  gap: 1rem;
-}
-
 .order-card-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -37,4 +32,11 @@ app-order-card {
 
 .selected {
   background-color: var(--clrLightBlue);
+}
+
+.my-order-item-container {
+  display: grid;
+  grid-template-columns: 3fr 8fr 1fr;
+  align-items: center;
+  gap: 1rem;
 }

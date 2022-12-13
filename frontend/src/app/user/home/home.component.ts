@@ -6,19 +6,24 @@ import { OrderCardComponent } from "../shared/components/order-card/order-card.c
 import { EuroPipe } from "../../shared/pipes/euro.pipe";
 import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
 import { Temporal } from "@js-temporal/polyfill";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe],
+  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
   date = Temporal.Now.plainDateISO();
-  rauberteller = [
+  raeuberteller = [
     {},
-    {}
+    {},
+  ];
+  myOrderToday = [
+    {name: 'Ich', meal: 'Schnitzel', offered: false},
+    {name: 'Draco Malfoy', meal: 'Salat Sizilia', offered: true},
   ];
   saldo: number = 38.5;
   menues = [

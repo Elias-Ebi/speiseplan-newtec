@@ -1,11 +1,13 @@
-<div class="main-layout">
+<div class="main-content">
   <!-- Top Boxes -->
   <section class="box-home-container">
+    <!-- Räuberteller -->
     <div class="box-home">
-      <h2 class="fs-title clr-primary">Verfügbare Räuberteller ({{rauberteller.length}})</h2>
+      <h2 class="fs-title clr-primary">Verfügbare Räuberteller ({{raeuberteller.length}})</h2>
       <button mat-flat-button color="primary" class="fs-label">Anzeigen</button>
     </div>
 
+    <!-- Saldo -->
     <div class="box-home">
       <h2 class="fs-title clr-primary">Saldo {{date | monthName}} {{date.year}}</h2>
       <h2 class="fs-title">{{saldo | euro}}</h2>
@@ -16,6 +18,8 @@
   <section class="section">
     <h2 class="fs-title clr-primary">Schnelle Bestellung — Dienstag 25.10.22</h2>
     <hr class="bg-neutral"/>
+
+    <!-- Cards -->
     <div class="order-card-container">
       <app-order-card
         class="mat-elevation-z1"
@@ -28,6 +32,36 @@
         [ngClass]="{'selected': menu.ordered}"
       >
       </app-order-card>
+    </div>
+  </section>
+
+  <!-- Meine Bestellung -->
+  <section class="section">
+    <h2 class="fs-title clr-primary">Meine Bestellung — Montag 24.10.22</h2>
+    <hr class="bg-neutral"/>
+
+    <!-- List -->
+    <div class="list-container">
+      <ng-container *ngFor="let order of myOrderToday; let last = last">
+        <div class="my-order-item-container">
+          <!-- Name -->
+          <div class="icon-with-text">
+            <mat-icon fontIcon="person" class="selected-icon"></mat-icon>
+            <p class="fs-body">{{order.name}}</p>
+          </div>
+
+          <!-- Meal -->
+          <div class="icon-with-text">
+            <mat-icon fontIcon="restaurant" class="selected-icon"></mat-icon>
+            <p class="fs-body">{{order.meal}}</p>
+          </div>
+
+          <button mat-flat-button color="primary"
+                  [disabled]="order.offered">{{order.offered ? "Angeboten" : "Anbieten"}}</button>
+        </div>
+
+        <hr *ngIf="!last">
+      </ng-container>
     </div>
   </section>
 </div>
