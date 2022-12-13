@@ -3,8 +3,8 @@
   <section class="box-home-container">
     <!-- Räuberteller -->
     <div class="box-home">
-      <h2 class="fs-title clr-primary">Verfügbare Räuberteller ({{raeuberteller.length}})</h2>
-      <button mat-flat-button color="primary" class="fs-label">Anzeigen</button>
+      <h2 class="fs-title clr-primary">Verfügbare Räuberteller ({{banditPlates.length}})</h2>
+      <button (click)="openBanditPlateDialog()" class="fs-label" color="primary" mat-flat-button>Anzeigen</button>
     </div>
 
     <!-- Saldo -->
@@ -22,14 +22,14 @@
     <!-- Cards -->
     <div class="order-card-container">
       <app-order-card
-        class="mat-elevation-z1"
         *ngFor="let menu of menues"
-        [icon]="menu.icon"
-        [name]="menu.name"
         [amount]="menu.amount"
         [description]="menu.description"
-        [selected]="menu.ordered"
+        [icon]="menu.icon"
+        [name]="menu.name"
         [ngClass]="{'selected': menu.ordered}"
+        [selected]="menu.ordered"
+        class="mat-elevation-z1"
       >
       </app-order-card>
     </div>
@@ -46,18 +46,23 @@
         <div class="my-order-item-container">
           <!-- Name -->
           <div class="icon-with-text">
-            <mat-icon fontIcon="person" class="selected-icon"></mat-icon>
+            <mat-icon class="selected-icon" fontIcon="person"></mat-icon>
             <p class="fs-body">{{order.name}}</p>
           </div>
 
           <!-- Meal -->
           <div class="icon-with-text">
-            <mat-icon fontIcon="restaurant" class="selected-icon"></mat-icon>
+            <mat-icon class="selected-icon" fontIcon="restaurant"></mat-icon>
             <p class="fs-body">{{order.meal}}</p>
           </div>
 
-          <button mat-flat-button color="primary"
-                  [disabled]="order.offered">{{order.offered ? "Angeboten" : "Anbieten"}}</button>
+          <button
+            [disabled]="order.offered"
+            color="primary"
+            mat-flat-button
+          >
+            {{order.offered ? "Angeboten" : "Anbieten"}}
+          </button>
         </div>
 
         <hr *ngIf="!last">

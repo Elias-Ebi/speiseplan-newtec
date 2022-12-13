@@ -1,0 +1,10 @@
+.bandit-plate-item-container {
+  display: grid;
+  grid-template-columns: 3fr 7fr 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.start-last-column {
+  grid-column-start: -2;
+}
