@@ -1,5 +1,5 @@
 <mat-tab-group class="main-content">
-  <mat-tab [label]="monthData.date | monthName" *ngFor="let monthData of historyData">
+  <mat-tab *ngFor="let monthData of historyData" [label]="monthData.date | monthName">
     <section class="section">
       <!-- Headline -->
       <div class="section-headline-container">
@@ -18,13 +18,13 @@
 
             <!-- Name -->
             <div class="icon-with-text">
-              <mat-icon fontIcon="person" class="selected-icon"></mat-icon>
+              <mat-icon class="selected-icon" fontIcon="person"></mat-icon>
               <p class="fs-body">{{order.meals.length}}</p>
             </div>
 
             <!-- Meal -->
             <div class="icon-with-text">
-              <mat-icon fontIcon="restaurant" class="selected-icon"></mat-icon>
+              <mat-icon class="selected-icon" fontIcon="restaurant"></mat-icon>
               <p class="fs-body">{{order.meals.join(", ")}}</p>
             </div>
 

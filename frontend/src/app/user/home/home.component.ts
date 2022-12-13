@@ -7,19 +7,24 @@ import { EuroPipe } from "../../shared/pipes/euro.pipe";
 import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
 import { Temporal } from "@js-temporal/polyfill";
 import { MatIconModule } from "@angular/material/icon";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { BanditPlateDialogComponent } from "./bandit-plate-dialog/bandit-plate-dialog.component";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule],
+  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
   date = Temporal.Now.plainDateISO();
-  raeuberteller = [
-    {},
-    {},
+  banditPlates = [
+    {name: "Harry Potter", description: "Fleischküchle in Zwiebelsoße mit Kartoffelpüree und Rahmkarotten"},
+    {
+      name: "Albus Dumbledore",
+      description: "Salat “Sizilia” Tomaten, Basilikum, Zuchinistreifen, Artischoken, Thunfisch, Oliven, Orangen und Balsamicodressing"
+    },
   ];
   myOrderToday = [
     {name: 'Ich', meal: 'Schnitzel', offered: false},
@@ -49,4 +54,13 @@ export class HomeComponent {
       ordered: false
     }
   ];
+
+  constructor(private dialog: MatDialog) {
+  }
+
+  openBanditPlateDialog(): void {
+    this.dialog.open(BanditPlateDialogComponent, {
+      data: this.banditPlates
+    });
+  }
 }
