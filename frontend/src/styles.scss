@@ -54,9 +54,13 @@ button {
   gap: 0.5rem;
 }
 
+.dialog-container {
+  padding: 2rem;
+  max-width: calc(80rem + 2 * 2rem);
+}
+
 .icon-with-text {
   display: grid;
-  grid-auto-flow: row;
   align-items: center;
   justify-content: start;
   gap: 0.5rem;
@@ -66,7 +70,8 @@ button {
   }
 }
 
-.dialog-container {
-  padding: 2rem;
-  max-width: calc(80rem + 2 * 2rem);
+.icon-button.icon-button {
+  color: white;
+  background: var(--clrPrimary);
+  border-radius: 0.75rem;
 }
