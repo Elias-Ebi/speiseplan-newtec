@@ -36,7 +36,22 @@ app-order-card {
 
 .my-order-item-container {
   display: grid;
-  grid-template-columns: 3fr 8fr 1fr;
+  grid-template-columns: 3fr 7fr 2fr;
   align-items: center;
   gap: 1rem;
+
+  > button {
+    justify-self: end;
+  }
+}
+
+.open-order-item-container {
+  display: grid;
+  grid-template-columns: 3fr 4fr 4fr 1fr;
+  align-items: center;
+  gap: 1rem;
+
+  > button {
+    justify-self: end;
+  }
 }

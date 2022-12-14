@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
 import { EuroPipe } from "../../shared/pipes/euro.pipe";
@@ -12,8 +12,7 @@ import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
   standalone: true,
   imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe],
   templateUrl: './history.component.html',
-  styleUrls: ['./history.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./history.component.scss']
 })
 export class HistoryComponent {
   orders = [
@@ -84,6 +83,6 @@ export class HistoryComponent {
       date: Temporal.PlainDate.from("2022-07-01"),
       orders: this.orders,
       total: 42.5
-    },
+    }
   ];
 }

@@ -9,11 +9,12 @@ import { Temporal } from "@js-temporal/polyfill";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { BanditPlateDialogComponent } from "./bandit-plate-dialog/bandit-plate-dialog.component";
+import { WeekdayNamePipe } from "../../shared/pipes/weekday-name.pipe";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule],
+  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule, WeekdayNamePipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -53,6 +54,39 @@ export class HomeComponent {
       description: "Salat “Sizilia” Tomaten, Basilikum, Zuchinistreifen, Artischoken, Thunfisch, Oliven, Orangen und Balsamicodressing",
       ordered: false
     }
+  ];
+
+  myOrders = [
+    {
+      date: Temporal.Now.plainDateISO(),
+      meals: ["Bratlinge", "Salat"],
+      guests: 7
+    },
+    {
+      date: Temporal.Now.plainDateISO(),
+      meals: ["Fleischküchle"],
+      guests: 0
+    },
+    {
+      date: Temporal.Now.plainDateISO(),
+      meals: ["Burger"],
+      guests: 0
+    },
+    {
+      date: Temporal.Now.plainDateISO(),
+      meals: ["Salat"],
+      guests: 0
+    },
+    {
+      date: Temporal.Now.plainDateISO(),
+      meals: ["Pommes"],
+      guests: 3
+    },
+    {
+      date: Temporal.Now.plainDateISO(),
+      meals: ["Schnitzel"],
+      guests: 0
+    },
   ];
 
   constructor(private dialog: MatDialog) {
