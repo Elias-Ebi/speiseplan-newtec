@@ -14,6 +14,19 @@ hr {
   background-color: var(--clrLine);
 }
 
+h2 {
+  @extend .fs-title;
+  @extend .clr-primary;
+}
+
+p {
+  @extend .fs-body;
+}
+
+button {
+  @extend .fs-label;
+}
+
 .content-wrapper {
   width: 95%;
   max-width: 80rem;
@@ -38,7 +51,7 @@ hr {
 
 .list-container {
   display: grid;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .icon-with-text {
