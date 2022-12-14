@@ -3,20 +3,20 @@
   <section class="box-home-container">
     <!-- Räuberteller -->
     <div class="box-home">
-      <h2 class="fs-title clr-primary">Verfügbare Räuberteller ({{banditPlates.length}})</h2>
-      <button (click)="openBanditPlateDialog()" class="fs-label" color="primary" mat-flat-button>Anzeigen</button>
+      <h2>Verfügbare Räuberteller ({{banditPlates.length}})</h2>
+      <button (click)="openBanditPlateDialog()" color="primary" mat-flat-button>Anzeigen</button>
     </div>
 
     <!-- Saldo -->
     <div class="box-home">
-      <h2 class="fs-title clr-primary">Saldo {{date | monthName}} {{date.year}}</h2>
-      <h2 class="fs-title">{{saldo | euro}}</h2>
+      <h2>Saldo {{date | monthName}} {{date.year}}</h2>
+      <h2 class="clr-black">{{saldo | euro}}</h2>
     </div>
   </section>
 
   <!-- Schnelle Bestellung -->
   <section class="section">
-    <h2 class="fs-title clr-primary">Schnelle Bestellung — Dienstag 25.10.22</h2>
+    <h2>Schnelle Bestellung — Dienstag 25.10.22</h2>
     <hr class="bg-neutral"/>
 
     <!-- Cards -->
@@ -37,7 +37,7 @@
 
   <!-- Meine Bestellung -->
   <section class="section">
-    <h2 class="fs-title clr-primary">Meine Bestellung — Montag 24.10.22</h2>
+    <h2>Meine Bestellung — Montag 24.10.22</h2>
     <hr class="bg-neutral"/>
 
     <!-- List -->
@@ -46,14 +46,14 @@
         <div class="my-order-item-container">
           <!-- Name -->
           <div class="icon-with-text">
-            <mat-icon class="selected-icon" fontIcon="person"></mat-icon>
-            <p class="fs-body">{{order.name}}</p>
+            <mat-icon>person</mat-icon>
+            <p>{{order.name}}</p>
           </div>
 
           <!-- Meal -->
           <div class="icon-with-text">
-            <mat-icon class="selected-icon" fontIcon="restaurant"></mat-icon>
-            <p class="fs-body">{{order.meal}}</p>
+            <mat-icon>restaurant</mat-icon>
+            <p>{{order.meal}}</p>
           </div>
 
           <button
@@ -65,6 +65,43 @@
           </button>
         </div>
 
+        <hr *ngIf="!last">
+      </ng-container>
+    </div>
+  </section>
+
+  <!-- Offene Bestellungen -->
+  <section class="section">
+    <h2>Offene Bestellungen</h2>
+    <hr class="bg-neutral"/>
+
+    <!-- List -->
+    <div class="list-container">
+      <ng-container *ngFor="let order of myOrders; let last = last">
+        <div class="open-order-item-container">
+          <!-- Date -->
+          <a href="/bestellen">
+            <p class="clr-primary">{{order.date | weekdayName}}, {{order.date.toLocaleString()}}</p>
+          </a>
+
+          <!-- Meal -->
+          <div class="icon-with-text">
+            <mat-icon>restaurant</mat-icon>
+            <p>{{order.meals.join(", ")}}</p>
+          </div>
+
+          <!-- Guests -->
+          <div class="icon-with-text">
+            <mat-icon fontSet="material-icons-outlined">group_add</mat-icon>
+            <p>{{order.guests}}</p>
+          </div>
+
+          <!-- Cancel -->
+          <button class="icon-button" mat-icon-button>
+            <mat-icon>no_food</mat-icon>
+          </button>
+
+        </div>
         <hr *ngIf="!last">
       </ng-container>
     </div>

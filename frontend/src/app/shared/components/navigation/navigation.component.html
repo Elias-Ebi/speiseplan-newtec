@@ -1,18 +1,25 @@
 <nav class="mat-elevation-z6">
   <div class="content-wrapper nav-container">
     <!-- Logo -->
-    <picture class="logo-container" routerLink="/">
-      <img alt="NewTec Speiseplan Logo" class="logo" src="assets/logo.svg">
-    </picture>
+    <img alt="NewTec Speiseplan Logo" class="link logo" routerLink="/" src="assets/logo.svg">
 
     <!-- Links -->
     <ul class="links-container">
       <li class="link">
-        <mat-icon fontIcon="notifications"></mat-icon>
+        <mat-icon>notifications</mat-icon>
       </li>
-      <li class="link fs-body" routerLink="/bestellen">Bestellen</li>
-      <li class="link fs-body" routerLink="/historie">Historie</li>
-      <li class="link fs-body">Logout</li>
+
+      <li class="link" routerLink="/bestellen">
+        <p>Bestellen</p>
+      </li>
+
+      <li class="link" routerLink="/historie">
+        <p>Historie</p>
+      </li>
+
+      <li class="link">
+        <p>Logout</p>
+      </li>
     </ul>
   </div>
 </nav>
