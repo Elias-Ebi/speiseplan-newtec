@@ -6,25 +6,40 @@
             <mat-icon>person_add</mat-icon>
         </a>
     </div>
-    <div class="seperator">
-
-    </div>
+    <div class="seperator"></div>
     <div class="search-container">
-
+      <mat-form-field color="primary" class="search-form-field">
+        <div class="input-content">
+          <mat-icon>search</mat-icon>
+          <input matInput placeholder="Suchen">
+        </div>
+      </mat-form-field>
     </div>
-    <div user-list-container>
+    <div class="user-list-container">
         <ul class="list-titles">
-
+          <li class="fs-body clr-primary">Nutzer</li>
+          <li class="fs-body clr-primary">E-Mail</li>
+          <li class="fs-body clr-primary">Admin</li>
+          <li class="fs-body clr-primary">Auswahl</li>
         </ul>
         <div class="seperator"></div>
         <ul class="user-list">
-
+          <li class="username-item">
+            <div class="username-content">
+              <mat-icon class="user-icon">home</mat-icon>
+              <span class="username">Ardi Pelaj</span>
+            </div>
+          </li>
+          <li>ardi98@live.de</li>
+          <li>nein</li>
+          <li><mat-checkbox color="primary"></mat-checkbox></li>
         </ul>
     </div>
     <div class="entries-info-container">
-
+      <mat-paginator class="paginator" color="primary" [length]="20" [pageSize]="20" [pageSizeOptions]="[5, 10, 20]" aria-label="Select page"></mat-paginator>
     </div>
     <div class="editing-container">
-
+      <a class="editing fs-body clr-primary" routerLink="#">Löschen</a>
+      <a class="editing fs-body clr-primary" routerLink="#">Bearbeiten</a>
     </div>
 </div>

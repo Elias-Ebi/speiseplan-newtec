@@ -7,19 +7,29 @@
 }
 
 .login-main-container {
-  width: 600px;
-  height: 600px;
-  margin: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
-
-  border: red solid 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 
   .login-remember-user {
-    //TODO: next
-
+    .checkbox {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+    }
   }
 
   .login-section {
+    position: relative;
+    top: 0.65rem;
+
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -32,10 +42,10 @@
       align-items: center;
 
       .username-field {
-        width: 100%;
+        width: 30%;
       }
       .password-field {
-        width: 100%;
+        width: 30%;
       }
     }
     background: transparent;
@@ -53,15 +63,12 @@
     width: 50%;
     gap: 0.65rem;
     justify-content: center;
-
-    //border: red solid 2px;
-
-
     background: transparent;
     .logo-container {
       background: transparent;
       img {
         background: transparent;
+        width: 4rem;
       }
       align-self: center;
     }
