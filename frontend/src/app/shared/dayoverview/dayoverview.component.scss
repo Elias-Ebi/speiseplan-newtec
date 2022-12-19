@@ -1,0 +1,923 @@
+* {
+  background: var(--clrLightBlue);
+}
+
+.transparent {
+  background: transparent;
+}
+
+.dayoverview-main-container {
+  /* Tagesbestellungen_Übersicht */
+
+  /* Auto layout */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0px;
+  gap: 40px;
+
+  position: absolute;
+  width: 1244px;
+  height: 687px;
+  left: 338px;
+  top: 125px;
+
+  .day-navbar {
+    /* Tagesauswahl */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    width: 1244px;
+    height: 49px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+    .day-navbar-tabgroup {
+      /* Tab group */
+
+      /* Auto layout */
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 0px;
+
+      width: 1244px;
+      height: 48px;
+
+
+      /* Inside auto layout */
+      flex: none;
+      order: 0;
+      flex-grow: 0;
+
+      .day-navbar-tabgroup-tab {
+        /* Tab 2
+
+Secondary tabs label only building blocks
+*/
+
+        /* Auto layout */
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0px;
+
+        width: 248.8px;
+        height: 48px;
+
+        /* Background */
+        background: #FAFAFA;
+
+        /* Inside auto layout */
+        flex: none;
+        order: 0;
+        flex-grow: 1;
+
+        .day-navbar-tab-statelayer {
+          /* State-layer */
+
+          /* Auto layout */
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          align-items: center;
+          padding: 0px 16px;
+          isolation: isolate;
+
+          width: 248.8px;
+          height: 48px;
+
+
+          /* Inside auto layout */
+          flex: none;
+          order: 0;
+          align-self: stretch;
+          flex-grow: 1;
+
+          .day-navbar-tab-tabcontents {
+            /* Tab Contents */
+
+            /* Auto layout */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 14px 0px;
+            gap: 12px;
+
+            width: 124px;
+            height: 48px;
+
+
+            /* Inside auto layout */
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            z-index: 0;
+
+            .day-navbar-tabcontents-label {
+              /* Label */
+
+              width: 124px;
+              height: 24px;
+
+              /* body/large */
+              font-family: 'Roboto';
+              font-style: normal;
+              font-weight: 400;
+              font-size: 16px;
+              line-height: 24px;
+
+              /* identical to box height, or 150% */
+              text-align: center;
+              letter-spacing: 0.5px;
+
+              /* Black */
+              color: #000000;
+
+
+              /* Inside auto layout */
+              flex: none;
+              order: 0;
+              flex-grow: 0;
+            }
+
+            .day-navbar-tabcontents-indicator {
+              /* Indicator */
+
+              position: absolute;
+              display: none;
+              height: 2px;
+              left: 0px;
+              right: -0.2px;
+              bottom: 0px;
+
+              /* Primary */
+              background: #00629F;
+
+              /* Inside auto layout */
+              flex: none;
+              order: 1;
+              flex-grow: 0;
+              z-index: 1;
+            }
+          }
+        }
+      }
+    }
+
+    .divider {
+      /* Divider
+      Dividers are one way to visually group components and create hierarchy. They can also be used to imply nested parent/child relationships.
+      Use full width dividers to separate larger sections of unrelated content. They can be used directly on a surface or inside other components like cards or lists.
+      */
+
+      /* Auto layout */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0px;
+
+      width: 1244px;
+      height: 1px;
+
+
+      /* Inside auto layout */
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+
+      .divider-two {
+        /* Divider */
+
+        width: 1244px;
+        height: 0px;
+
+        /* Line */
+        border: 1px solid #CFCFCF;
+
+        /* Inside auto layout */
+        flex: none;
+        order: 0;
+        align-self: stretch;
+        flex-grow: 0;
+      }
+    }
+  }
+
+  .day-order-selection {
+    /* Tagebestellungen */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 20px;
+
+    width: 1244px;
+    height: 578px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+
+    .order-selection-titel {
+      /* Titel */
+
+      /* Auto layout */
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0px;
+      gap: 20px;
+
+      width: 1244px;
+      height: 40px;
+
+
+      /* Inside auto layout */
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+      .order-selection-titel-tag {
+        width: 405px;
+        height: 28px;
+
+        /* title/large */
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 22px;
+        line-height: 28px;
+
+        /* identical to box height, or 127% */
+
+        /* Primary */
+        color: #00629F;
+
+
+        /* Inside auto layout */
+        flex: none;
+        order: 0;
+        flex-grow: 0;
+      }
+      .order-selection-titel-button {
+        /* button */
+
+        /* Auto layout */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0px;
+        gap: 8px;
+
+        width: 162px;
+        height: 40px;
+
+        /* Primary */
+        background: #00629F;
+        border-radius: 8px;
+
+        /* Inside auto layout */
+        flex: none;
+        order: 1;
+        flex-grow: 0;
+
+        .order-selection-title-button-state {
+          /* state-layer */
+
+          /* Auto layout */
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          padding: 10px 24px;
+          gap: 8px;
+
+          width: 162px;
+          height: 40px;
+
+
+          /* Inside auto layout */
+          flex: none;
+          order: 0;
+          flex-grow: 0;
+          .order-selection-title-button-state-vector {
+            /* Vector */
+
+            width: 14px;
+            height: 14px;
+
+            /* White */
+            background: #FFFFFF;
+
+            /* Inside auto layout */
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+          }
+          .order-selection-title-button-state-label {
+            /* label-text */
+
+            width: 92px;
+            height: 20px;
+
+            /* M3/label/large */
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 20px;
+
+            /* identical to box height, or 143% */
+            display: flex;
+            align-items: center;
+            text-align: center;
+            letter-spacing: 0.1px;
+
+            /* White */
+            color: #FFFFFF;
+
+
+            /* Inside auto layout */
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+          }
+        }
+      }
+    }
+    .divider-three {
+      /* Line 1 */
+
+      width: 1244px;
+      height: 0px;
+
+      /* Neutral */
+      border: 1px solid #5D5E61;
+
+      /* Inside auto layout */
+      flex: none;
+      order: 1;
+      flex-grow: 0;
+    }
+    .order-selection-order {
+      /* Bestellungen */
+
+      /* Auto layout */
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0px;
+
+      width: 1244px;
+      height: 498px;
+
+
+      /* Inside auto layout */
+      flex: none;
+      order: 2;
+      flex-grow: 0;
+      .order-selection-order-meal {
+        /* Gericht 1 */
+
+        width: 1244px;
+        height: 54px;
+
+
+        /* Inside auto layout */
+        flex: none;
+        order: 0;
+        flex-grow: 0;
+
+        .order-selection-order-expand-button {
+
+          position: absolute;
+          width: 31.94px;
+          height: 40.5px;
+          left: 1225.94px;
+          top: 47.25px;
+
+          transform: rotate(-180deg);
+
+          .order-selection-order-expand-button-vector {
+            /* Vector */
+
+            position: absolute;
+            left: 75%;
+            right: -25%;
+            top: 62.5%;
+            bottom: 11.3%;
+
+            background: #000000;
+            transform: rotate(-180deg);
+          }
+        }
+        .order-selection-order-meal-listitem {
+          /* List Item */
+
+          /* Auto layout */
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 8px 0px;
+          gap: 16px;
+
+          position: absolute;
+          width: 1244px;
+          height: 54px;
+          left: 0px;
+          top: 0px;
+
+          .order-selection-order-meal-listitem-order {
+            /* Meine Bestellung */
+
+            /* Auto layout */
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 15px;
+
+            width: 404px;
+            height: 17px;
+
+
+            /* Inside auto layout */
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+            .order-selection-order-vector {
+              /* Vector */
+
+              width: 13.5px;
+              height: 18px;
+
+              background: #000000;
+
+              /* Inside auto layout */
+              flex: none;
+              order: 0;
+              flex-grow: 0;
+            }
+
+            .order-selection-order-tag {
+              /* Fleischküchle */
+
+              width: 104px;
+              height: 24px;
+
+              /* body/large */
+              font-family: 'Roboto';
+              font-style: normal;
+              font-weight: 400;
+              font-size: 16px;
+              line-height: 24px;
+
+              /* identical to box height, or 150% */
+              text-align: center;
+              letter-spacing: 0.5px;
+
+              /* Black */
+              color: #000000;
+
+
+              /* Inside auto layout */
+              flex: none;
+              order: 1;
+              flex-grow: 0;
+            }
+          }
+          .order-selectin-order-meal-listitem-guestnumber {
+            /* Gast */
+
+            width: 299px;
+            height: 24px;
+
+            /* body/large */
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+
+            /* identical to box height, or 150% */
+            display: flex;
+            align-items: center;
+            letter-spacing: 0.5px;
+
+            /* Black */
+            color: #000000;
+
+
+            /* Inside auto layout */
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+          }
+          .order-selection-order-meal-listitem-cancel {
+            /* button */
+
+            /* Auto layout */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+            gap: 8px;
+
+            width: 134px;
+            height: 40px;
+
+            /* Primary */
+            background: #00629F;
+            border-radius: 8px;
+
+            /* Inside auto layout */
+            flex: none;
+            order: 2;
+            flex-grow: 0;
+
+            .order-selection-order-meal-listitem-cancel-statelayer {
+              /* state-layer */
+
+              /* Auto layout */
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              align-items: center;
+              padding: 10px 24px;
+              gap: 8px;
+
+              width: 134px;
+              height: 40px;
+
+
+              /* Inside auto layout */
+              flex: none;
+              order: 0;
+              flex-grow: 0;
+
+              .order-selection-order-meal-listitem-cancel-statelayer-vector {
+                /* Vector */
+
+                width: 14px;
+                height: 14px;
+
+                /* White */
+                background: #FFFFFF;
+
+                /* Inside auto layout */
+                flex: none;
+                order: 0;
+                flex-grow: 0;
+              }
+
+              .order-selection-order-meal-listitem-cancel-statelayer-label {
+                /* label-text */
+
+                width: 64px;
+                height: 20px;
+
+                /* M3/label/large */
+                font-family: 'Roboto';
+                font-style: normal;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 20px;
+
+                /* identical to box height, or 143% */
+                display: flex;
+                align-items: center;
+                text-align: center;
+                letter-spacing: 0.1px;
+
+                /* White */
+                color: #FFFFFF;
+
+
+                /* Inside auto layout */
+                flex: none;
+                order: 1;
+                flex-grow: 0;
+              }
+            }
+          }
+        }
+      }
+      .order-selection-order-orderer {
+        /* List Item */
+
+        /* Auto layout */
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 8px 0px;
+        gap: 16px;
+
+        width: 1244px;
+        height: 48px;
+
+
+        /* Inside auto layout */
+        flex: none;
+        order: 1;
+        align-self: stretch;
+        flex-grow: 0;
+
+        .order-selection-order-orderer-frame {
+          /* Frame 17 */
+
+          /* Auto layout */
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 0px;
+          gap: 10px;
+
+          width: 18px;
+          height: 18px;
+
+
+          /* Inside auto layout */
+          flex: none;
+          order: 0;
+          flex-grow: 0;
+
+          order-selection-order-orderer-frame-vector {
+            /* Vector */
+
+            width: 18px;
+            height: 18px;
+
+            /* Black */
+            background: #000000;
+
+            /* Inside auto layout */
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+          }
+        }
+        .order-selection-order-orderer-label {
+          /* Max Mustermann */
+
+          width: 271px;
+          height: 24px;
+
+          /* body/large */
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 24px;
+
+          /* identical to box height, or 150% */
+          letter-spacing: 0.5px;
+
+          /* Black */
+          color: #000000;
+
+
+          /* Inside auto layout */
+          flex: none;
+          order: 1;
+          flex-grow: 0;
+        }
+      }
+      .order-selection-order-divider {
+        /* Line 16 */
+
+        width: 1244px;
+        height: 0px;
+
+        /* Line */
+        border: 1px solid #CFCFCF;
+
+        /* Inside auto layout */
+        flex: none;
+        order: 8;
+        flex-grow: 0;
+      }
+    }
+  }
+  .general-navbar {
+    /* Frame 140 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+
+    position: absolute;
+    width: 1920px;
+    height: 80px;
+    left: 0px;
+    top: 0px;
+
+    /* Primary */
+    background: #00629F;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+    .general-navbar-elements {
+      /* Navigationselemente */
+
+      width: 1241px;
+      height: 80px;
+
+
+      /* Inside auto layout */
+      flex: none;
+      order: 0;
+      align-self: stretch;
+      flex-grow: 0;
+
+      .general-navbar-navigationoptions {
+        /* Navigaitonsoptionen */
+
+        /* Auto layout */
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0px;
+
+        position: absolute;
+        width: 548px;
+        height: 80px;
+        left: 693.5px;
+        top: 0px;
+
+        .general-navbar-navigationoptions-frame {
+          /* Frame 145 */
+
+          /* Auto layout */
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          padding: 0px 10px;
+          gap: 10px;
+
+          width: 136px;
+          height: 80px;
+
+          /* Background */
+          background: #FAFAFA;
+
+          /* Inside auto layout */
+          flex: none;
+          order: 0;
+          align-self: stretch;
+          flex-grow: 0;
+
+          .general-navbar-navigationoptions-frame-label {
+            width: 64px;
+            height: 24px;
+
+            /* body/large */
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+
+            /* identical to box height, or 150% */
+            letter-spacing: 0.5px;
+
+            /* White */
+            color: #FFFFFF;
+
+
+            /* Inside auto layout */
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+          }
+        }
+      }
+
+      .general-navbar-adminarea {
+        /* Logo and Admin Area */
+
+        /* Auto layout */
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0px;
+        gap: 100px;
+
+        position: absolute;
+        width: 319px;
+        height: 39px;
+        left: 0px;
+        top: 21px;
+
+        .general-navbar-adminarea-logo {
+          /* picture_logo */
+
+          width: 86px;
+          height: 39px;
+
+          background: url(Logo.png); //todo add correct path
+
+          /* Inside auto layout */
+          flex: none;
+          order: 0;
+          flex-grow: 0;
+        }
+
+        .general-navbar-adminarea-frame {
+          /* Frame 37 */
+
+          /* Auto layout */
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 0px;
+          gap: 5px;
+
+          width: 133px;
+          height: 24px;
+
+
+          /* Inside auto layout */
+          flex: none;
+          order: 1;
+          flex-grow: 0;
+
+          .general-navbar-adminarea-frame-label {
+            /* Admin-Bereich */
+
+            width: 110px;
+            height: 24px;
+
+            /* body/large */
+            font-family: 'Roboto';
+            font-style: normal;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 24px;
+
+            /* identical to box height, or 150% */
+            letter-spacing: 0.5px;
+
+            /* White */
+            color: #FFFFFF;
+
+
+            /* Inside auto layout */
+            flex: none;
+            order: 0;
+            flex-grow: 0;
+          }
+
+          .general-navbar-adminarea-frame-dropdown {
+            /* arrow_drop_down_FILL0_wght400_GRAD0_opsz48 1 */
+
+            width: 18px;
+            height: 18px;
+
+
+            /* Inside auto layout */
+            flex: none;
+            order: 1;
+            flex-grow: 0;
+
+            .general-navbar-adminarea-frame-dropdown-vector {
+              /* Vector */
+
+              position: absolute;
+              left: 29.17%;
+              right: 29.17%;
+              top: 41.77%;
+              bottom: 37.5%;
+
+              /* White */
+              background: #FFFFFF;
+            }
+          }
+        }
+
+      }
+    }
+  }
+}
