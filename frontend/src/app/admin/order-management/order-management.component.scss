@@ -1,0 +1,142 @@
+.orders-container {
+    display: grid;
+    grid-template-columns: 4fr 3fr 3fr 2fr;
+    align-items: center;
+    gap: 1rem;
+}
+
+.text-align-right {
+    text-align: end;
+}
+
+th.mat-mdc-header-cell {
+    color: var(--clrPrimary);
+    font-size: 1.375rem;
+    line-height: 1.75rem;
+    font-weight: var(--fwRegular);
+}
+
+.mat-mdc-table {
+    background-color: var(--clrBackground);
+}
+
+.mat-mdc-paginator {
+    background-color: var(--clrBackground);
+}
+
+td.mat-mdc-cell {
+    padding-top: 10px;
+}
+
+.span-icon {
+    vertical-align: bottom !important;
+}
+
+th.mat-mdc-header-cell {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.87);
+}
+
+
+.secondary {
+    margin: 5px;
+    color: var(--clrPrimary);
+    background-color: var(--clrBackground);
+    border: 2px solid var(--clrPrimary) !important;
+}
+
+.primary {
+    margin: 5px;
+    border: 2px solid transparent !important;
+}
+
+.mat-column-action-single {
+    width: 160px;
+    text-align: right;
+    justify-content: flex-end;
+}
+
+.mat-column-action-multiple {
+    width: 160px;
+    text-align: right;
+    justify-content: flex-end;
+}
+
+.ui-container {
+    height: 200px;
+}
+
+.edit-multiple-container {
+    float: right;
+}
+
+.icon-text-button {
+    font-size: small;
+    width: 200px;
+    float: right;
+}
+
+.main-content {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items:flex-start;
+  align-content:flex-start;
+    
+}
+
+.example-container {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+}
+
+.example-sidenav {
+    padding: 20px;
+    height: 100%;
+    width: 300px;
+    background-color: var(--clrLightBlue);
+    
+}
+
+.sidenav-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.nav-header-text {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidenav-header-text.h3{
+    vertical-align: middle !important
+}
+
+.side-nav-content {
+    display:block;
+  width:100%;
+}
+
+.example-form-field {
+    display: block;
+}
+
+
+.custom-section {
+    // display: grid;
+    //gap: 1rem;
+    width: 80%;
+}
+
+.date-intervall-container{
+    padding-bottom: 30px;
+}
+
+
+mat-divider {
+    margin: 10px;
+}

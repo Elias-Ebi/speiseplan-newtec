@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavigationComponent } from "./shared/components/navigation/navigation.component";
 import { RouterOutlet } from "@angular/router";
 
+
 @Component({
   standalone: true,
   selector: 'app-root',
@@ -10,7 +11,8 @@ import { RouterOutlet } from "@angular/router";
     NavigationComponent,
     RouterOutlet
   ],
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  
 })
 export class AppComponent {
 }
