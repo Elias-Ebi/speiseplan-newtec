@@ -1,17 +1,17 @@
 <div class="card">
   <div class="header">
     <div class="main-header">
-      <img [src]="icon" class="food-icon" alt=""/>
+      <img [src]="icon" alt="" class="food-icon"/>
 
       <div>
         <p class="fs-body-bold">{{name}}</p>
-        <p class="fs-body">{{amount}} Bestellungen</p>
+        <p>{{amount}} Bestellungen</p>
       </div>
     </div>
 
     <!-- Checkmark -->
-    <mat-icon *ngIf="selected" fontIcon="task_alt" class="selected-icon"></mat-icon>
+    <mat-icon *ngIf="selected" class="selected-icon">task_alt</mat-icon>
   </div>
 
-  <p class="fs-body">{{description}}</p>
+  <p>{{description}}</p>
 </div>

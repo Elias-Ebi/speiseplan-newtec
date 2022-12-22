@@ -1,9 +1,7 @@
 <nav class="mat-elevation-z6">
   <div class="content-wrapper nav-container">
     <!-- Logo -->
-    <picture routerLink="/" class="logo-container">
-      <img src="assets/logo.svg" alt="NewTec Speiseplan Logo" class="logo" >
-    </picture>
+    <img alt="NewTec Speiseplan Logo" class="link logo" routerLink="/" src="assets/logo.svg">
 
     <!-- Navigation to switch between admin-mode / user-mode -->
     <div class="user-switch-container" routerLink="/nutzer">
@@ -13,10 +11,28 @@
 
     <!-- Links -->
     <ul class="links-container">
+<<<<<<< HEAD
       <li class="link"><mat-icon fontIcon="notifications"></mat-icon></li>
       <li class="link fs-body" routerLink="/bestellen">Bestellen</li>
       <li class="link fs-body" routerLink="/historie">Historie</li>
       <li class="link fs-body" routerLink="/login">Logout</li>
+=======
+      <li class="link">
+        <mat-icon>notifications</mat-icon>
+      </li>
+
+      <li class="link" routerLink="/bestellen">
+        <p>Bestellen</p>
+      </li>
+
+      <li class="link" routerLink="/historie">
+        <p>Historie</p>
+      </li>
+
+      <li class="link">
+        <p>Logout</p>
+      </li>
+>>>>>>> 18ffbeb2feaf60989a88fc48d2d30c9609bfa722
     </ul>
   </div>
 </nav>

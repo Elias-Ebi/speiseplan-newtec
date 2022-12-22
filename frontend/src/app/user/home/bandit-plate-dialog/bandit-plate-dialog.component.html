@@ -1,0 +1,29 @@
+<div class="dialog-container">
+  <section class="section">
+    <h2>Verfügbare Räuberteller — Montag 24.10.22</h2>
+    <hr class="bg-neutral"/>
+
+    <!-- List -->
+    <div class="list-container">
+      <ng-container *ngFor="let order of banditPlates; let last = last">
+        <div class="bandit-plate-item-container">
+          <!-- Name -->
+          <div class="icon-with-text">
+            <mat-icon>person</mat-icon>
+            <p>{{order.name}}</p>
+          </div>
+
+          <!-- Meal -->
+          <div class="icon-with-text">
+            <mat-icon>restaurant</mat-icon>
+            <p>{{order.description}}</p>
+          </div>
+
+          <button (click)="closeDialog()" class="start-last-column" color="primary" mat-flat-button>Nehmen</button>
+        </div>
+
+        <hr *ngIf="!last">
+      </ng-container>
+    </div>
+  </section>
+</div>

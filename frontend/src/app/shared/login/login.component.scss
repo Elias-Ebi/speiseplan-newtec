@@ -77,6 +77,17 @@
       align-self: center;
     }
   }
+
+  .login-button-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 0.65rem 0 0.65rem 0;
+
+    a {
+      width: 15%;
+    }
+  }
 }
 
 

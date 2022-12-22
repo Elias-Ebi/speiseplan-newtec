@@ -1,1 +1,40 @@
-<p>historie works!</p>
+<mat-tab-group class="main-content">
+  <mat-tab *ngFor="let monthData of historyData" [label]="monthData.date | monthName">
+    <section class="section">
+      <!-- Headline -->
+      <div class="section-headline-container">
+        <h2>Bestellungen - {{monthData.date | monthName}}</h2>
+        <h2>{{monthData.total | euro}}</h2>
+      </div>
+
+      <hr class="bg-neutral"/>
+
+      <!-- List -->
+      <div class="list-container">
+        <ng-container *ngFor="let order of monthData.orders; let last = last">
+          <div class="orders-container">
+            <!-- Date -->
+            <p>{{order.date | weekdayName}}, {{order.date.toLocaleString()}}</p>
+
+            <!-- Name -->
+            <div class="icon-with-text">
+              <mat-icon>person</mat-icon>
+              <p>{{order.meals.length}}</p>
+            </div>
+
+            <!-- Meal -->
+            <div class="icon-with-text">
+              <mat-icon>restaurant</mat-icon>
+              <p>{{order.meals.join(", ")}}</p>
+            </div>
+
+            <!-- Price -->
+            <p class="text-align-right">{{order.amount | euro}}</p>
+          </div>
+
+          <hr *ngIf="!last">
+        </ng-container>
+      </div>
+    </section>
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,13 @@
+/* Tabs */
+.mat-mdc-tab-list {
+  border-bottom: 1px solid var(--clrLine);
+}
+
+.mdc-tab--active {
+  background-color: var(--clrLightGrey);
+}
+
+/* Icon Button */
+.mat-mdc-icon-button .mat-mdc-button-persistent-ripple.mat-mdc-button-persistent-ripple {
+  border-radius: inherit;
+}

@@ -1,7 +1,7 @@
 <div class="content-container">
     <div class="title-action-container">
         <p class="fs-title clr-primary title">Nutzerverwaltung</p>
-        <a class="add-user-button" mat-raised-button color="primary" aria-label="add-user">
+        <a class="add-user-button" mat-raised-button color="primary" aria-label="add-user" (click)="onClickAddUser()">
             <span>NUTZER HINZUFÜGEN</span>
             <mat-icon>person_add</mat-icon>
         </a>
@@ -39,7 +39,7 @@
       <mat-paginator class="paginator" color="primary" [length]="20" [pageSize]="20" [pageSizeOptions]="[5, 10, 20]" aria-label="Select page"></mat-paginator>
     </div>
     <div class="editing-container">
-      <a class="editing fs-body clr-primary" routerLink="#">Löschen</a>
-      <a class="editing fs-body clr-primary" routerLink="#">Bearbeiten</a>
+      <a class="editing fs-body clr-primary" (click)="onClickDeleteUser()">Löschen</a>
+      <a class="editing fs-body clr-primary" (click)="onClickEditUser()">Bearbeiten</a>
     </div>
 </div>

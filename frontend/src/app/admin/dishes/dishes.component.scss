@@ -1,0 +1,12 @@
+.dishes--main-container {
+
+  .dishes--date-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65rem 1.65rem 0.35rem 1.65rem;
+
+    border: solid 1px var(--clrLine);
+    border-radius: 0.35rem;
+  }
+
+}

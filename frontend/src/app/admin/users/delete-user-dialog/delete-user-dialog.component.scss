@@ -1,0 +1,17 @@
+.d-title {
+  color: var(--clrPrimary);
+  margin-bottom: 0.65rem;
+}
+
+.d-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1.5rem;
+  gap: 0.65rem;
+}
+
+.d-actions {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
