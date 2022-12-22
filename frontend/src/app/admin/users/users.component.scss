@@ -1,7 +1,9 @@
 .content-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  top: 2rem;
 }
 
 .title-action-container {
