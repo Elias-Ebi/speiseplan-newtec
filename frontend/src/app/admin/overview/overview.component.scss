@@ -1,0 +1,11 @@
+.meals-container {
+  display: grid;
+  grid-template-columns: 4fr 3fr 3fr 2fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.text-align-right {
+  text-align: end;
+}
+
