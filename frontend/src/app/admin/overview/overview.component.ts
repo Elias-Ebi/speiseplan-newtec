@@ -33,7 +33,7 @@ export class OverviewComponent {
     },
     {
       meals: ["Salat Sizilia"],
-      total: 11, // Button?
+      total: 11,
       users: this.users
     }
   ]
@@ -42,27 +42,22 @@ export class OverviewComponent {
     {
       date: Temporal.PlainDate.from("2022-10-21"),
       orders: this.orders
-      //Button
     },
     {
       date: Temporal.PlainDate.from("2022-10-24"),
       orders: this.orders
-      //Button
     },
     {
       date: Temporal.PlainDate.from("2022-10-25"),
       orders: this.orders
-      //Button
     },
     {
       date: Temporal.PlainDate.from("2022-10-26"),
       orders: this.orders
-      //Button
     },
     {
       date: Temporal.PlainDate.from("2022-10-27"),
       orders: this.orders
-      //Button
     }
   ]
 

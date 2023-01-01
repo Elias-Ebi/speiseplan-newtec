@@ -10,29 +10,31 @@
       </div>
 
       <hr class="bg-neutral"/>
-      <div class="list-container">
         <ng-container *ngFor="let meal of days.orders">
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <p>{{meal.meals}}</p>
-
+                <div class="icon-with-text">
+                  <mat-icon>restaurant</mat-icon>
+                  <p>{{meal.meals}}</p>
+                </div>
               </mat-panel-title>
               <mat-panel-description class="meals-container">
                 <p>{{meal.total}}</p>
                 <button class="icon-button" color="primary" mat-flat-button>
-                  <mat-icon>restaurant</mat-icon>
+                  <mat-icon>no_meals</mat-icon>
                   ABSAGEN
                 </button>
               </mat-panel-description>
             </mat-expansion-panel-header>
             <ng-container *ngFor="let user of meal.users">
-              <p>{{user.user}}</p>
+              <div class="icon-with-text">
+                <mat-icon>person</mat-icon>
+                <p>{{user.user}}</p>
+              </div>
             </ng-container>
           </mat-expansion-panel>
         </ng-container>
-      </div>
-
     </section>
   </mat-tab>
 </mat-tab-group>

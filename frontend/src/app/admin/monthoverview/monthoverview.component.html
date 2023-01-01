@@ -1,0 +1,66 @@
+<mat-tab-group class="main-content">
+  <mat-tab *ngFor="let month of monthData" [label]="month.date | monthName">
+    <section class="section">
+      <div class="month-button-bar">
+        <h2>{{month.date | monthName }}</h2>
+        <button class="icon-button" color="primary" mat-flat-button>
+          <mat-icon>notifications_active</mat-icon>
+          ZAHLUNGSERINNERUNG
+        </button>
+        <button class="icon-button" color="primary" mat-flat-button>
+          <mat-icon>picture_as_pdf</mat-icon>
+          EXPORTIEREN
+        </button>
+      </div>
+      <hr class="bg-neutral"/>
+      <mat-form-field appearance="fill">
+        <mat-label>Suchen</mat-label>
+        <input matInput placeholder="Geben sie einen Suchbegriff ein" value="">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      <div class="user-container">
+        <h2>Besteller</h2>
+        <h2>Anzahl</h2>
+        <h2>Betrag</h2>
+        <h2>Bezahlstatus</h2>
+        <h2></h2>
+      </div>
+      <hr>
+      <div class="list-container">
+        <ng-container *ngFor="let users of month.orderers; let last=last">
+          <div class="user-container">
+            <div class="icon-with-text">
+              <mat-icon>person</mat-icon>
+              <p>{{users.name}}</p>
+            </div>
+
+            <div class="icon-with-text">
+              <mat-icon>restaurant</mat-icon>
+              <p>{{users.order_count}}</p>
+            </div>
+
+            <p>{{users.cash_sum | euro}}</p>
+
+            <div class="icon-with-text" *ngIf="users.paid">
+              <mat-icon>check</mat-icon>
+              <p>bezahlt</p>
+            </div>
+            <div class="icon-with-text" *ngIf="!users.paid">
+              <mat-icon>close</mat-icon>
+              <p>nicht bezahlt</p>
+            </div>
+
+
+            <button class="icon-button" color="primary" mat-flat-button *ngIf="!users.paid">
+              <mat-icon>attach_money</mat-icon>
+            </button>
+            <button class="icon-button" color="primary" mat-flat-button *ngIf="users.paid">
+              <mat-icon>money_off</mat-icon>
+            </button>
+
+          </div>
+        </ng-container>
+      </div>
+    </section>
+  </mat-tab>
+</mat-tab-group>
