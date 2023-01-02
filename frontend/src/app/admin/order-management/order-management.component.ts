@@ -21,6 +21,9 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angu
 import {MatDatepickerModule} from '@angular/material/datepicker'; 
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDividerModule} from '@angular/material/divider'; 
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component';
+import { CancelOrderDialogComponent } from './cancel-order-dialog/cancel-order-dialog.component';
 
 @Component({
   selector: 'app-order-management',
@@ -44,7 +47,8 @@ import {MatDividerModule} from '@angular/material/divider';
     MatDatepickerModule,
     MatNativeDateModule,
     MatDividerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
   ],
   templateUrl: './order-management.component.html',
   styleUrls: ['./order-management.component.scss'],
@@ -87,7 +91,7 @@ export class OrderManagementComponent {
   });
   
   
-  constructor(protected orderService: OrderService) {
+  constructor(protected orderService: OrderService, private dialog: MatDialog) {
   }
 
   ngAfterViewInit() {
@@ -95,8 +99,16 @@ export class OrderManagementComponent {
     // this.toggleFilter()
   }
 
-  openEditDialog() {
-    // TODO 
+  openEditDialog(element: any) {
+    this.dialog.open(EditOrderDialogComponent, {
+      data: element
+    });
+  }
+
+  openCancelDialog(element: any) {
+    this.dialog.open(CancelOrderDialogComponent, {
+      data: element
+    });
   }
 
   toggleFilter() {
