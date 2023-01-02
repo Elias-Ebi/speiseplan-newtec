@@ -9,10 +9,9 @@
   }
 }
 
-.month-button-bar {
-  display: grid;
-  grid-template-columns: 5fr 2fr 1.5fr;
-  align-items: center;
+.headline-buttons {
+  display: flex;
   gap: 1rem;
 }
+
 

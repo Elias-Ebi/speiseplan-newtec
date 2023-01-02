@@ -2,40 +2,38 @@
   <mat-tab *ngFor="let days of dayData" [label]="days.date | weekdayName">
     <section class="section">
       <div class="section-headline-container">
-        <h2>Tagesbestellungen - {{days.date | weekdayName}} {{days.date.toString()}}</h2>
-        <button class="icon-button" color="primary" mat-flat-button>
+        <h2>Tagesbestellungen - {{days.date | weekdayName}} {{days.date.toLocaleString()}}</h2>
+        <button color="primary" mat-flat-button>
           <mat-icon>picture_as_pdf</mat-icon>
-          EXPORTIEREN
+          Exportieren
         </button>
       </div>
 
       <hr class="bg-neutral"/>
-      <mat-accordion multi="true">
-        <ng-container *ngFor="let meal of days.orders">
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <div class="icon-with-text">
-                  <mat-icon>restaurant</mat-icon>
-                  <p>{{meal.meals}}</p>
-                </div>
-              </mat-panel-title>
-              <mat-panel-description class="meals-container">
-                <p>{{meal.total}}</p>
-                <button class="icon-button" color="primary" mat-flat-button>
-                  <mat-icon>no_meals</mat-icon>
-                  ABSAGEN
-                </button>
-              </mat-panel-description>
-            </mat-expansion-panel-header>
-            <ng-container *ngFor="let user of meal.users">
+
+      <mat-accordion multi="true" displayMode="flat">
+        <mat-expansion-panel *ngFor="let meal of days.orders">
+          <mat-expansion-panel-header>
+            <mat-panel-title class="panel-header">
               <div class="icon-with-text">
-                <mat-icon>person</mat-icon>
-                <p>{{user.user}}</p>
+                <mat-icon>restaurant</mat-icon>
+                <p>{{meal.meals}}</p>
               </div>
-            </ng-container>
-          </mat-expansion-panel>
-        </ng-container>
+
+              <p>{{meal.total}}</p>
+
+              <button color="primary" mat-flat-button>
+                <mat-icon>no_meals</mat-icon>
+                Absagen
+              </button>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let user of meal.users" class="icon-with-text">
+            <mat-icon>person</mat-icon>
+            <p>{{user.user}}</p>
+          </div>
+        </mat-expansion-panel>
       </mat-accordion>
     </section>
   </mat-tab>
