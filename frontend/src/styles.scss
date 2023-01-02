@@ -54,6 +54,11 @@ button {
   gap: 0.5rem;
 }
 
+.list-container-wide {
+  display: grid;
+  gap: 1rem;
+}
+
 .dialog-container {
   padding: 2rem;
   max-width: calc(80rem + 2 * 2rem);
@@ -74,4 +79,12 @@ button {
   color: white;
   background: var(--clrPrimary);
   border-radius: 0.75rem;
+}
+
+.link {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
