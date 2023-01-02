@@ -12,10 +12,13 @@ nav {
 }
 
 .logo-container {
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4rem;
 }
 
 .logo {
+  cursor: pointer;
   height: 3.75rem;
 }
 
@@ -28,6 +31,6 @@ nav {
   }
 }
 
-.link {
+.nav-link {
   cursor: pointer;
 }

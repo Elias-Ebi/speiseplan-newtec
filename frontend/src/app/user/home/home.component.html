@@ -80,9 +80,8 @@
       <ng-container *ngFor="let order of myOrders; let last = last">
         <div class="open-order-item-container">
           <!-- Date -->
-          <a href="/bestellen">
-            <p class="clr-primary">{{order.date | weekdayName}}, {{order.date.toLocaleString()}}</p>
-          </a>
+          <p class="clr-primary link" routerLink="/bestellen">{{order.date | weekdayName}}
+            , {{order.date.toLocaleString()}}</p>
 
           <!-- Meal -->
           <div class="icon-with-text">
@@ -100,8 +99,8 @@
           <button class="icon-button" mat-icon-button>
             <mat-icon>no_food</mat-icon>
           </button>
-
         </div>
+
         <hr *ngIf="!last">
       </ng-container>
     </div>
