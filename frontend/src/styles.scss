@@ -75,3 +75,9 @@ button {
   background: var(--clrPrimary);
   border-radius: 0.75rem;
 }
+
+.success-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--clrPrimary);
+  button {background:var(--clrPrimary); color: white !important}
+}

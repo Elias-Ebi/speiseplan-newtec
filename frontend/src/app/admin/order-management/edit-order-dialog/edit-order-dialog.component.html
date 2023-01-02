@@ -1,0 +1,27 @@
+<div class="dialog-container">
+    <section class="section">
+      <h2>Bestellung Bearbeiten</h2>
+      
+      <mat-form-field class="example-form-field">
+        <mat-label>Besteller</mat-label>
+        <input matInput type="text" [(ngModel)]="order.buyer" />
+      </mat-form-field>
+
+      <mat-form-field class="example-form-field">
+        <mat-label>Gast</mat-label>
+        <input matInput type="text" [(ngModel)]="order.guest" />
+      </mat-form-field>
+
+      <mat-form-field class="example-form-field">
+        <mat-label>Menü</mat-label>
+        <input matInput type="text" [(ngModel)]="order.meals" />
+      </mat-form-field>
+
+
+      <div class="dialog-btn-container">
+        <button class="secondary-btn" mat-flat-button color="primary" (click)="closeDialog(false)"> ABBRECHEN </button>
+        <button mat-flat-button color="primary" (click)="closeDialog(true)"> BESTÄTIGEN </button>
+    </div>
+    </section>
+  </div>
+  
