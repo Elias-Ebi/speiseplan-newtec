@@ -1,0 +1,18 @@
+.main-layout {
+  width: 30rem;
+  padding: 5rem;
+
+  display: grid;
+
+  border: 0.0625rem solid var(--clrLine);
+  border-radius: 1rem;
+}
+
+h2 {
+  justify-self: center;
+  margin-bottom: 2rem;
+}
+
+.login-button {
+  margin-top: 2rem;
+}
