@@ -55,7 +55,7 @@
       <mat-divider></mat-divider>
 
       <div class="date-intervall-container">
-        <label class="example-margin">Zeispanne: </label>
+        <label class="example-margin">Datumsspanne: </label>
         <mat-slide-toggle
           [checked]="useDateInterval"
           (change)="toggleDateIntervalMode()"
@@ -63,32 +63,34 @@
         ></mat-slide-toggle>
       </div>
 
-      <mat-form-field appearance="fill">
+      <mat-form-field *ngIf="!useDateInterval" appearance="fill" class="example-form-field">
         <mat-label>Datum auswählen</mat-label>
-        <input matInput [matDatepicker]="picker" />
-        <mat-hint>MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="picker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput [matDatepicker]="datepicker">
+        <mat-hint>MM/TT/JJJJ</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker>
+          <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Abbrechen</button>
+            <button mat-raised-button color="primary" matDatepickerApply>OK</button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
       </mat-form-field>
 
-      <!--
-      <mat-form-field appearance="fill">
-        <mat-label>Datumsintervall eingeben</mat-label>
-        <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
-          <input matStartDate formControlName="start" placeholder="Start date">
-          <input matEndDate formControlName="end" placeholder="End date">
+      <mat-form-field *ngIf="useDateInterval" appearance="fill" class="example-form-field">
+        <mat-label>Datumsspanne auswählen</mat-label>
+        <mat-date-range-input [rangePicker]="rangePicker">
+          <input matStartDate placeholder="Start date">
+          <input matEndDate placeholder="End date">
         </mat-date-range-input>
-        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
-      
-        <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
-        <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+        <mat-hint>MM/TT/JJJJ – MM/TT/JJJJ</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangePicker>
+          <mat-date-range-picker-actions>
+            <button mat-button matDateRangePickerCancel>Abbrechen</button>
+            <button mat-raised-button color="primary" matDateRangePickerApply>OK</button>
+          </mat-date-range-picker-actions>
+        </mat-date-range-picker>
       </mat-form-field>
-      -->
 
 
     </div>
@@ -98,9 +100,12 @@
     <section class="custom-section">
       <!-- UI above table -->
       <div>
-        <button mat-icon-button (click)="toggleFilter()">
-          <mat-icon>filter_alt</mat-icon>
-        </button>
+        <div class="filter-menu-btn">
+          <button mat-icon-button (click)="toggleFilter()">
+            <mat-icon>filter_alt</mat-icon>
+          </button>
+          <p> Filter </p>
+        </div>
 
         <span class="edit-multiple-container">
           <label class="example-margin">Mehrere Bearbeiten: </label>

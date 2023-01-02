@@ -114,6 +114,6 @@ export class OrderManagementComponent {
   }
 
   toggleDateIntervalMode() {
-
+    this.useDateInterval = !this.useDateInterval;
   }
 }
