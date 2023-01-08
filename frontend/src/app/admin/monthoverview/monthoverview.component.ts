@@ -9,11 +9,12 @@ import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 
 @Component({
   selector: 'app-monthoverview',
   standalone: true,
-  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule],
+  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule],
   templateUrl: './monthoverview.component.html',
   styleUrls: ['./monthoverview.component.scss']
 })
@@ -88,4 +89,7 @@ export class MonthoverviewComponent {
       orderers: this.orderers
     },
   ]
+
+  displayedColumns: string[] = ['orderer', 'count', 'sum', 'paid_status', 'paid_button'];
+  dataSource = new MatTableDataSource<any>(this.orderers);
 }
