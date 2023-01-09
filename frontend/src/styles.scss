@@ -46,12 +46,18 @@ button {
 
 .section-headline-container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 
 .list-container {
   display: grid;
   gap: 0.5rem;
+}
+
+.list-container-wide {
+  display: grid;
+  gap: 1rem;
 }
 
 .dialog-container {
@@ -74,6 +80,21 @@ button {
   color: white;
   background: var(--clrPrimary);
   border-radius: 0.75rem;
+}
+
+.icon-button-outlined.icon-button-outlined {
+  color: var(--clrPrimary);
+  background: transparent;
+  box-shadow: 0 0 0 0.0625rem var(--clrPrimary) inset;
+  border-radius: 0.75rem;
+}
+
+.link {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .success-snackbar {

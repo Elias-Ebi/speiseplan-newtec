@@ -10,11 +10,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { BanditPlateDialogComponent } from "./bandit-plate-dialog/bandit-plate-dialog.component";
 import { WeekdayNamePipe } from "../../shared/pipes/weekday-name.pipe";
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule, WeekdayNamePipe],
+  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule, WeekdayNamePipe, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

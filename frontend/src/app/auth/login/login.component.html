@@ -1,0 +1,17 @@
+<form (submit)="onSubmit()" [formGroup]="form" class="main-layout">
+  <h2>NewTec Speiseplan</h2>
+
+  <mat-form-field>
+    <mat-label>E-Mail</mat-label>
+    <input formControlName="email" matInput required>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Passwort</mat-label>
+    <input formControlName="password" matInput required type="password">
+  </mat-form-field>
+
+  <p class="clr-primary link" routerLink="/auth/register">Registrieren</p>
+
+  <button class="login-button" color="primary" mat-flat-button>Login</button>
+</form>
