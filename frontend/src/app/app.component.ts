@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { NavigationComponent } from "./shared/components/navigation/navigation.component";
+import { Component, OnInit } from '@angular/core';
+import { UserNavigationComponent } from "./user/shared/components/navigation/user-navigation.component";
 import { RouterOutlet } from "@angular/router";
+import { AuthService } from "./shared/services/auth.service";
 
 
 @Component({
@@ -8,11 +9,17 @@ import { RouterOutlet } from "@angular/router";
   selector: 'app-root',
   templateUrl: './app.component.html',
   imports: [
-    NavigationComponent,
+    UserNavigationComponent,
     RouterOutlet
   ],
   styleUrls: ['./app.component.scss'],
   
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  constructor(private authService: AuthService) {
+  }
+
+  ngOnInit(): void {
+    this.authService.getAndSetProfile();
+  }
 }
