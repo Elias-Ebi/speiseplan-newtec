@@ -23,6 +23,10 @@ th, td {
   vertical-align: middle;
 }
 
+th {
+  border-bottom: 1px solid var(--clrNeutral);
+}
+
 .paid-button-cell:where(td) {
   text-align: right;
 }
