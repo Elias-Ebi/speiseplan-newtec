@@ -6,10 +6,10 @@ import { Temporal } from "@js-temporal/polyfill";
 import { WeekdayNamePipe } from "../../shared/pipes/weekday-name.pipe";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
-import {MatButtonModule} from "@angular/material/button";
-import {MatInputModule} from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
+import { MatButtonModule } from "@angular/material/button";
+import { MatInputModule } from "@angular/material/input";
+import { FormsModule } from "@angular/forms";
+import { MatTableModule } from "@angular/material/table";
 
 @Component({
   selector: 'app-monthoverview',
@@ -19,77 +19,76 @@ import {MatTableDataSource, MatTableModule} from "@angular/material/table";
   styleUrls: ['./monthoverview.component.scss']
 })
 export class MonthoverviewComponent {
-  orderers = [
+  customers = [
     {
       name: "Birgit Beispiel",
-      order_count: 11,
-      cash_sum: 62.20,
+      count: 11,
+      total: 62.20,
       paid: true
     },
     {
       name: "Adam Sandler",
-      order_count: 2,
-      cash_sum: 10.30,
+      count: 2,
+      total: 10.30,
       paid: false
     },
     {
       name: "Jumbo Schreiner",
-      order_count: 41,
-      cash_sum: 162.40,
+      count: 41,
+      total: 162.40,
       paid: true
     },
     {
       name: "Max Mustermann",
-      order_count: 11,
-      cash_sum: 62.20,
+      count: 11,
+      total: 62.20,
       paid: true
     },
     {
       name: "Rudolph Carell",
-      order_count: 11,
-      cash_sum: 62.20,
+      count: 11,
+      total: 62.20,
       paid: false
     },
     {
       name: "Moritz Bleibtreu",
-      order_count: 11,
-      cash_sum: 62.20,
+      count: 11,
+      total: 62.20,
       paid: true
     },
     {
       name: "Hans Bärlach",
-      order_count: 18,
-      cash_sum: 82.90,
+      count: 18,
+      total: 82.90,
       paid: true
     }
   ]
-  monthData=[
+  monthData = [
     {
       date: Temporal.PlainDate.from("2022-12-01"),
-      orderers: this.orderers
+      customers: this.customers
     },
     {
       date: Temporal.PlainDate.from("2022-11-01"),
-      orderers: this.orderers
+      customers: this.customers
     },
     {
       date: Temporal.PlainDate.from("2022-10-01"),
-      orderers: this.orderers
+      customers: this.customers
     },
     {
       date: Temporal.PlainDate.from("2022-09-01"),
-      orderers: this.orderers
+      customers: this.customers
     },
     {
       date: Temporal.PlainDate.from("2022-08-01"),
-      orderers: this.orderers
+      customers: this.customers
     },
     {
       date: Temporal.PlainDate.from("2022-07-01"),
-      orderers: this.orderers
+      customers: this.customers
     },
   ]
 
-  displayedColumns: string[] = ['orderer', 'count', 'sum', 'paid_status', 'paid_button'];
-  dataSource = new MatTableDataSource<any>(this.orderers);
+  displayedColumns: string[] = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];
 }

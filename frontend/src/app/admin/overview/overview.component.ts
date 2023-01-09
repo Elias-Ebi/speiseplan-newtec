@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
-import { EuroPipe} from "../../shared/pipes/euro.pipe";
-import { WeekdayNamePipe} from "../../shared/pipes/weekday-name.pipe";
-import { MatTabsModule} from "@angular/material/tabs";
-import {Temporal} from "@js-temporal/polyfill";
-import {MatButtonModule} from "@angular/material/button";
-import {MatExpansionModule} from "@angular/material/expansion";
+import { EuroPipe } from "../../shared/pipes/euro.pipe";
+import { WeekdayNamePipe } from "../../shared/pipes/weekday-name.pipe";
+import { MatTabsModule } from "@angular/material/tabs";
+import { Temporal } from "@js-temporal/polyfill";
+import { MatButtonModule } from "@angular/material/button";
+import { MatExpansionModule } from "@angular/material/expansion";
 
 
 @Component({
@@ -18,7 +18,7 @@ import {MatExpansionModule} from "@angular/material/expansion";
 })
 export class OverviewComponent {
 
-  users = [ {user:"Max Mustermann"}, {user:"Grace Kelly"}, {user:"Birgit Beispiel"}, {user:"Bernhard-Viktor Christoph-Carl von Bülow"} ]
+  users = [{user: "Max Mustermann"}, {user: "Grace Kelly"}, {user: "Birgit Beispiel"}, {user: "Bernhard-Viktor Christoph-Carl von Bülow"}]
 
   orders = [
     {

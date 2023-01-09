@@ -14,9 +14,17 @@
   gap: 1rem;
 }
 
-th.mat-mdc-header-cell {
-  color: var(--clrPrimary);
-  font-size: 1.375rem;
-  line-height: 1.75rem;
-  font-weight: var(--fwRegular);
+table {
+  background-color: var(--clrBackground);
 }
+
+th, td {
+  padding: 0.5rem 0;
+  vertical-align: middle;
+}
+
+.paid-button-cell:where(td) {
+  text-align: right;
+}
+
+
