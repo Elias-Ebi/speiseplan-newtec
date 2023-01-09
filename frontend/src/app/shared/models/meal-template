@@ -1,0 +1,5 @@
+export interface MealTemplate {
+  mealTemplateId: number;
+  mealTemplateName: string;
+  mealTemplateDescription: string;
+}
