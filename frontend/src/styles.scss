@@ -46,6 +46,7 @@ button {
 
 .section-headline-container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -86,6 +87,14 @@ button {
   --mdc-snackbar-container-color: var(--clrPrimary);
   button {background:var(--clrPrimary); color: white !important}
 }
+
+.icon-button-outlined.icon-button-outlined {
+  color: var(--clrPrimary);
+  background: transparent;
+  box-shadow: 0 0 0 0.0625rem var(--clrPrimary) inset;
+  border-radius: 0.75rem;
+}
+
 .link {
   cursor: pointer;
 
