@@ -1,12 +1,12 @@
+/*
+* Table style
+*/
+
 .orders-container {
     display: grid;
     grid-template-columns: 4fr 3fr 3fr 2fr;
     align-items: center;
     gap: 1rem;
-}
-
-.text-align-right {
-    text-align: end;
 }
 
 th.mat-mdc-header-cell {
@@ -66,13 +66,15 @@ th.mat-mdc-header-cell {
     justify-content: flex-end;
 }
 
-.ui-container {
-    height: 200px;
-}
-
 .edit-multiple-container {
     float: right;
+    margin: 20px;
 }
+
+
+/*
+* Filter style
+*/
 
 .filter-menu-btn {
     display: flex;
@@ -85,6 +87,15 @@ th.mat-mdc-header-cell {
     float: right;
 }
 
+.p-icon-btn{
+    font-size: small;
+}
+
+
+/*
+* drawer style
+*/
+
 .main-content {
     display: flex;
     height: 100%;
@@ -94,7 +105,7 @@ th.mat-mdc-header-cell {
     
 }
 
-.example-container {
+.drawer-container {
     position: absolute;
     left: 0;
     width: 100%;
@@ -102,7 +113,7 @@ th.mat-mdc-header-cell {
     
 }
 
-.example-sidenav {
+.drawer-sidenav {
     padding: 20px;
     height: 100%;
     width: 300px;
@@ -137,8 +148,6 @@ th.mat-mdc-header-cell {
 
 
 .custom-section {
-    // display: grid;
-    //gap: 1rem;
     width: 80%;
 }
 

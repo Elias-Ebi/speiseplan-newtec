@@ -7,16 +7,25 @@ import {MatInputModule} from '@angular/material/input';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { Temporal } from '@js-temporal/polyfill';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatDatepickerModule} from '@angular/material/datepicker'; 
 
 @Component({
   selector: 'app-edit-order-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatSnackBarModule, MatButtonModule, MatInputModule, FormsModule, ReactiveFormsModule,],
+  imports: [
+    CommonModule, 
+    MatIconModule, 
+    MatSnackBarModule, 
+    MatButtonModule, 
+    MatInputModule, 
+    FormsModule, 
+    ReactiveFormsModule,
+    MatDatepickerModule
+  ],
   templateUrl: './edit-order-dialog.component.html',
   styleUrls: ['./edit-order-dialog.component.scss']
 })
 export class EditOrderDialogComponent {
-
   constructor(
     @Inject(MAT_DIALOG_DATA) 
     public order: 

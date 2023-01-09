@@ -18,12 +18,13 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav'; 
 import {MatInputModule} from '@angular/material/input'; 
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms';
-import {MatDatepickerModule} from '@angular/material/datepicker'; 
+import {MatDatepickerInputEvent, MatDatepickerModule} from '@angular/material/datepicker'; 
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDividerModule} from '@angular/material/divider'; 
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component';
 import { CancelOrderDialogComponent } from './cancel-order-dialog/cancel-order-dialog.component';
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-order-management',
@@ -94,14 +95,16 @@ export class OrderManagementComponent {
   constructor(protected orderService: OrderService, private dialog: MatDialog) {
   }
 
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    // this.toggleFilter()
   }
 
   openEditDialog(element: any) {
+    let orderToEdit = _.cloneDeep(element)
+    orderToEdit.date = orderToEdit.date.toString();
     this.dialog.open(EditOrderDialogComponent, {
-      data: element
+      data: orderToEdit
     });
   }
 
@@ -127,5 +130,40 @@ export class OrderManagementComponent {
 
   toggleDateIntervalMode() {
     this.useDateInterval = !this.useDateInterval;
+  }
+
+  filterOrdersByMenu(event: Event){
+    this.dataSource.filterPredicate = 
+    (data: any, filter: string) => data.meals.indexOf(filter) != -1;
+    
+    const filterValue = (event.target as HTMLInputElement).value;
+    console.log('filtervalue ', filterValue)
+    this.dataSource.filter = filterValue;
+  }
+
+  filterOrdersByBuyer(event: Event){
+    this.dataSource.filterPredicate = 
+    (data: any, filter: string) => data.buyer.indexOf(filter) != -1;
+    
+    const filterValue = (event.target as HTMLInputElement).value;
+    console.log('filtervalue ', filterValue)
+    this.dataSource.filter = filterValue;
+  }
+
+  filterOrdersByGuest(event: Event){
+    this.dataSource.filterPredicate = 
+    (data: any, filter: string) => data.guest.indexOf(filter) != -1;
+    
+    const filterValue = (event.target as HTMLInputElement).value;
+    console.log('filtervalue ', filterValue)
+    this.dataSource.filter = filterValue;
+  }
+
+  filterOrdersByDate(event: MatDatepickerInputEvent<any>) {
+    this.dataSource.filterPredicate = 
+    (data: any, filter: string) => data.date.indexOf(filter) != -1;
+    const filterValue = event.value;
+    console.log('filtervalue ', filterValue)
+    this.dataSource.filter = filterValue;
   }
 }

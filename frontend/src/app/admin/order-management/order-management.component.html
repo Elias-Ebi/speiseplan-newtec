@@ -1,5 +1,5 @@
-<mat-drawer-container class="example-container" autosize>
-  <mat-drawer #drawer class="example-sidenav" mode="side">
+<mat-drawer-container class="drawer-container" autosize>
+  <mat-drawer #drawer class="drawer-sidenav" mode="side">
     <div class="sidenav-header">
       <div class="nav-header-text">
         <h3>Filter</h3>
@@ -12,7 +12,7 @@
     <div class="side-nav-content">
       <mat-form-field class="example-form-field">
         <mat-label>Besteller</mat-label>
-        <input matInput type="text" [(ngModel)]="buyerFilter" />
+        <input matInput type="text" [(ngModel)]="buyerFilter" (keyup)="filterOrdersByBuyer($event)" #input/>
         <button
           *ngIf="buyerFilter"
           matSuffix
@@ -26,7 +26,7 @@
 
       <mat-form-field class="example-form-field">
         <mat-label>Gast</mat-label>
-        <input matInput type="text" [(ngModel)]="guestFilter" />
+        <input matInput type="text" [(ngModel)]="guestFilter" (keyup)="filterOrdersByGuest($event)" #input/>
         <button
           *ngIf="guestFilter"
           matSuffix
@@ -40,7 +40,7 @@
 
       <mat-form-field class="example-form-field">
         <mat-label>Menü</mat-label>
-        <input matInput type="text" [(ngModel)]="mealFilter" />
+        <input matInput type="text" [(ngModel)]="mealFilter" (keyup)="filterOrdersByMenu($event)" #input/>
         <button
           *ngIf="mealFilter"
           matSuffix
@@ -65,13 +65,13 @@
 
       <mat-form-field *ngIf="!useDateInterval" appearance="fill" class="example-form-field">
         <mat-label>Datum auswählen</mat-label>
-        <input matInput [matDatepicker]="datepicker">
+        <input matInput [matDatepicker]="datepicker" (dateChange)="filterOrdersByDate($event)">
         <mat-hint>MM/TT/JJJJ</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
         <mat-datepicker #datepicker>
           <mat-datepicker-actions>
             <button mat-button matDatepickerCancel>Abbrechen</button>
-            <button mat-raised-button color="primary" matDatepickerApply>OK</button>
+            <button mat-raised-button color="primary"  matDatepickerApply>OK</button>
           </mat-datepicker-actions>
         </mat-datepicker>
       </mat-form-field>
@@ -79,15 +79,15 @@
       <mat-form-field *ngIf="useDateInterval" appearance="fill" class="example-form-field">
         <mat-label>Datumsspanne auswählen</mat-label>
         <mat-date-range-input [rangePicker]="rangePicker">
-          <input matStartDate placeholder="Start date">
-          <input matEndDate placeholder="End date">
+          <input matStartDate placeholder="Startdatum">
+          <input matEndDate placeholder="Enddatum">
         </mat-date-range-input>
         <mat-hint>MM/TT/JJJJ – MM/TT/JJJJ</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
         <mat-date-range-picker #rangePicker>
           <mat-date-range-picker-actions>
             <button mat-button matDateRangePickerCancel>Abbrechen</button>
-            <button mat-raised-button color="primary" matDateRangePickerApply>OK</button>
+            <button mat-raised-button color="primary" matDateRangePickerApply >OK</button>
           </mat-date-range-picker-actions>
         </mat-date-range-picker>
       </mat-form-field>
@@ -99,7 +99,7 @@
   <div class="main-content">
     <section class="custom-section">
       <!-- UI above table -->
-      <div>
+      <div> 
         <div class="filter-menu-btn">
           <button mat-icon-button (click)="toggleFilter()">
             <mat-icon>filter_alt</mat-icon>
@@ -107,24 +107,24 @@
           <p> Filter </p>
         </div>
 
-        <span class="edit-multiple-container">
+        <div class="edit-multiple-container">
           <label class="example-margin">Mehrere Bearbeiten: </label>
           <mat-slide-toggle
             [checked]="editMultipleOrders"
             (change)="toggleEditMode()"
             color="primary"
           ></mat-slide-toggle>
-        </span>
-      </div>
-      <div *ngIf="editMultipleOrders" [@fadeInOut]>
-        <button mat-flat-button class="icon-button icon-text-button btn-padding" color="primary">
-          <div class="icon-with-text">
-            <mat-icon>edit</mat-icon>
-            <p>Ausgewählte bearbeiten </p>
+          <div *ngIf="editMultipleOrders" [@fadeInOut]>
+            <button mat-flat-button class="icon-button icon-text-button btn-padding" color="primary">
+              <div class="icon-with-text">
+                <mat-icon>edit</mat-icon>
+                <p class="p-icon-btn"> Markierte bearbeiten </p>
+              </div>
+            </button>
           </div>
-        </button>
+        </div>
+        <div>
       </div>
-      <div>
         <table mat-table [dataSource]="dataSource">
           <!-- Date Column -->
           <ng-container matColumnDef="date">
