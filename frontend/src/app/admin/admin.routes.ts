@@ -1,7 +1,9 @@
 import { Route } from "@angular/router";
-import { AdminComponent } from "./admin.component";
+import { OverviewComponent } from "./overview/overview.component";
+import { MonthoverviewComponent } from "./monthoverview/monthoverview.component";
 
 export const ADMIN_ROUTES: Route[] = [
-  {path: '', component: AdminComponent},
+  {path: '', component: OverviewComponent},
+  {path: 'month-overview', component: MonthoverviewComponent},
   {path: '**', redirectTo: ''}
 ]

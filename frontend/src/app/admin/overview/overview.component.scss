@@ -1,0 +1,10 @@
+.panel-header {
+  display: grid;
+  grid-template-columns: 4fr 3fr 5fr;
+  align-items: center;
+  gap: 1rem;
+
+  > button {
+    justify-self: left;
+  }
+}
