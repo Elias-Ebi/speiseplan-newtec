@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/database/entitites/user.entity';
+import { User } from 'src/data/entitites/user.entity';
 import { Repository } from 'typeorm';
 import { JwtPayload } from './models/jwt-payload';
 
@@ -35,7 +35,7 @@ export class AuthService {
     });
   }
 
-  login(user: User): {accessToken: string} {
+  login(user: User): { accessToken: string } {
     const payload: JwtPayload = {
       sub: user.email,
       name: user.name,

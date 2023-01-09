@@ -9,7 +9,7 @@ import {
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { SkipAuth } from './decorators/skip-auth.decorator';
-import { User } from '../database/entitites/user.entity';
+import { User } from '../data/entitites/user.entity';
 
 @Controller('auth')
 export class AuthController {
