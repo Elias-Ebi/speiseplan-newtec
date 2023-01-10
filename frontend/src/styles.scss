@@ -103,3 +103,19 @@ button {
   --mdc-snackbar-container-color: var(--clrPrimary);
   button {background:var(--clrPrimary); color: white !important}
 }
+
+
+app-order-card {
+  background-color: white;
+  border: 1px solid var(--clrLine);
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--clrLightBlue);
+  }
+
+  &.selected {
+    background-color: var(--clrLightBlue);
+  }
+}
