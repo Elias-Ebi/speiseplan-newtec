@@ -1,0 +1,29 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+
+  // span
+  @for $i from 1 through 12 {
+    .span-#{$i} {
+      grid-column: span #{$i};
+    }
+  }
+
+  // start
+  @for $i from 1 through 12 {
+    .start-#{$i} {
+      grid-column-start: #{$i};
+    }
+  }
+
+  // justify self
+  .justify-self-end {
+    justify-self: end;
+  }
+}
+
+// align items
+.align-center {
+  align-items: center;
+}

@@ -1,14 +1,14 @@
 <div class="main-content">
   <!-- Top Boxes -->
-  <section class="box-home-container">
+  <section class="grid">
     <!-- Räuberteller -->
-    <div class="box-home">
+    <div class="span-6 box-home">
       <h2>Verfügbare Räuberteller ({{banditPlates.length}})</h2>
       <button (click)="openBanditPlateDialog()" color="primary" mat-flat-button>Anzeigen</button>
     </div>
 
     <!-- Saldo -->
-    <div class="box-home">
+    <div class="span-6 box-home">
       <h2>Saldo {{date | monthName}} {{date.year}}</h2>
       <h2 class="clr-black">{{saldo | euro}}</h2>
     </div>
@@ -20,7 +20,7 @@
     <hr class="bg-neutral"/>
 
     <!-- Cards -->
-    <div class="order-card-container">
+    <div class="grid">
       <app-order-card
         *ngFor="let menu of menues"
         [amount]="menu.amount"
@@ -29,7 +29,7 @@
         [name]="menu.name"
         [ngClass]="{'selected': menu.ordered}"
         [selected]="menu.ordered"
-        class="mat-elevation-z1"
+        class="span-4 mat-elevation-z1"
       >
       </app-order-card>
     </div>
@@ -43,21 +43,22 @@
     <!-- List -->
     <div class="list-container">
       <ng-container *ngFor="let order of myOrderToday; let last = last">
-        <div class="my-order-item-container">
+        <div class="grid align-center">
           <!-- Name -->
-          <div class="icon-with-text">
+          <div class="span-3 icon-with-text">
             <mat-icon>person</mat-icon>
             <p>{{order.name}}</p>
           </div>
 
           <!-- Meal -->
-          <div class="icon-with-text">
+          <div class="span-7 icon-with-text">
             <mat-icon>restaurant</mat-icon>
             <p>{{order.meal}}</p>
           </div>
 
           <button
             [disabled]="order.offered"
+            class="span-2 justify-self-end"
             color="primary"
             mat-flat-button
           >
@@ -78,25 +79,26 @@
     <!-- List -->
     <div class="list-container">
       <ng-container *ngFor="let order of myOrders; let last = last">
-        <div class="open-order-item-container">
+        <div class="grid align-center">
           <!-- Date -->
-          <p class="clr-primary link" routerLink="/bestellen">{{order.date | weekdayName}}
-            , {{order.date.toLocaleString()}}</p>
+          <p class="span-3 clr-primary link" routerLink="/bestellen">
+            {{order.date | weekdayName}}, {{order.date.toLocaleString()}}
+          </p>
 
           <!-- Meal -->
-          <div class="icon-with-text">
+          <div class="span-4 icon-with-text">
             <mat-icon>restaurant</mat-icon>
             <p>{{order.meals.join(", ")}}</p>
           </div>
 
           <!-- Guests -->
-          <div class="icon-with-text">
+          <div class="span-4 icon-with-text">
             <mat-icon fontSet="material-icons-outlined">group_add</mat-icon>
             <p>{{order.guests}}</p>
           </div>
 
           <!-- Cancel -->
-          <button class="icon-button" mat-icon-button>
+          <button class="span-1 justify-self-end icon-button" mat-icon-button>
             <mat-icon>no_food</mat-icon>
           </button>
         </div>

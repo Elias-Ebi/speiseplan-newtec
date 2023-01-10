@@ -3,6 +3,7 @@
 @use "styles/font-styles";
 @use "styles/utils";
 @use "styles/material";
+@use "styles/grid";
 
 body {
   background-color: var(--clrBackground);
@@ -42,12 +43,12 @@ button {
 .section {
   display: grid;
   gap: 1rem;
-}
 
-.section-headline-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  &-headline-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .list-container {
@@ -95,4 +96,10 @@ button {
   &:hover {
     text-decoration: underline;
   }
+}
+
+.success-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--clrPrimary);
+  button {background:var(--clrPrimary); color: white !important}
 }
