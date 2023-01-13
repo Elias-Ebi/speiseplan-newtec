@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { OrderCardComponent } from "../shared/components/order-card/order-card.component";
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {OrderCardComponent} from "../shared/components/order-card/order-card.component";
+import {MatIconModule} from "@angular/material/icon";
+import {MatButtonModule} from "@angular/material/button";
+import {MatTabsModule} from "@angular/material/tabs";
+import {Temporal} from "@js-temporal/polyfill";
+import {FullDatePipe} from "../../shared/pipes/full-date.pipe";
 
 @Component({
   selector: 'app-order',
   standalone: true,
-  imports: [CommonModule, OrderCardComponent, MatIconModule, MatButtonModule],
+  imports: [CommonModule, OrderCardComponent, MatIconModule, MatButtonModule, MatTabsModule, FullDatePipe],
   templateUrl: './order.component.html',
   styleUrls: ['./order.component.scss']
 })
@@ -40,4 +43,58 @@ export class OrderComponent {
     {name: 'Ich', meal: 'Schnitzel'},
     {name: 'Draco Malfoy', meal: 'Salat Sizilia'}
   ];
+
+  data = [
+    {
+      datum: Temporal.PlainDate.from("2022-12-01"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },
+    {
+      datum: Temporal.PlainDate.from("2022-12-02"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },
+    {
+      datum: Temporal.PlainDate.from("2022-12-03"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },    {
+      datum: Temporal.PlainDate.from("2022-11-04"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },    {
+      datum: Temporal.PlainDate.from("2022-11-05"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },    {
+      datum: Temporal.PlainDate.from("2022-11-06"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },    {
+      datum: Temporal.PlainDate.from("2022-11-07"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },    {
+      datum: Temporal.PlainDate.from("2022-11-08"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },    {
+      datum: Temporal.PlainDate.from("2022-11-09"),
+      meals: this.menues,
+      orders: [],
+      guestOrders: this.guestOrders
+    },
+
+
+
+  ]
 }
