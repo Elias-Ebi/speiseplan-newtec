@@ -1,9 +1,11 @@
-import { Temporal } from "@js-temporal/polyfill";
+import { Temporal } from '@js-temporal/polyfill';
+import { Category } from './category';
 
 export interface Meal {
-    mealId: string;
-    mealName: string;
-    mealDescription: string;
-    mealPrice: number;
-    mealDate: Temporal.PlainDate;
+  id: string;
+  name: string;
+  description: string;
+  category: Category;
+  total: number;
+  date: Temporal.PlainDate;
 }

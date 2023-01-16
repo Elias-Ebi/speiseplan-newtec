@@ -1,5 +1,8 @@
+import { Category } from "./category";
+
 export interface MealTemplate {
-  mealTemplateId: number;
-  mealTemplateName: string;
-  mealTemplateDescription: string;
+  id: string;
+  name: string;
+  category: Category;
+  description: string;
 }

@@ -1,11 +1,12 @@
-import { Temporal } from "@js-temporal/polyfill";
+import { Temporal } from '@js-temporal/polyfill';
+import { User } from './user';
 
 export interface Order {
-    orderId: number;
-    orderTotal: number;
-    buyer: string;
-    orderDate: Temporal.PlainDate;
-    isGuestOrder: boolean;
-    guestName: string | undefined;
-    isOrderOffered: boolean;
+  id: string;
+  total: number;
+  user: User;
+  date: Temporal.PlainDate;
+  isGuestOrder: boolean;
+  guestName: string | undefined;
+  isOrderOffered: boolean;
 }
