@@ -6,6 +6,7 @@ export interface OrderMonth {
   total: number;
   user: User;
   month: number;
+  year: number;
   orders: Order[];
   isPaid: boolean;
 }
