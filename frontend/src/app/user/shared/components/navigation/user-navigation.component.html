@@ -3,24 +3,24 @@
     <!-- Logo and Admin Area-->
     <div class="logo-container">
       <img alt="NewTec Speiseplan Logo" class="link logo" routerLink="/" src="/assets/logo.svg">
-      <p *ngIf="authService.profile.isAdmin" class="nav-link" routerLink="/admin">Admin-Bereich</p>
+      <p *ngIf="isAdmin$ | async" class="nav-link" routerLink="/admin">Admin-Bereich</p>
     </div>
 
     <!-- Links -->
     <ul class="links-container">
-      <li class="nav-link">
+      <li>
         <mat-icon>notifications</mat-icon>
       </li>
 
-      <li class="nav-link" routerLink="/bestellen">
+      <li routerLink="/bestellen">
         <p>Bestellen</p>
       </li>
 
-      <li class="nav-link" routerLink="/historie">
+      <li routerLink="/historie">
         <p>Historie</p>
       </li>
 
-      <li (click)="authService.logout()" class="nav-link">
+      <li (click)="logout()">
         <p>Logout</p>
       </li>
     </ul>

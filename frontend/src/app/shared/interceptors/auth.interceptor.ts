@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Router } from "@angular/router";
-import { ACCESS_TOKEN_KEY } from "../shared/services/auth.service";
+import { ACCESS_TOKEN_KEY } from "../services/auth.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -23,8 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           this.router.navigateByUrl('/auth/login');
         }
-        return throwError(() => {
-        });
+        return throwError(() => {});
       })
     );
   }

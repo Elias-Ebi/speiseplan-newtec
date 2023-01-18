@@ -34,9 +34,13 @@ button {
   margin: 0 auto;
 }
 
-.main-content {
+.content {
   display: grid;
   gap: 2.5rem;
+}
+
+.main-content {
+  @extend .content;
   margin: 2.5rem 0;
 }
 
@@ -102,4 +106,20 @@ button {
   color: white;
   --mdc-snackbar-container-color: var(--clrPrimary);
   button {background:var(--clrPrimary); color: white !important}
+}
+
+
+app-order-card {
+  background-color: white;
+  border: 1px solid var(--clrLine);
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--clrLightBlue);
+  }
+
+  &.selected {
+    background-color: var(--clrLightBlue);
+  }
 }

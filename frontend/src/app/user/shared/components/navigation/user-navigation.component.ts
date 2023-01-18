@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 import { AuthService } from "../../../../shared/services/auth.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-user-navigation',
@@ -12,6 +13,13 @@ import { AuthService } from "../../../../shared/services/auth.service";
   styleUrls: ['./user-navigation.component.scss']
 })
 export class UserNavigationComponent {
-  constructor(public authService: AuthService) {
+  isAdmin$: Observable<boolean>;
+
+  constructor(private authService: AuthService) {
+    this.isAdmin$ = this.authService.isAdmin$;
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }
