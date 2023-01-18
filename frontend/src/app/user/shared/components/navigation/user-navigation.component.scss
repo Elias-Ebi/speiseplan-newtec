@@ -9,6 +9,10 @@ nav {
   height: 100%;
   align-items: center;
   justify-content: space-between;
+
+  img, p, mat-icon {
+    cursor: pointer;
+  }
 }
 
 .logo-container {
@@ -18,19 +22,10 @@ nav {
 }
 
 .logo {
-  cursor: pointer;
   height: 3.75rem;
 }
 
 .links-container {
   display: flex;
   gap: 2rem;
-
-  li {
-    height: fit-content;
-  }
-}
-
-.nav-link {
-  cursor: pointer;
 }

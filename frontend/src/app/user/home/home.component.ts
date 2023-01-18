@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
 import { MatListModule } from "@angular/material/list";
@@ -11,28 +11,31 @@ import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { BanditPlateDialogComponent } from "./bandit-plate-dialog/bandit-plate-dialog.component";
 import { WeekdayNamePipe } from "../../shared/pipes/weekday-name.pipe";
 import { RouterLink } from "@angular/router";
+import { ApiService } from "../../shared/services/api.service";
+import { Order } from "../../shared/models/order";
+import { FullDatePipe } from "../../shared/pipes/full-date.pipe";
+import { DateService } from "../../shared/services/date.service";
+import * as _ from "lodash";
+import PlainDate = Temporal.PlainDate;
+
+interface OpenOrder {
+  date: PlainDate;
+  mealNames: string[],
+  guests: number
+}
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule, WeekdayNamePipe, RouterLink],
+  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule, WeekdayNamePipe, RouterLink, FullDatePipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
-  date = Temporal.Now.plainDateISO();
-  banditPlates = [
-    {name: "Harry Potter", description: "Fleischküchle in Zwiebelsoße mit Kartoffelpüree und Rahmkarotten"},
-    {
-      name: "Albus Dumbledore",
-      description: "Salat “Sizilia” Tomaten, Basilikum, Zuchinistreifen, Artischoken, Thunfisch, Oliven, Orangen und Balsamicodressing"
-    },
-  ];
-  myOrderToday = [
-    {name: 'Ich', meal: 'Schnitzel', offered: false},
-    {name: 'Draco Malfoy', meal: 'Salat Sizilia', offered: true},
-  ];
-  saldo: number = 38.5;
+export class HomeComponent implements OnInit {
+  latestUnchangableDate: PlainDate;
+  currentDate: PlainDate;
+  banditPlates: Order[] = [];
+  saldo = 0;
   menues = [
     {
       icon: "assets/food_icons/meat_icon.png",
@@ -56,46 +59,43 @@ export class HomeComponent {
       ordered: false
     }
   ];
+  todaysOrders: Order[] = [];
+  openOrders: OpenOrder[] = [];
 
-  myOrders = [
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Bratlinge", "Salat"],
-      guests: 7
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Fleischküchle"],
-      guests: 0
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Burger"],
-      guests: 0
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Salat"],
-      guests: 0
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Pommes"],
-      guests: 3
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Schnitzel"],
-      guests: 0
-    },
-  ];
-
-  constructor(private dialog: MatDialog) {
+  constructor(private dialog: MatDialog, private apiService: ApiService, private dateService: DateService) {
+    this.latestUnchangableDate = this.dateService.getLatestUnchangeableDate();
+    this.currentDate = Temporal.Now.plainDateISO();
   }
 
   openBanditPlateDialog(): void {
     this.dialog.open(BanditPlateDialogComponent, {
       data: this.banditPlates
     });
+  }
+
+  async ngOnInit(): Promise<void> {
+    const banditPlatePromise = this.apiService.getBanditPlates();
+    const saldoPromise = this.apiService.getSaldo();
+    const todaysOrdersPromise = this.apiService.getTodaysOrders();
+    const openOrdersPromise = this.apiService.getOpenOrders();
+
+    const [banditPlates, saldo, todaysOrders, openOrders] = await Promise.all([banditPlatePromise, saldoPromise, todaysOrdersPromise, openOrdersPromise]);
+
+    this.banditPlates = banditPlates;
+    this.saldo = saldo;
+    this.todaysOrders = todaysOrders;
+    this.openOrders = this.transformOpenOrders(openOrders);
+  }
+
+  private transformOpenOrders(orders: Order[]): OpenOrder[] {
+    const groupedOrders = _.groupBy(orders, 'date');
+
+    return Object.keys(groupedOrders).map((dateString) => {
+      return {
+        date: Temporal.PlainDate.from(dateString),
+        mealNames: groupedOrders[dateString].filter(order => !order.guestName).map(order => order.meal.name),
+        guests: groupedOrders[dateString].filter(order => order.guestName).length
+      } as OpenOrder;
+    })
   }
 }

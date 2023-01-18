@@ -1,4 +1,4 @@
-export interface User {
+export interface Profile {
   email: string;
   name: string;
   isAdmin: boolean;
