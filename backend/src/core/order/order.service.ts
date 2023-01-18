@@ -162,8 +162,15 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
-  async deleteOrder(id: string, user: AuthUser): Promise<void> {
+  async deleteOrder(id: string, user: AuthUser, considerOrderableDate: boolean): Promise<void> {
     const order = await this.getOrder(id);
+
+    const orderDate = PlainDate.from(order.date);
+    const firstOrderableDate = this.dateService.getNextOrderableDate();
+
+    if (considerOrderableDate && PlainDate.compare(orderDate, firstOrderableDate) === -1) {
+      throw new BadRequestException('Too late to delete this order.');
+    }
 
     if (!this.canEdit(order, user)) {
       throw new UnauthorizedException();
