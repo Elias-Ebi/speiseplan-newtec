@@ -11,8 +11,8 @@ export class FullDatePipe implements PipeTransform {
   transform(date: Temporal.PlainDate): string {
     const options: DateTimeFormatOptions = {
       weekday: "long",
-      year: "2-digit",
-      month: "numeric",
+      year: "numeric",
+      month: "2-digit",
       day: "numeric",
     };
     return date.toLocaleString('default', options);

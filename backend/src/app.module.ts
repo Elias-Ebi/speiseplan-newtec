@@ -3,27 +3,34 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './data/entitites/user.entity';
-import { ConfigModule } from '@nestjs/config';
-import * as process from 'process';
+import { CoreModule } from './core/core.module';
+import { environment } from './environment';
+import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
-    AuthModule,
-    ConfigModule.forRoot({
-      envFilePath: ['.env.local', '.env'],
-    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DB_URL,
-      entities: [User],
-      synchronize: true,
+      url: environment.dbUrl,
+      autoLoadEntities: true,
+      synchronize: environment.synchronize,
+      migrationsTableName: 'migrations',
+      migrations: ["src/data/migrations/*{.ts,.js}"],
+      migrationsRun: environment.migrationsRun,
     }),
+    AuthModule,
+    CoreModule,
+    SharedModule
   ],
   providers: [
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AdminOnlyGuard,
     },
   ],
 })

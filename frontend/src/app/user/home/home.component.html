@@ -1,25 +1,23 @@
 <div class="main-content">
-  <!-- Top Boxes -->
   <section class="grid">
     <!-- Räuberteller -->
     <div class="span-6 box-home">
-      <h2>Verfügbare Räuberteller ({{banditPlates.length}})</h2>
-      <button (click)="openBanditPlateDialog()" color="primary" mat-flat-button>Anzeigen</button>
+      <h2>Verfügbare Räuberteller: {{banditPlates.length}}</h2>
+      <button (click)="openBanditPlateDialog()" color="primary" mat-flat-button [disabled]="!banditPlates.length">Anzeigen</button>
     </div>
 
     <!-- Saldo -->
     <div class="span-6 box-home">
-      <h2>Saldo {{date | monthName}} {{date.year}}</h2>
+      <h2>Saldo {{currentDate | monthName}} {{currentDate.year}}</h2>
       <h2 class="clr-black">{{saldo | euro}}</h2>
     </div>
   </section>
 
   <!-- Schnelle Bestellung -->
   <section class="section">
-    <h2>Schnelle Bestellung — Dienstag 25.10.22</h2>
+    <h2>Schnelle Bestellung — 24.10.22</h2>
     <hr class="bg-neutral"/>
 
-    <!-- Cards -->
     <div class="grid">
       <app-order-card
         *ngFor="let menu of menues"
@@ -37,37 +35,38 @@
 
   <!-- Meine Bestellung -->
   <section class="section">
-    <h2>Meine Bestellung — Montag 24.10.22</h2>
+    <h2>Meine Bestellung — {{latestUnchangableDate | fullDate}}</h2>
     <hr class="bg-neutral"/>
 
-    <!-- List -->
     <div class="list-container">
-      <ng-container *ngFor="let order of myOrderToday; let last = last">
+      <ng-container *ngFor="let order of todaysOrders; let last = last;">
         <div class="grid align-center">
           <!-- Name -->
           <div class="span-3 icon-with-text">
             <mat-icon>person</mat-icon>
-            <p>{{order.name}}</p>
+            <p>{{order.guestName || "Ich"}}</p>
           </div>
 
-          <!-- Meal -->
+          <!-- Meal Name -->
           <div class="span-7 icon-with-text">
             <mat-icon>restaurant</mat-icon>
-            <p>{{order.meal}}</p>
+            <p>{{order.meal.name}}</p>
           </div>
 
           <button
-            [disabled]="order.offered"
+            [disabled]="order.isBanditplate"
             class="span-2 justify-self-end"
             color="primary"
             mat-flat-button
           >
-            {{order.offered ? "Angeboten" : "Anbieten"}}
+            {{order.isBanditplate ? "Angeboten" : "Anbieten"}}
           </button>
         </div>
 
         <hr *ngIf="!last">
       </ng-container>
+
+      <p *ngIf="!todaysOrders.length">Keine Bestellungen vorhanden.</p>
     </div>
   </section>
 
@@ -76,28 +75,28 @@
     <h2>Offene Bestellungen</h2>
     <hr class="bg-neutral"/>
 
-    <!-- List -->
     <div class="list-container">
-      <ng-container *ngFor="let order of myOrders; let last = last">
+      <ng-container *ngFor="let order of openOrders; let last = last">
         <div class="grid align-center">
           <!-- Date -->
           <p class="span-3 clr-primary link" routerLink="/bestellen">
-            {{order.date | weekdayName}}, {{order.date.toLocaleString()}}
+            {{order.date | fullDate}}
           </p>
 
           <!-- Meal -->
           <div class="span-4 icon-with-text">
             <mat-icon>restaurant</mat-icon>
-            <p>{{order.meals.join(", ")}}</p>
+            <p>{{order.mealNames.join(", ")}}</p>
           </div>
 
           <!-- Guests -->
-          <div class="span-4 icon-with-text">
+          <div *ngIf="order.guests" class="span-4 icon-with-text">
             <mat-icon fontSet="material-icons-outlined">group_add</mat-icon>
             <p>{{order.guests}}</p>
           </div>
 
-          <!-- Cancel -->
+          <div *ngIf="!order.guests" class="span-4"></div>
+
           <button class="span-1 justify-self-end icon-button" mat-icon-button>
             <mat-icon>no_food</mat-icon>
           </button>
@@ -105,6 +104,8 @@
 
         <hr *ngIf="!last">
       </ng-container>
+
+      <p *ngIf="!openOrders.length">Keine Bestellungen vorhanden.</p>
     </div>
   </section>
 </div>

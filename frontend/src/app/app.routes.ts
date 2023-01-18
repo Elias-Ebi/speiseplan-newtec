@@ -1,4 +1,5 @@
 import { Route } from "@angular/router";
+import { AdminGuard } from "./shared/guards/admin.guard";
 
 export const APP_ROUTES: Route[] = [
   {
@@ -14,7 +15,8 @@ export const APP_ROUTES: Route[] = [
   {
     path: 'admin',
     loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
-    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES)
+    loadChildren: () => import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
+    canActivate: [AdminGuard]
   },
   {path: '**', redirectTo: '', pathMatch: 'full'}
 ];

@@ -1,22 +1,20 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { User } from './user.entity';
-import { Temporal } from '@js-temporal/polyfill';
 import { Meal } from './meal.entity';
 import { OrderMonth } from './order-month.entity';
-import PlainDate = Temporal.PlainDate;
+import { Profile } from './profile.entity';
 
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User)
-  user: User;
+  @ManyToOne(() => Profile)
+  profile: Profile;
 
-  @Column()
-  date: PlainDate;
+  @Column({ type: 'date' })
+  date: string;
 
-  @ManyToOne(() => OrderMonth)
+  @ManyToOne(() => OrderMonth, (orderMonth) => orderMonth.orders)
   orderMonth: OrderMonth;
 
   @ManyToOne(() => Meal)
@@ -25,9 +23,6 @@ export class Order {
   @Column()
   guestName: string;
 
-  @Column()
-  total: number;
-
-  @Column()
+  @Column({ default: false })
   isBanditplate: boolean;
 }

@@ -11,3 +11,9 @@
 .mat-mdc-icon-button .mat-mdc-button-persistent-ripple.mat-mdc-button-persistent-ripple {
   border-radius: inherit;
 }
+
+/* Loading Spinner Dialog */
+.spinner-dialog .mdc-dialog__surface.mdc-dialog__surface.mdc-dialog__surface {
+  border-radius: 2.5rem;
+  padding: 1rem;
+}

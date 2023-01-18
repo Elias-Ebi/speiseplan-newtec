@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { environment } from "../../environment";
-import { User } from "../models/user";
-import { lastValueFrom } from "rxjs";
+import { BehaviorSubject, lastValueFrom, map, Observable } from "rxjs";
 import { Router } from "@angular/router";
+import { Profile } from "../models/profile";
 
 export const ACCESS_TOKEN_KEY = 'access_token';
 
@@ -11,14 +11,27 @@ export const ACCESS_TOKEN_KEY = 'access_token';
   providedIn: 'root',
 })
 export class AuthService {
-  profile: User = {email: '', name: '', isAdmin: false};
+  private profileSource$ = new BehaviorSubject({email: '', name: '', isAdmin: false});
+
 
   constructor(private httpClient: HttpClient, private router: Router) {
   }
 
-  register(email: string, name: string, password: string): Promise<User> {
+
+  get profile$(): Observable<Profile> {
+    return this.profileSource$.asObservable()
+  }
+
+  get isAdmin$(): Observable<boolean> {
+    return this.profile$.pipe(
+      map((profile) => profile.isAdmin)
+    );
+  }
+
+
+  register(email: string, name: string, password: string): Promise<Profile> {
     const payload = {email, name, password};
-    const response$ = this.httpClient.post<User>(`${environment.apiUrl}/auth/register`, payload);
+    const response$ = this.httpClient.post<Profile>(`${environment.apiUrl}/auth/register`, payload);
     return lastValueFrom(response$);
   }
 
@@ -29,6 +42,7 @@ export class AuthService {
     const {accessToken} = await lastValueFrom(response$);
     localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
     await this.getAndSetProfile();
+
     this.router.navigateByUrl('/');
   }
 
@@ -38,7 +52,8 @@ export class AuthService {
   }
 
   async getAndSetProfile(): Promise<void> {
-    const response$ = this.httpClient.get<User>(`${environment.apiUrl}/auth/profile`);
-    this.profile = await lastValueFrom(response$);
+    const response$ = this.httpClient.get<Profile>(`${environment.apiUrl}/auth/profile`);
+    const profile = await lastValueFrom(response$);
+    this.profileSource$.next(profile);
   }
 }

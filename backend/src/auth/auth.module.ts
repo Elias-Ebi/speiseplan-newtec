@@ -5,21 +5,18 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import * as process from 'process';
 import { User } from '../data/entitites/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { environment } from '../environment';
+import { Profile } from '../data/entitites/profile.entity';
 
 @Module({
   imports: [
     PassportModule,
-    ConfigModule.forRoot({
-      envFilePath: ['.env.local', '.env'],
-    }),
     JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
+      secret: environment.jwtSecretKey,
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Profile]),
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],

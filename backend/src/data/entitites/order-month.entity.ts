@@ -5,16 +5,17 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './user.entity';
 import { Order } from './order.entity';
+import { DecimalTransformer } from '../transformers/decimal.transformer';
+import { Profile } from './profile.entity';
 
 @Entity()
 export class OrderMonth {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User)
-  user: User;
+  @ManyToOne(() => Profile)
+  profile: Profile;
 
   @Column()
   month: number;
@@ -25,9 +26,9 @@ export class OrderMonth {
   @OneToMany(() => Order, (order) => order.orderMonth)
   orders: Order[];
 
-  @Column()
+  @Column({ type: 'decimal', precision: 5, scale: 2, transformer: new DecimalTransformer() })
   total: number;
 
-  @Column()
+  @Column({ default: false })
   paid: boolean;
 }
