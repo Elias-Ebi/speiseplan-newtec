@@ -15,6 +15,8 @@ import { AdminOnly } from '../../auth/decorators/admin-only.decorator';
 import { Temporal } from '@js-temporal/polyfill';
 import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDate = Temporal.PlainDate;
+import { Temporal } from '@js-temporal/polyfill';
+import PlainDate = Temporal.PlainDate;
 
 @Controller('meals')
 export class MealController {
@@ -31,6 +33,12 @@ export class MealController {
   async getNextOrderable(): Promise<Meal[]> {
     const time = Temporal.Now.plainDateTimeISO();
     return await this.mealService.getNextOrderable(time);
+  }
+
+  @Get('date/:date')
+  async getMealsOn(@Param('date') date: string): Promise<Meal[]> {
+    const requestedDate = PlainDate.from(date);
+    return await this.mealService.getMealsOn(requestedDate);
   }
 
   @Get('date/:date')
