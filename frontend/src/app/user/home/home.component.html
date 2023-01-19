@@ -15,13 +15,14 @@
 
   <!-- Schnelle Bestellung -->
   <section class="section">
-    <h2>Schnelle Bestellung — 24.10.22</h2>
+    <h2>Schnelle Bestellung — {{nextOrderableDate | fullDate}}</h2>
     <hr class="bg-neutral"/>
 
-    <div class="grid">
+    <div class="grid" *ngIf="quickOrderMeals.length">
       <app-order-card
-        *ngFor="let menu of menues"
-        [amount]="menu.amount"
+        (click)="orderOrDelete(menu.id, menu.name, menu.orderId)"
+        *ngFor="let menu of quickOrderMeals"
+        [amount]="menu.orderCount"
         [description]="menu.description"
         [icon]="menu.icon"
         [name]="menu.name"
@@ -31,6 +32,8 @@
       >
       </app-order-card>
     </div>
+
+    <p *ngIf="!quickOrderMeals.length">Für diesen Tag gibt es keine Mahlzeiten zu bestellen.</p>
   </section>
 
   <!-- Meine Bestellung -->

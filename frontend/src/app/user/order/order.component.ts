@@ -9,7 +9,7 @@ import { FullDatePipe } from "../../shared/pipes/full-date.pipe";
 import { ApiService } from "../../shared/services/api.service";
 import { Meal } from "../../shared/models/meal";
 import * as _ from "lodash";
-import { categoryMap } from "../../shared/models/category";
+import { CategoryService } from "../../shared/services/category.service";
 
 @Component({
   selector: 'app-order',
@@ -31,7 +31,7 @@ export class OrderComponent implements OnInit {
     guestOrders: { name: string, meal: string }[]
   }[] = []
 
-  constructor(private apiService: ApiService) {
+  constructor(private apiService: ApiService, private categoryService: CategoryService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -51,6 +51,6 @@ export class OrderComponent implements OnInit {
   }
 
    getIcon(categoryId: string): string {
-    return categoryMap.get(categoryId)?.icon || "";
+    return this.categoryService.getIconFromCategoryID(categoryId);
   }
 }

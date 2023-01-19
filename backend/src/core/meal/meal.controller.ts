@@ -13,6 +13,8 @@ import { Meal } from '../../data/entitites/meal.entity';
 import { MealService } from './meal.service';
 import { AdminOnly } from '../../auth/decorators/admin-only.decorator';
 import { DateService } from '../../shared/date/date.service';
+import { Temporal } from '@js-temporal/polyfill';
+import PlainDate = Temporal.PlainDate;
 
 @Controller('meals')
 export class MealController {
@@ -23,6 +25,12 @@ export class MealController {
   async getOrderableMeals(): Promise<Meal[]> {
     const date = this.dateService.getNextOrderableDate();
     return await this.mealService.getMealsFrom(date);
+  }
+
+  @Get('date/:date')
+  async getMealsOn(@Param('date') date: string): Promise<Meal[]> {
+    const requestedDate = PlainDate.from(date);
+    return await this.mealService.getMealsOn(requestedDate);
   }
 
   @Post()

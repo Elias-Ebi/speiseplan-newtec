@@ -42,7 +42,7 @@ export class OrderController {
   }
 
   @Delete(':id')
-  async deleteOrder(@Param('id') id: string, @Request() req): Promise<void> {
+  async deleteOrder(@Param('id') id: string, @Request() req): Promise<Order> {
     const user = req.user as AuthUser;
     return this.orderService.deleteOrder(id, user, true);
   }

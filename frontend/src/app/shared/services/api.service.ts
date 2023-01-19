@@ -4,6 +4,8 @@ import { Meal } from "../models/meal";
 import { environment } from "../../environment";
 import { lastValueFrom } from "rxjs";
 import { Order } from "../models/order";
+import { Temporal } from "@js-temporal/polyfill";
+import PlainDate = Temporal.PlainDate;
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getMealsOn(date: PlainDate): Promise<Meal[]> {
+    const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/date/${date.toString()}`);
+    return lastValueFrom(response);
+  }
+
   async getTodaysOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
     return lastValueFrom(response);
@@ -35,6 +42,16 @@ export class ApiService {
 
   async getOrderableMeals(): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals`);
+    return lastValueFrom(response);
+  }
+
+  async orderMeal(mealID: string): Promise<Order> {
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}`, {});
+    return lastValueFrom(response);
+  }
+
+  async deleteOrder(orderID: string): Promise<Order> {
+    const response = this.httpClient.delete<Order>(`${environment.apiUrl}/orders/${orderID}`)
     return lastValueFrom(response);
   }
 }

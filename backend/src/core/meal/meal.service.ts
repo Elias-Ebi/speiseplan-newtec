@@ -23,6 +23,16 @@ export class MealService {
     return meal;
   }
 
+  async getMealsOn(date: PlainDate): Promise<Meal[]> {
+    const options: FindManyOptions<Meal> = {
+      where: {
+        date: date.toString()
+      }
+    };
+
+    return this.mealRepository.find(options);
+  }
+
   async getMealsFrom(date: PlainDate): Promise<Meal[]> {
     const options: FindManyOptions<Meal> = {
       where: {

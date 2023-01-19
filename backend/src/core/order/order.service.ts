@@ -162,7 +162,7 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
-  async deleteOrder(id: string, user: AuthUser, considerOrderableDate: boolean): Promise<void> {
+  async deleteOrder(id: string, user: AuthUser, considerOrderableDate: boolean): Promise<Order> {
     const order = await this.getOrder(id);
 
     const orderDate = PlainDate.from(order.date);
@@ -186,7 +186,8 @@ export class OrderService {
 
     meal.orderCount -= 1;
 
-    await Promise.all([this.orderRepository.remove(order), this.orderMonthRepository.save(orderMonth), this.mealRepository.save(meal)]);
+    await Promise.all([this.orderMonthRepository.save(orderMonth), this.mealRepository.save(meal)]);
+    return this.orderRepository.remove(order);
   }
 
   private async mealAlreadyOrdered(mealId: string, email: string): Promise<boolean> {
