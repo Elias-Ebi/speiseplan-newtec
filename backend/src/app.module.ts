@@ -18,6 +18,7 @@ import { SharedModule } from './shared/shared.module';
       migrationsTableName: 'migrations',
       migrations: ["src/data/migrations/*{.ts,.js}"],
       migrationsRun: environment.migrationsRun,
+      ssl: true
     }),
     AuthModule,
     CoreModule,
