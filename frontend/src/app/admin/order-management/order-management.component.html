@@ -62,9 +62,9 @@
 
       <mat-form-field *ngIf="!useDateInterval">
         <mat-label>Datum auswählen</mat-label>
-        <input matInput [matDatepicker]="datepicker" (dateChange)="filterOrdersByDate($event)">
+        <input (dateChange)="filterOrdersByDate($event)" [matDatepicker]="datepicker" matInput>
         <mat-hint>MM/TT/JJJJ</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
         <mat-datepicker #datepicker></mat-datepicker>
       </mat-form-field>
 
@@ -75,7 +75,7 @@
           <input matEndDate placeholder="Enddatum">
         </mat-date-range-input>
         <mat-hint>MM/TT/JJJJ – MM/TT/JJJJ</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-datepicker-toggle [for]="rangePicker" matIconSuffix></mat-datepicker-toggle>
         <mat-date-range-picker #rangePicker></mat-date-range-picker>
       </mat-form-field>
     </div>
@@ -92,8 +92,8 @@
 
         <div class="list-container">
           <mat-slide-toggle
-            [checked]="editMultipleOrders"
             (change)="toggleEditMode()"
+            [checked]="editMultipleOrders"
             color="primary"
             labelPosition="before"
           >
@@ -152,17 +152,17 @@
           <td *matCellDef="let element" mat-cell>
             <div class="action-buttons">
               <button
+                (click)="openEditDialog(element)"
                 class="icon-button-outlined"
                 mat-icon-button
-                (click)="openEditDialog(element)"
               >
                 <mat-icon>edit</mat-icon>
               </button>
 
               <button
+                (click)="openCancelDialog(element)"
                 class="icon-button"
                 mat-icon-button
-                (click)="openCancelDialog(element)"
               >
                 <mat-icon>no_food</mat-icon>
               </button>

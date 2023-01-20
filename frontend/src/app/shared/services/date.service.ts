@@ -7,7 +7,7 @@ import PlainTime = Temporal.PlainTime;
   providedIn: 'root'
 })
 export class DateService {
-  private threshold = Temporal.PlainTime.from({ hour: 13 });
+  private threshold = Temporal.PlainTime.from({hour: 13});
 
   /**
    * Get the latest date where orders can't be changed anymore.
@@ -25,7 +25,7 @@ export class DateService {
 
     if (isFriday && !isBeforeThreshold || isWeekend) {
       const daysToNextMonday = 8 - currentDate.dayOfWeek;
-      return currentDate.add({ days: daysToNextMonday });
+      return currentDate.add({days: daysToNextMonday});
     }
 
     return this.getNextDate(currentDate, currentTime, this.threshold, 0);
@@ -49,12 +49,12 @@ export class DateService {
 
     if (isFriday && isBeforeThreshold || isThursday && !isBeforeThreshold) {
       const daysToNextMonday = 8 - currentDate.dayOfWeek;
-      return currentDate.add({ days: daysToNextMonday });
+      return currentDate.add({days: daysToNextMonday});
     }
 
     if (isFriday && !isBeforeThreshold || isWeekend) {
       const daysToNextMonday = 8 - currentDate.dayOfWeek;
-      return currentDate.add({ days: daysToNextMonday + 1 });
+      return currentDate.add({days: daysToNextMonday + 1});
     }
 
     return this.getNextDate(currentDate, currentTime, this.threshold, 1);
@@ -62,9 +62,9 @@ export class DateService {
 
   private getNextDate(startDate: PlainDate, time: PlainTime, threshold: PlainTime, daysToAdd: number): PlainDate {
     if (PlainTime.compare(time, threshold) >= 0) {
-      return startDate.add({ days: daysToAdd + 1 });
+      return startDate.add({days: daysToAdd + 1});
     }
 
-    return startDate.add({ days: daysToAdd });
+    return startDate.add({days: daysToAdd});
   }
 }

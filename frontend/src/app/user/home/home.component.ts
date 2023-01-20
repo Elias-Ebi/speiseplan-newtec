@@ -15,27 +15,13 @@ import { ApiService } from "../../shared/services/api.service";
 import { Order } from "../../shared/models/order";
 import { FullDatePipe } from "../../shared/pipes/full-date.pipe";
 import { DateService } from "../../shared/services/date.service";
-import * as _ from "lodash";
 import { Meal } from "../../shared/models/meal";
 import { CategoryService } from "../../shared/services/category.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { HomeQuickOrderMeal } from "./models/home-quickorder-meal";
+import { HomeOpenOrderDay } from "./models/home-open-order-day";
+import { HomeUnchangeableOrderDay } from "./models/home-unchangeable-order-day";
 import PlainDate = Temporal.PlainDate;
-
-interface OpenOrder {
-  date: PlainDate;
-  mealNames: string[];
-  guests: number;
-}
-
-interface QuickOrderMeal {
-  id: string;
-  icon: string;
-  name: string;
-  orderCount: number;
-  description: string;
-  ordered: boolean;
-  orderId: string;
-}
 
 @Component({
   selector: 'app-home',
@@ -45,14 +31,13 @@ interface QuickOrderMeal {
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  latestUnchangableDate: PlainDate;
-  nextOrderableDate: PlainDate;
-  currentDate: PlainDate;
-  banditPlates: Order[] = [];
+  banditPlatesDays: HomeUnchangeableOrderDay[] = [];
+  banditPlateCount = 0;
   saldo = 0;
-  quickOrderMeals: QuickOrderMeal[] = [];
-  todaysOrders: Order[] = [];
-  openOrders: OpenOrder[] = [];
+  quickOrderMeals: HomeQuickOrderMeal[] = [];
+  quickOrderDate: PlainDate = Temporal.Now.plainDateISO();
+  unchangeableOrderDays: HomeUnchangeableOrderDay[] = [];
+  openOrdersDays: HomeOpenOrderDay[] = [];
 
   constructor(
     private dialog: MatDialog,
@@ -61,110 +46,179 @@ export class HomeComponent implements OnInit {
     private categoryService: CategoryService,
     private snackBar: MatSnackBar
   ) {
-    this.latestUnchangableDate = this.dateService.getLatestUnchangeableDate();
-    this.nextOrderableDate = this.dateService.getNextOrderableDate();
-    this.currentDate = Temporal.Now.plainDateISO();
   }
 
   openBanditPlateDialog(): void {
     this.dialog.open(BanditPlateDialogComponent, {
-      data: this.banditPlates
+      data: this.banditPlatesDays
     });
   }
 
   async ngOnInit(): Promise<void> {
+    await this.loadDashboard();
+  }
+
+  orderOrDeleteMeal(mealId: string, orderId: string, ordered: boolean) {
+    if (ordered) {
+      this.deleteOrder(orderId);
+      return;
+    }
+
+    this.orderMeal(mealId);
+  }
+
+  async offerOrderAsBanditPlate(orderId: string) {
+    this.apiService.offerBanditPlate(orderId)
+      .then(async (order) => {
+        await this.loadDashboard();
+
+        this.snackBar.open(`${order.meal.name} erfolgreich angeboten.`, '', {
+          duration: 2000,
+          panelClass: 'success-snackbar'
+        });
+      })
+      .catch((err) => {
+        this.snackBar.open(`Das Menü konnte nicht als Räuberteller angeboten werden! ${err.message.message}`, '', {duration: 2000});
+      });
+  }
+
+  async deleteOrdersOn(date: PlainDate) {
+    this.apiService.deleteOrdersOn(date).then(async () => {
+      await this.loadDashboard();
+
+      this.snackBar.open(`Bestellungen für den ${date.toLocaleString()} erfolgreich storniert.`, '', {
+        duration: 2000,
+        panelClass: 'success-snackbar'
+      });
+    }).catch((err) => {
+      this.snackBar.open(`Bestellungen konnten nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
+    })
+  }
+
+  private async loadDashboard(): Promise<void> {
     const banditPlatePromise = this.apiService.getBanditPlates();
     const saldoPromise = this.apiService.getSaldo();
-    const quickOrderMealsPromise = this.apiService.getMealsOn(this.nextOrderableDate);
-    const todaysOrdersPromise = this.apiService.getTodaysOrders();
+    const quickOrderMealsPromise = this.apiService.getNextOrderableMeals();
+    const todaysOrdersPromise = this.apiService.getUnchangeableOrders();
     const openOrdersPromise = this.apiService.getOpenOrders();
 
     const [banditPlates, saldo, quickOrderMeals, todaysOrders, openOrders] = await Promise.all(
       [banditPlatePromise, saldoPromise, quickOrderMealsPromise, todaysOrdersPromise, openOrdersPromise]
     );
 
-    this.banditPlates = banditPlates;
+    this.banditPlatesDays = this.transformBanditPlates(banditPlates);
+    this.banditPlateCount = banditPlates.length;
     this.saldo = saldo;
+
     this.quickOrderMeals = this.transformQuickOrderMeals(quickOrderMeals, openOrders);
-    this.todaysOrders = todaysOrders;
-    this.openOrders = this.transformOpenOrders(openOrders);
+    if (quickOrderMeals.length) {
+      const dateString = quickOrderMeals[0].date
+      this.quickOrderDate = PlainDate.from(dateString);
+    }
+
+    this.unchangeableOrderDays = this.transformUnchangeableOrders(todaysOrders);
+    this.openOrdersDays = this.transformOpenOrders(openOrders);
   }
 
-  private transformOpenOrders(orders: Order[]): OpenOrder[] {
-    const groupedOrders = _.groupBy(orders, 'date');
+  private orderMeal(mealId: string) {
+    this.apiService.orderMeal(mealId).then(async (order) => {
+      await this.loadDashboard();
 
-    return Object.keys(groupedOrders).map((dateString) => {
+      this.snackBar.open(`${order.meal.name} erfolgreich bestellt.`, '', {
+        duration: 2000,
+        panelClass: 'success-snackbar'
+      });
+    }).catch((err) => {
+      this.snackBar.open(`Menü konnte nicht bestellt werden! ${err.message.message}`, '', {duration: 2000});
+    });
+  }
+
+  private deleteOrder(orderId: string) {
+    this.apiService.deleteOrder(orderId).then(async (order) => {
+      await this.loadDashboard();
+
+      this.snackBar.open(`${order.meal.name} erfolgreich storniert.`, '', {
+        duration: 2000,
+        panelClass: 'success-snackbar'
+      });
+    }).catch((err) => {
+      this.snackBar.open(`Bestellung konnte nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
+    });
+  }
+
+  private transformBanditPlates(orders: Order[]): HomeUnchangeableOrderDay[] {
+    const groupedOrders = this.groupBy(orders, 'date');
+
+    return Object.entries(groupedOrders).map(([dateString, orders]) => {
       return {
         date: Temporal.PlainDate.from(dateString),
-        mealNames: groupedOrders[dateString].filter(order => !order.guestName).map(order => order.meal.name),
-        guests: groupedOrders[dateString].filter(order => order.guestName).length
-      } as OpenOrder;
+        orders: orders
+      }
     })
   }
 
-  private transformQuickOrderMeals(meals: Meal[], openOrders: Order[]): QuickOrderMeal[] {
+  private transformQuickOrderMeals(meals: Meal[], openOrders: Order[]): HomeQuickOrderMeal[] {
     return meals.map((meal) => {
       const orderForMeal = openOrders.find((order) => order.meal.id === meal.id);
+      const category = this.categoryService.getCategory(meal.categoryId);
+
       return {
         id: meal.id,
-        icon: this.categoryService.getIconFromCategoryID(meal.categoryId),
+        icon: category?.icon || '',
+        orderIndex: category?.orderIndex || -1,
         name: meal.name,
         orderCount: meal.orderCount,
         description: meal.description,
         ordered: !!orderForMeal,
         orderId: orderForMeal?.id || ''
       }
-    });
+    }).sort((a, b) => this.sortByNumber(a.orderIndex, b.orderIndex) || this.sortByString(a.id, b.id));
   }
 
-  private async updateOpenOrders(): Promise<OpenOrder[]> {
-    const openOrders = await this.apiService.getOpenOrders();
-    return this.transformOpenOrders(openOrders);
-  }
+  private transformUnchangeableOrders(orders: Order[]): HomeUnchangeableOrderDay[] {
+    const groupedOrders = this.groupBy(orders, 'date');
 
-  orderOrDelete(mealId: string, mealName: string, orderId: string) {
-    if (!orderId) {
-      this.orderMeal(mealId, mealName);
-    } else {
-      this.deleteOrder(orderId, mealName);
-    }
-  }
-
-  private orderMeal(mealId: string, mealName: string) {
-    this.apiService.orderMeal(mealId).then(async (order) => {
-      const mealToSelect = this.quickOrderMeals.find((meal) => meal.id === mealId);
-
-      if (mealToSelect) {
-        mealToSelect.ordered = true;
-        mealToSelect.orderId = order.id;
-        mealToSelect.orderCount = order.meal.orderCount;
+    return Object.entries(groupedOrders).map(([dateString, orders]) => {
+      return {
+        date: Temporal.PlainDate.from(dateString),
+        orders: orders.sort((a, b) => this.sortByString(a.guestName, b.guestName) || this.sortByString(a.id, b.id))
       }
-
-      this.saldo += order.meal.total;
-      this.openOrders = await this.updateOpenOrders();
-
-      this.snackBar.open(`${mealName} erfolgreich bestellt.`, '', {duration: 2000, panelClass: 'success-snackbar'});
-    }).catch((err) => {
-      this.snackBar.open(`${mealName} konnte nicht bestellt werden! ${err.message.message}`, '', {duration: 2000});
-    });
+    }).sort((a, b) => this.sortByDate(a.date, b.date));
   }
 
-  private deleteOrder(orderId: string, mealName: string) {
-    this.apiService.deleteOrder(orderId).then(async (order) => {
-      const mealToSelect = this.quickOrderMeals.find((meal) => meal.orderId === orderId);
+  private transformOpenOrders(orders: Order[]): HomeOpenOrderDay[] {
+    const groupedOrders = this.groupBy(orders, 'date');
 
-      if (mealToSelect) {
-        mealToSelect.ordered = false;
-        mealToSelect.orderId = '';
-        mealToSelect.orderCount = order.meal.orderCount;
+    return Object.entries(groupedOrders).map(([dateString, orders]) => {
+      const sortedById = orders.sort((a, b) => this.sortByString(a.id, b.id));
 
-        this.saldo -= order.meal.total;
-        this.openOrders = await this.updateOpenOrders();
-
-        this.snackBar.open(`${mealName} erfolgreich storniert.`, '', {duration: 2000, panelClass: 'success-snackbar'});
+      return {
+        date: Temporal.PlainDate.from(dateString),
+        orders: sortedById,
+        mealNames: sortedById.filter(order => !order.guestName).map(order => order.meal.name),
+        guestCount: sortedById.filter(order => order.guestName).length
       }
-    }).catch((err) => {
-      this.snackBar.open(`${mealName} konnte nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
-    });
+    }).sort((a, b) => this.sortByDate(a.date, b.date));
+  }
+
+  private groupBy<T, K extends keyof T>(list: T[], key: K): { [key: string]: T[] } {
+    return list.reduce((acc, item) => {
+      const group = item[key] as string;
+      acc[group] = acc[group] || [];
+      acc[group].push(item);
+      return acc;
+    }, {} as { [key: string]: T[] });
+  }
+
+  private sortByNumber(a: number, b: number): number {
+    return a - b;
+  }
+
+  private sortByString(a: string, b: string): number {
+    return a.localeCompare(b)
+  }
+
+  private sortByDate(a: PlainDate, b: PlainDate): number {
+    return PlainDate.compare(a, b);
   }
 }

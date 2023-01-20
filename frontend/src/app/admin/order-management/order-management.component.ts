@@ -54,7 +54,7 @@ import * as _ from "lodash";
   animations: [
     trigger('fadeInOut', [
       transition(':enter', [   // :enter is alias to 'void => *'
-      style({ height: '0' }),
+        style({height: '0'}),
         animate(250, style({height: '*'}))
       ]),
       transition(':leave', [   // :leave is alias to '* => void'
@@ -117,9 +117,9 @@ export class OrderManagementComponent implements AfterViewInit {
     this.drawer.toggle()
   }
 
-  toggleEditMode(){
+  toggleEditMode() {
     this.editMultipleOrders = !this.editMultipleOrders
-    if(this.editMultipleOrders) {
+    if (this.editMultipleOrders) {
       this.displayedColumns = ['date', 'buyer', 'meals', 'guest', 'action-multiple'];
     } else {
       this.displayedColumns = ['date', 'buyer', 'meals', 'guest', 'action-single'];
@@ -130,7 +130,7 @@ export class OrderManagementComponent implements AfterViewInit {
     this.useDateInterval = !this.useDateInterval;
   }
 
-  filterOrdersByMenu(event: Event){
+  filterOrdersByMenu(event: Event) {
     this.dataSource.filterPredicate =
       (data: any, filter: string) => data.meals.indexOf(filter) != -1;
 
@@ -139,7 +139,7 @@ export class OrderManagementComponent implements AfterViewInit {
     this.dataSource.filter = filterValue;
   }
 
-  filterOrdersByBuyer(event: Event){
+  filterOrdersByBuyer(event: Event) {
     this.dataSource.filterPredicate =
       (data: any, filter: string) => data.buyer.indexOf(filter) != -1;
 
@@ -148,7 +148,7 @@ export class OrderManagementComponent implements AfterViewInit {
     this.dataSource.filter = filterValue;
   }
 
-  filterOrdersByGuest(event: Event){
+  filterOrdersByGuest(event: Event) {
     this.dataSource.filterPredicate =
       (data: any, filter: string) => data.guest.indexOf(filter) != -1;
 

@@ -4,6 +4,7 @@ interface Category {
   id: string;
   name: string;
   icon: string;
+  orderIndex: number;
 }
 
 @Injectable({
@@ -13,22 +14,26 @@ export class CategoryService {
   private meat = {
     id: '44c615e8-80e4-40c9-b026-70f96cd21dcd',
     name: 'Meat',
-    icon: 'assets/food_icons/meat_icon.png'
+    icon: 'assets/food_icons/meat_icon.png',
+    orderIndex: 0
   };
   private vegetarian = {
     id: '6f8b2947-4784-4c61-b973-705b314ef4f6',
     name: 'Vegetarian',
-    icon: 'assets/food_icons/vegetarian_icon.png'
+    icon: 'assets/food_icons/vegetarian_icon.png',
+    orderIndex: 1
   };
   private vegan = {
     id: 'af03df2a-0d22-4e7d-8a12-9269ecd318af',
     name: 'Vegan',
-    icon: 'assets/food_icons/vegan_icon.png'
+    icon: 'assets/food_icons/vegan_icon.png',
+    orderIndex: 2
   };
   private salad = {
     id: '85d77591-0b55-4df4-93b0-03c00bcb14b9',
     name: 'Salad',
-    icon: 'assets/food_icons/salad_icon.png'
+    icon: 'assets/food_icons/salad_icon.png',
+    orderIndex: 3
   };
 
   private categoryMap: Map<string, Category>;
@@ -42,8 +47,7 @@ export class CategoryService {
     ]);
   }
 
-  getIconFromCategoryID(categoryID: string): string {
-    const category = this.categoryMap.get(categoryID);
-    return category?.icon || '';
+  getCategory(categoryID: string): Category | undefined {
+    return this.categoryMap.get(categoryID);
   }
 }

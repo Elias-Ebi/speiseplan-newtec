@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IsDate, IsNotEmpty, IsUUID, Min } from 'class-validator';
+import { IsDate, IsDateString, IsNotEmpty, IsUUID, Min } from 'class-validator';
 import { DecimalTransformer } from '../transformers/decimal.transformer';
+import { DateTimeTransformer } from '../transformers/date-time.transformer';
 
 @Entity()
 export class Meal {
@@ -10,6 +11,14 @@ export class Meal {
   @Column({ type: 'date' })
   @IsDate({ message: 'Date has to be in a date format.' })
   date: string;
+
+  @Column({ type: 'timestamptz', transformer: new DateTimeTransformer() })
+  @IsDateString()
+  delivery: string;
+
+  @Column({ type: 'timestamptz', transformer: new DateTimeTransformer() })
+  @IsDateString()
+  orderable: string;
 
   @Column()
   @IsNotEmpty({ message: 'Name must not be empty.' })

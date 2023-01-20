@@ -105,7 +105,11 @@ button {
 .success-snackbar {
   color: white;
   --mdc-snackbar-container-color: var(--clrPrimary);
-  button {background:var(--clrPrimary); color: white !important}
+
+  button {
+    background: var(--clrPrimary);
+    color: white !important
+  }
 }
 
 

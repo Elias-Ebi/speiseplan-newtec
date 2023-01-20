@@ -1,10 +1,10 @@
 <div class="dialog-container">
-  <section class="section">
-    <h2>Verfügbare Räuberteller — {{date | fullDate}}</h2>
+  <section *ngFor="let banditPlateDay of banditPlateDays" class="section">
+    <h2>Verfügbare Räuberteller — {{banditPlateDay.date | fullDate}}</h2>
     <hr class="bg-neutral"/>
 
     <div class="list-container">
-      <ng-container *ngFor="let order of banditPlates; let last = last">
+      <ng-container *ngFor="let order of banditPlateDay.orders; let last = last">
         <div class="grid align-center">
           <!-- Name -->
           <div class="span-3 icon-with-text">

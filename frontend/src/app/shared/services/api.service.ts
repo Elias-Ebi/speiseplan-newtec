@@ -20,18 +20,23 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async offerBanditPlate(orderId: string): Promise<Order> {
+    const response = this.httpClient.put<Order>(`${environment.apiUrl}/orders/banditplates/offer/${orderId}`, {});
+    return lastValueFrom(response);
+  }
+
   async getSaldo(): Promise<number> {
-    const response = this.httpClient.get<number>(`${environment.apiUrl}/orders/current-total`);
+    const response = this.httpClient.get<number>(`${environment.apiUrl}/orders/current-balance`);
     return lastValueFrom(response);
   }
 
-  async getMealsOn(date: PlainDate): Promise<Meal[]> {
-    const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/date/${date.toString()}`);
+  async getNextOrderableMeals(): Promise<Meal[]> {
+    const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/next-orderable`);
     return lastValueFrom(response);
   }
 
-  async getTodaysOrders(): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
+  async getUnchangeableOrders(): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/unchangeable`);
     return lastValueFrom(response);
   }
 
@@ -52,6 +57,11 @@ export class ApiService {
 
   async deleteOrder(orderID: string): Promise<Order> {
     const response = this.httpClient.delete<Order>(`${environment.apiUrl}/orders/${orderID}`)
+    return lastValueFrom(response);
+  }
+
+  async deleteOrdersOn(date: PlainDate): Promise<Order[]> {
+    const response = this.httpClient.delete<Order[]>(`${environment.apiUrl}/orders/delete-day/${date.toString()}`)
     return lastValueFrom(response);
   }
 }

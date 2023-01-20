@@ -50,7 +50,7 @@ export class OrderComponent implements OnInit {
     this.data.sort((a, b) => Temporal.PlainDate.compare(a.date, b.date));
   }
 
-   getIcon(categoryId: string): string {
-    return this.categoryService.getIconFromCategoryID(categoryId);
+  getIcon(categoryId: string): string {
+    return this.categoryService.getCategory(categoryId)?.icon || '';
   }
 }
