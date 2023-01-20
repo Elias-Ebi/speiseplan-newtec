@@ -55,6 +55,16 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getOrdersDate(date: PlainDate): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/${date.toString()}`);
+    return lastValueFrom(response);
+  }
+
+  async getOrdersOn(date: PlainDate): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
+    return lastValueFrom(response);
+  }
+
   async getOpenOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/open`);
     return lastValueFrom(response);
