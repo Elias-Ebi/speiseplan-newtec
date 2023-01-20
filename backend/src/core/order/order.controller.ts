@@ -3,6 +3,9 @@ import { OrderService } from './order.service';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Order } from '../../data/entitites/order.entity';
 import { DateService } from '../../shared/date/date.service';
+import {Temporal} from "@js-temporal/polyfill";
+import PlainDate = Temporal.PlainDate;
+
 
 @Controller('orders')
 export class OrderController {
@@ -26,6 +29,13 @@ export class OrderController {
     const user = req.user as AuthUser;
     const date = this.dateService.getLatestUnchangeableDate();
     return this.orderService.getOrdersOn(date, user.email);
+  }
+
+  @Get('date/:date')
+  async getOrdersOn(@Param('date') date: string, @Request() req): Promise<Order[]> {
+    const user = req.user as AuthUser;
+    const requestedDate = PlainDate.from(date);
+    return await this.orderService.getOrdersOn(requestedDate, user.email);
   }
 
   @Get('open')
