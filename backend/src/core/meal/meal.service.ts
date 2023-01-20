@@ -5,6 +5,7 @@ import { FindManyOptions, FindOneOptions, FindOptionsWhere, LessThan, MoreThan, 
 import { categoryExists } from '../../data/other-models/category.type';
 import { Temporal } from '@js-temporal/polyfill';
 import PlainDateTime = Temporal.PlainDateTime;
+import PlainDate = Temporal.PlainDate;
 
 @Injectable()
 export class MealService {
@@ -21,6 +22,16 @@ export class MealService {
     }
 
     return meal;
+  }
+
+  async getMealsOn(date: PlainDate): Promise<Meal[]> {
+    const options: FindManyOptions<Meal> = {
+      where: {
+        date: date.toString()
+      }
+    };
+
+    return this.mealRepository.find(options);
   }
 
   async getNextOrderable(time: PlainDateTime): Promise<Meal[]> {
