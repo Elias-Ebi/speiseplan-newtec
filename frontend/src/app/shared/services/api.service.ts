@@ -58,8 +58,8 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getMealsOn(date: PlainDate): Promise<Meal[]> {
-    const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/date/${date.toString()}`);
+  async getNextOrderableMeals(): Promise<Meal[]> {
+    const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/next-orderable`);
     return lastValueFrom(response);
   }
 
