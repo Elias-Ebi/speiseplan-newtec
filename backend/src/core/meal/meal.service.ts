@@ -4,6 +4,7 @@ import { Meal } from '../../data/entitites/meal.entity';
 import { FindManyOptions, FindOneOptions, FindOptionsWhere, LessThan, MoreThan, Repository } from 'typeorm';
 import { categoryExists } from '../../data/other-models/category.type';
 import { Temporal } from '@js-temporal/polyfill';
+import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDateTime = Temporal.PlainDateTime;
 import PlainDate = Temporal.PlainDate;
 
@@ -82,8 +83,8 @@ export class MealService {
     return this.mealRepository.save(meal);
   }
 
-  async update(meal: Meal, updateOrderCount: boolean): Promise<Meal> {
-    if (!updateOrderCount) {
+  async update(meal: Meal, options?: UpdateMealOptions): Promise<Meal> {
+    if (options?.replaceOrderCount) {
       const currMeal = await this.get(meal.id);
       meal.orderCount = currMeal.orderCount;
     }

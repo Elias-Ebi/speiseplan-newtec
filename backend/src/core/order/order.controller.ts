@@ -55,14 +55,14 @@ export class OrderController {
   async order(@Param('mealId') mealId: string, @Request() req, @Query('guestName') guestName?: string): Promise<Order> {
     const user = req.user as AuthUser;
     const time = Temporal.Now.plainDateTimeISO();
-    return this.orderService.order(time, mealId, user.email, true, guestName);
+    return this.orderService.order(time, mealId, user.email, guestName);
   }
 
   @Delete(':id')
   async deleteOrder(@Param('id') id: string, @Request() req): Promise<Order> {
     const user = req.user as AuthUser;
     const time = Temporal.Now.plainDateTimeISO();
-    return this.orderService.delete(time, id, user, true);
+    return this.orderService.delete(time, id, user);
   }
 
   @Delete('delete-day/:date')
@@ -70,6 +70,6 @@ export class OrderController {
     const user = req.user as AuthUser;
     const time = Temporal.Now.plainDateTimeISO();
     const requestedDate = PlainDate.from(date);
-    return this.orderService.deleteOn(time, requestedDate, user, true);
+    return this.orderService.deleteOn(time, requestedDate, user);
   }
 }

@@ -13,6 +13,7 @@ import { Meal } from '../../data/entitites/meal.entity';
 import { MealService } from './meal.service';
 import { AdminOnly } from '../../auth/decorators/admin-only.decorator';
 import { Temporal } from '@js-temporal/polyfill';
+import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDate = Temporal.PlainDate;
 
 @Controller('meals')
@@ -54,8 +55,8 @@ export class MealController {
     if (!meal.id) {
       throw new UnprocessableEntityException('Meal must contain an ID.');
     }
-
-    return await this.mealService.update(meal, false);
+    const options: UpdateMealOptions = { replaceOrderCount: true };
+    return await this.mealService.update(meal, options);
   }
 
   @Delete(':id')

@@ -11,6 +11,7 @@ import { OrderMonthService } from '../order-month/order-month.service';
 import { OrderMonth } from '../../data/entitites/order-month.entity';
 import PlainDate = Temporal.PlainDate;
 import PlainDateTime = Temporal.PlainDateTime;
+import { OrderOptions } from './options-models/order.options';
 
 @Injectable()
 export class OrderService {
@@ -147,12 +148,12 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
-  async order(time: PlainDateTime, mealId: string, email: string, considerOrderableDate: boolean, guestName?: string): Promise<Order> {
+  async order(time: PlainDateTime, mealId: string, email: string, guestName?: string, options?: OrderOptions): Promise<Order> {
     const meal = await this.mealService.get(mealId);
 
     const orderableTime = PlainDateTime.from(meal.orderable);
 
-    if (considerOrderableDate && PlainDateTime.compare(orderableTime, time) !== 1) {
+    if (!options?.ignoreOrderableDate && PlainDateTime.compare(orderableTime, time) !== 1) {
       throw new BadRequestException('Too late to order this meal.');
     }
 
@@ -173,7 +174,7 @@ export class OrderService {
     }
 
     meal.orderCount += 1;
-    promises.push(this.mealService.update(meal, true));
+    promises.push(this.mealService.update(meal));
 
     await Promise.all(promises);
     return order;
@@ -198,10 +199,10 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
-  async delete(time: PlainDateTime, id: string, user: AuthUser, considerOrderableDate: boolean): Promise<Order> {
+  async delete(time: PlainDateTime, id: string, user: AuthUser, options?: OrderOptions): Promise<Order> {
     const order = await this.get(id);
 
-    if (considerOrderableDate && !this.canBeEdited(order, time)) {
+    if (!options?.ignoreOrderableDate && !this.canBeEdited(order, time)) {
       throw new BadRequestException('Too late to delete this order.');
     }
 
@@ -219,11 +220,11 @@ export class OrderService {
 
     meal.orderCount -= 1;
 
-    await Promise.all([this.orderMonthService.update(orderMonth), this.mealService.update(meal, true)]);
+    await Promise.all([this.orderMonthService.update(orderMonth), this.mealService.update(meal)]);
     return this.orderRepository.remove(order);
   }
 
-  async deleteOn(time: PlainDateTime, date: PlainDate, user: AuthUser, considerOrderableDate: boolean): Promise<Order[]> {
+  async deleteOn(time: PlainDateTime, date: PlainDate, user: AuthUser, options?: OrderOptions): Promise<Order[]> {
     const orders = await this.getOn(date, user.email);
 
     if (!orders.length) {
@@ -232,7 +233,7 @@ export class OrderService {
 
     let ordersToDelete = orders.filter((order) => this.canEdit(order, user));
 
-    if (considerOrderableDate) {
+    if (!options?.ignoreOrderableDate) {
       ordersToDelete = ordersToDelete.filter((order) => this.canBeEdited(order, time));
     }
 
@@ -267,7 +268,7 @@ export class OrderService {
     });
 
     const orderMonthPromises = Array.from(orderMonths.values()).map((orderMonth) => this.orderMonthService.update(orderMonth));
-    const mealPromises = Array.from(meals.values()).map((meal) => this.mealService.update(meal, true));
+    const mealPromises = Array.from(meals.values()).map((meal) => this.mealService.update(meal));
 
     await Promise.all([orderMonthPromises, mealPromises]);
 
