@@ -21,6 +21,7 @@ import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { HomeQuickOrderMeal } from "./models/home-quickorder-meal";
 import { HomeOpenOrderDay } from "./models/home-open-order-day";
 import { HomeUnchangeableOrderDay } from "./models/home-unchangeable-order-day";
+import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils";
 import PlainDate = Temporal.PlainDate;
 
 @Component({
@@ -147,7 +148,7 @@ export class HomeComponent implements OnInit {
   }
 
   private transformBanditPlates(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = this.groupBy(orders, 'date');
+    const groupedOrders = groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       return {
@@ -172,25 +173,25 @@ export class HomeComponent implements OnInit {
         ordered: !!orderForMeal,
         orderId: orderForMeal?.id || ''
       }
-    }).sort((a, b) => this.sortByNumber(a.orderIndex, b.orderIndex) || this.sortByString(a.id, b.id));
+    }).sort((a, b) => sortByNumber(a.orderIndex, b.orderIndex) || sortByString(a.id, b.id));
   }
 
   private transformUnchangeableOrders(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = this.groupBy(orders, 'date');
+    const groupedOrders = groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       return {
         date: Temporal.PlainDate.from(dateString),
-        orders: orders.sort((a, b) => this.sortByString(a.guestName, b.guestName) || this.sortByString(a.id, b.id))
+        orders: orders.sort((a, b) => sortByString(a.guestName, b.guestName) || sortByString(a.id, b.id))
       }
-    }).sort((a, b) => this.sortByDate(a.date, b.date));
+    }).sort((a, b) => sortByDate(a.date, b.date));
   }
 
   private transformOpenOrders(orders: Order[]): HomeOpenOrderDay[] {
-    const groupedOrders = this.groupBy(orders, 'date');
+    const groupedOrders = groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
-      const sortedById = orders.sort((a, b) => this.sortByString(a.id, b.id));
+      const sortedById = orders.sort((a, b) => sortByString(a.id, b.id));
 
       return {
         date: Temporal.PlainDate.from(dateString),
@@ -198,27 +199,6 @@ export class HomeComponent implements OnInit {
         mealNames: sortedById.filter(order => !order.guestName).map(order => order.meal.name),
         guestCount: sortedById.filter(order => order.guestName).length
       }
-    }).sort((a, b) => this.sortByDate(a.date, b.date));
-  }
-
-  private groupBy<T, K extends keyof T>(list: T[], key: K): { [key: string]: T[] } {
-    return list.reduce((acc, item) => {
-      const group = item[key] as string;
-      acc[group] = acc[group] || [];
-      acc[group].push(item);
-      return acc;
-    }, {} as { [key: string]: T[] });
-  }
-
-  private sortByNumber(a: number, b: number): number {
-    return a - b;
-  }
-
-  private sortByString(a: string, b: string): number {
-    return a.localeCompare(b)
-  }
-
-  private sortByDate(a: PlainDate, b: PlainDate): number {
-    return PlainDate.compare(a, b);
+    }).sort((a, b) => sortByDate(a.date, b.date));
   }
 }

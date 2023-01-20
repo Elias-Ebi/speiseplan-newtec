@@ -6,29 +6,27 @@
         <h2>Meine Bestellung</h2>
         <hr class="bg-neutral"/>
 
-        <div class="grid" *ngIf="day.cardOrders.length">
+        <div class="grid">
           <app-order-card
-            (click)="orderOrDelete(menu.id, menu.orderId, day.date)"
-            *ngFor="let menu of day.cardOrders"
-            [amount]="menu.orderCount"
-            [description]="menu.description"
-            [icon]="menu.icon"
-            [name]="menu.name"
-            [ngClass]="{'selected': menu.ordered}"
-            [selected]="menu.ordered"
+            (click)="orderOrDelete(orderMeal.id, orderMeal.orderId, day.date)"
+            *ngFor="let orderMeal of day.orderMeals"
+            [amount]="orderMeal.orderCount"
+            [description]="orderMeal.description"
+            [icon]="orderMeal.icon"
+            [name]="orderMeal.name"
+            [ngClass]="{'selected': orderMeal.ordered}"
+            [selected]="orderMeal.ordered"
             class="span-4 mat-elevation-z1"
           >
           </app-order-card>
         </div>
-
-        <p *ngIf="!day.cardOrders.length">Für diesen Tag gibt es keine Mahlzeiten zu bestellen.</p>
       </section>
 
       <!-- Gastbestellung -->
       <section class="section">
         <div class="section-headline-container">
           <h2>Gastbestellung</h2>
-          <button mat-flat-button color="primary">
+          <button color="primary" mat-flat-button>
             <mat-icon>group_add</mat-icon>
             Gast hinzufügen
           </button>
