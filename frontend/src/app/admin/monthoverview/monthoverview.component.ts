@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
 import { EuroPipe } from "../../shared/pipes/euro.pipe";
@@ -10,6 +10,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
 import { MatTableModule } from "@angular/material/table";
+import { ApiService } from "../../shared/services/api.service";
+import { DateService } from "../../shared/services/date.service";
 
 @Component({
   selector: 'app-monthoverview',
@@ -18,7 +20,11 @@ import { MatTableModule } from "@angular/material/table";
   templateUrl: './monthoverview.component.html',
   styleUrls: ['./monthoverview.component.scss']
 })
-export class MonthoverviewComponent {
+export class MonthoverviewComponent implements OnInit {
+
+  async ngOnInit(): Promise<void> {
+
+  }
   customers = [
     {
       name: "Birgit Beispiel",
