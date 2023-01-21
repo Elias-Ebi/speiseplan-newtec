@@ -1,0 +1,34 @@
+.user-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+  align-items: center;
+  gap: 1rem;
+
+  > button {
+    justify-self: end;
+  }
+}
+
+.headline-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+table {
+  background-color: var(--clrBackground);
+}
+
+th, td {
+  padding: 0.5rem 0;
+  vertical-align: middle;
+}
+
+th {
+  border-bottom: 1px solid var(--clrNeutral);
+}
+
+.paid-button-cell:where(td) {
+  text-align: right;
+}
+
+

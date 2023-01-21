@@ -3,6 +3,7 @@
 @use "styles/font-styles";
 @use "styles/utils";
 @use "styles/material";
+@use "styles/grid";
 
 body {
   background-color: var(--clrBackground);
@@ -33,20 +34,25 @@ button {
   margin: 0 auto;
 }
 
-.main-content {
+.content {
   display: grid;
   gap: 2.5rem;
+}
+
+.main-content {
+  @extend .content;
   margin: 2.5rem 0;
 }
 
 .section {
   display: grid;
   gap: 1rem;
-}
 
-.section-headline-container {
-  display: flex;
-  justify-content: space-between;
+  &-headline-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 }
 
 .list-container {
@@ -81,10 +87,39 @@ button {
   border-radius: 0.75rem;
 }
 
+.icon-button-outlined.icon-button-outlined {
+  color: var(--clrPrimary);
+  background: transparent;
+  box-shadow: 0 0 0 0.0625rem var(--clrPrimary) inset;
+  border-radius: 0.75rem;
+}
+
 .link {
   cursor: pointer;
 
   &:hover {
     text-decoration: underline;
+  }
+}
+
+.success-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--clrPrimary);
+  button {background:var(--clrPrimary); color: white !important}
+}
+
+
+app-order-card {
+  background-color: white;
+  border: 1px solid var(--clrLine);
+  border-radius: 0.5rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--clrLightBlue);
+  }
+
+  &.selected {
+    background-color: var(--clrLightBlue);
   }
 }

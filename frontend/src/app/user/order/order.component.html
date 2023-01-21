@@ -1,1 +1,68 @@
-<p>bestellen works!</p>
+<mat-tab-group class="main-content">
+  <mat-tab *ngFor="let day of data" [label]="day.date | fullDate">
+    <div class="content">
+      <!-- Meine Bestellung -->
+      <section class="section">
+        <h2>Meine Bestellung</h2>
+        <hr class="bg-neutral"/>
+
+        <div class="grid">
+          <app-order-card
+            *ngFor="let menu of day.meals"
+            [amount]="menu.orderCount"
+            [description]="menu.description"
+            [icon]="getIcon(menu.categoryId)"
+            [name]="menu.name"
+            [ngClass]="{'selected': false}"
+            [selected]="false"
+            class="span-4 mat-elevation-z1"
+          >
+          </app-order-card>
+        </div>
+      </section>
+
+      <!-- Gastbestellung -->
+      <section class="section">
+        <div class="section-headline-container">
+          <h2>Gastbestellung</h2>
+          <button mat-flat-button color="primary">
+            <mat-icon>group_add</mat-icon>
+            Gast hinzufügen
+          </button>
+        </div>
+
+        <hr class="bg-neutral"/>
+
+        <div class="list-container">
+          <ng-container *ngFor="let order of day.guestOrders; let last = last">
+            <div class="grid align-center">
+              <!-- Name -->
+              <div class="span-3 icon-with-text">
+                <mat-icon>person</mat-icon>
+                <p>{{order.name}}</p>
+              </div>
+
+              <!-- Meal -->
+              <div class="span-7 icon-with-text">
+                <mat-icon>restaurant</mat-icon>
+                <p>{{order.meal}}</p>
+              </div>
+
+              <div class="span-2 button-container">
+                <button mat-icon-button class="icon-button-outlined">
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                <button mat-icon-button class="icon-button">
+                  <mat-icon>no_food</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <hr *ngIf="!last">
+          </ng-container>
+        </div>
+      </section>
+    </div>
+  </mat-tab>
+</mat-tab-group>

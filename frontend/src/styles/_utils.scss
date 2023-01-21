@@ -1,11 +1,22 @@
+// color
+
 .clr-primary {
   color: var(--clrPrimary);
+}
+
+.clr-success {
+  color: var(--clrSuccess);
+}
+
+.clr-error {
+  color: var(--clrError);
 }
 
 .clr-black {
   color: black;
 }
 
+// background-color
 
 .bg-neutral {
   background-color: var(--clrNeutral);

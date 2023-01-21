@@ -7,5 +7,6 @@ export interface Meal {
   description: string;
   category: Category;
   total: number;
-  date: Temporal.PlainDate;
+  date: string;
+  orderCount: number;
 }

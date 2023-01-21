@@ -1,0 +1,74 @@
+/*
+* UI style
+*/
+
+.ui-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+/*
+* Table style
+*/
+table {
+  background-color: var(--clrBackground);
+}
+
+th, td {
+  padding: 0.5rem 0;
+  vertical-align: middle;
+}
+
+th {
+  border-bottom: 1px solid var(--clrNeutral);
+}
+
+.mat-mdc-paginator {
+  background-color: var(--clrBackground);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.action-column {
+  text-align: right;
+}
+
+/*
+* Filter style
+*/
+.filter-button {
+  cursor: pointer;
+  width: fit-content;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+
+  &:hover {
+    background-color: var(--clrLightGrey);
+  }
+}
+
+/*
+* drawer style
+*/
+
+.drawer-container {
+  position: absolute;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+.drawer {
+  padding: 1rem;
+  width: 18.75rem;
+  background-color: var(--clrLightBlue);
+}
+
+.filter-form-fields {
+  display: grid;
+}

@@ -1,0 +1,193 @@
+<mat-drawer-container class="drawer-container">
+  <mat-drawer #drawer class="drawer" mode="side">
+    <div class=" list-container-wide">
+      <div class="section-headline-container">
+        <h2 class="clr-black">Filter</h2>
+        <button (click)="toggleFilter()" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="filter-form-fields">
+        <mat-form-field>
+          <mat-label>Besteller</mat-label>
+          <input (keyup)="filterOrdersByBuyer($event)" [(ngModel)]="buyerFilter" matInput/>
+          <button
+            (click)="buyerFilter = ''"
+            *ngIf="buyerFilter"
+            mat-icon-button
+            matSuffix
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Gast</mat-label>
+          <input (keyup)="filterOrdersByGuest($event)" [(ngModel)]="guestFilter" matInput/>
+          <button
+            (click)="guestFilter = ''"
+            *ngIf="guestFilter"
+            mat-icon-button
+            matSuffix
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Menü</mat-label>
+          <input (keyup)="filterOrdersByMenu($event)" [(ngModel)]="mealFilter" matInput/>
+          <button
+            (click)="mealFilter = ''"
+            *ngIf="mealFilter"
+            mat-icon-button
+            matSuffix
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <hr>
+
+      <mat-slide-toggle
+        (change)="toggleDateIntervalMode()"
+        [checked]="useDateInterval"
+        color="primary"
+        labelPosition="before"
+      >
+        Datumsspanne
+      </mat-slide-toggle>
+
+      <mat-form-field *ngIf="!useDateInterval">
+        <mat-label>Datum auswählen</mat-label>
+        <input matInput [matDatepicker]="datepicker" (dateChange)="filterOrdersByDate($event)">
+        <mat-hint>MM/TT/JJJJ</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+        <mat-datepicker #datepicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="useDateInterval">
+        <mat-label>Datumsspanne auswählen</mat-label>
+        <mat-date-range-input [rangePicker]="rangePicker">
+          <input matStartDate placeholder="Startdatum">
+          <input matEndDate placeholder="Enddatum">
+        </mat-date-range-input>
+        <mat-hint>MM/TT/JJJJ – MM/TT/JJJJ</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+        <mat-date-range-picker #rangePicker></mat-date-range-picker>
+      </mat-form-field>
+    </div>
+  </mat-drawer>
+
+  <div class="content-wrapper">
+    <section>
+      <!-- UI above table -->
+      <div class="ui-container">
+        <div (click)="toggleFilter()" class="icon-with-text filter-button">
+          <mat-icon>filter_alt</mat-icon>
+          <p>Filter</p>
+        </div>
+
+        <div class="list-container">
+          <mat-slide-toggle
+            [checked]="editMultipleOrders"
+            (change)="toggleEditMode()"
+            color="primary"
+            labelPosition="before"
+          >
+            Mehrere Bearbeiten
+          </mat-slide-toggle>
+
+          <button *ngIf="editMultipleOrders" [@fadeInOut] color="primary" mat-flat-button>
+            <mat-icon>edit</mat-icon>
+            Markierte bearbeiten
+          </button>
+        </div>
+      </div>
+
+      <table [dataSource]="dataSource" class="bg-background" mat-table>
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Datum</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>{{ element.date.toLocaleString() }}</td>
+        </ng-container>
+
+        <!-- Buyer Column -->
+        <ng-container matColumnDef="buyer">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Besteller</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>{{ element.buyer }}</td>
+        </ng-container>
+
+        <!-- Meals Column -->
+        <ng-container matColumnDef="meals">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Menü</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <div class="icon-with-text">
+              <mat-icon>restaurant</mat-icon>
+              <p>{{ element.meals }} </p>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Guest Column -->
+        <ng-container matColumnDef="guest">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Gast</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>{{ element.guest }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action-single">
+          <th *matHeaderCellDef class="action-column" mat-header-cell>
+            <h2>Aktion</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <div class="action-buttons">
+              <button
+                class="icon-button-outlined"
+                mat-icon-button
+                (click)="openEditDialog(element)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+
+              <button
+                class="icon-button"
+                mat-icon-button
+                (click)="openCancelDialog(element)"
+              >
+                <mat-icon>no_food</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action-multiple">
+          <th *matHeaderCellDef class="action-column" mat-header-cell>
+            <h2>Aktion</h2>
+          </th>
+          <td *matCellDef="let element" class="action-column" mat-cell>
+            <mat-checkbox color="primary"></mat-checkbox>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    </section>
+  </div>
+</mat-drawer-container>

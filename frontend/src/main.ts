@@ -7,13 +7,15 @@ import { importProvidersFrom } from '@angular/core';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from "@angular/common";
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
-import { AuthInterceptor } from "./app/auth/auth.interceptor";
+import { AuthInterceptor } from "./app/shared/interceptors/auth.interceptor";
+import { LoadingInterceptor } from "./app/shared/interceptors/loading.interceptor";
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(APP_ROUTES),
     importProvidersFrom(BrowserAnimationsModule),
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
     provideHttpClient(withInterceptorsFromDi())
   ]
 });

@@ -1,0 +1,101 @@
+<mat-tab-group class="main-content">
+  <mat-tab *ngFor="let month of monthData" [label]="month.date | monthName">
+    <section class="section">
+      <div class="section-headline-container">
+        <h2>{{month.date | monthName }}</h2>
+
+        <div class="headline-buttons">
+          <button color="primary" mat-flat-button>
+            <mat-icon>notifications_active</mat-icon>
+            Zahlungserinnerung
+          </button>
+
+          <button color="primary" mat-flat-button>
+            <mat-icon>picture_as_pdf</mat-icon>
+            Exportieren
+          </button>
+        </div>
+      </div>
+
+      <hr class="bg-neutral"/>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Suchen</mat-label>
+        <input matInput placeholder="Geben sie einen Suchbegriff ein" value="">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+
+      <table [dataSource]="customers" mat-table>
+        <ng-container matColumnDef="customer">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Besteller</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <p>{{element.name}}</p>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="count">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Anzahl</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <p>{{element.count}}</p>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sum">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Betrag</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <p>{{element.total}}</p>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="paid_status">
+          <th *matHeaderCellDef mat-header-cell>
+            <h2>Bezahlstatus</h2>
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <div *ngIf="element.paid" class="icon-with-text">
+              <mat-icon class="clr-success">check</mat-icon>
+              <p>bezahlt</p>
+            </div>
+            <div *ngIf="!element.paid" class="icon-with-text">
+              <mat-icon class="clr-error">close</mat-icon>
+              <p>nicht bezahlt</p>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="paid_button">
+          <th *matHeaderCellDef mat-header-cell></th>
+          <td *matCellDef="let element" class="paid-button-cell" mat-cell>
+            <button
+              (click)="element.paid = true"
+              *ngIf="!element.paid"
+              class="icon-button"
+              color="primary"
+              mat-icon-button
+            >
+              <mat-icon>euro</mat-icon>
+            </button>
+            <button
+              (click)="element.paid = false"
+              *ngIf="element.paid"
+              class="icon-button-outlined"
+              color="primary"
+              mat-icon-button
+            >
+              <mat-icon>euro</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+    </section>
+  </mat-tab>
+</mat-tab-group>
