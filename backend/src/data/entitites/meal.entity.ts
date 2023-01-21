@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 import { IsDate, IsDateString, IsNotEmpty, IsUUID, Min } from 'class-validator';
 import { DecimalTransformer } from '../transformers/decimal.transformer';
 import { DateTimeTransformer } from '../transformers/date-time.transformer';
@@ -10,6 +10,7 @@ export class Meal {
 
   @Column({ type: 'date' })
   @IsDate({ message: 'Date has to be in a date format.' })
+  @Index()
   date: string;
 
   @Column({ type: 'timestamptz', transformer: new DateTimeTransformer() })
@@ -18,6 +19,7 @@ export class Meal {
 
   @Column({ type: 'timestamptz', transformer: new DateTimeTransformer() })
   @IsDateString()
+  @Index()
   orderable: string;
 
   @Column()

@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Meal } from './meal.entity';
 import { OrderMonth } from './order-month.entity';
 import { Profile } from './profile.entity';
@@ -9,15 +9,18 @@ export class Order {
   id: string;
 
   @ManyToOne(() => Profile)
+  @Index()
   profile: Profile;
 
   @Column({ type: 'date' })
+  @Index()
   date: string;
 
   @ManyToOne(() => OrderMonth, (orderMonth) => orderMonth.orders)
   orderMonth: OrderMonth;
 
   @ManyToOne(() => Meal)
+  @Index()
   meal: Meal;
 
   @Column()
