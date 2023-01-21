@@ -66,7 +66,7 @@ export class OrderController {
   }
 
   @Delete('delete-day/:date')
-  async deleteOrders(@Param('date') date: string, @Request() req): Promise<Order[]> {
+  async deleteOrders(@Param('date') date: string, @Request() req): Promise<void> {
     const user = req.user as AuthUser;
     const time = Temporal.Now.plainDateTimeISO();
     const requestedDate = PlainDate.from(date);

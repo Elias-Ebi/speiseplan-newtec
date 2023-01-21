@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, In, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository } from 'typeorm';
 import { Order } from '../../data/entitites/order.entity';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Meal } from '../../data/entitites/meal.entity';
@@ -9,9 +9,9 @@ import { Temporal } from '@js-temporal/polyfill';
 import { MealService } from '../meal/meal.service';
 import { OrderMonthService } from '../order-month/order-month.service';
 import { OrderMonth } from '../../data/entitites/order-month.entity';
+import { OrderOptions } from './options-models/order.options';
 import PlainDate = Temporal.PlainDate;
 import PlainDateTime = Temporal.PlainDateTime;
-import { OrderOptions } from './options-models/order.options';
 
 @Injectable()
 export class OrderService {
@@ -24,13 +24,11 @@ export class OrderService {
   }
 
   async getBanditPlates(time: PlainDateTime): Promise<Order[]> {
-    const possibleMeals = await this.mealService.getUnchangeable(time);
-    const possibleMealIDs = possibleMeals.map((meal) => meal.id);
-
     const options: FindManyOptions<Order> = {
       where: {
         meal: {
-          id: In(possibleMealIDs)
+          delivery: MoreThan(time.toString()),
+          orderable: LessThan(time.toString())
         },
         isBanditplate: true
       },
@@ -72,16 +70,14 @@ export class OrderService {
   }
 
   async getUnchangeable(time: PlainDateTime, email: string): Promise<Order[]> {
-    const possibleMeals = await this.mealService.getUnchangeable(time);
-    const possibleMealIDs = possibleMeals.map((meal) => meal.id);
-
     const options: FindManyOptions<Order> = {
       where: {
         profile: {
           email
         },
         meal: {
-          id: In(possibleMealIDs)
+          delivery: MoreThan(time.toString()),
+          orderable: LessThan(time.toString())
         }
       },
       relations: {
@@ -93,16 +89,13 @@ export class OrderService {
   }
 
   async getChangeable(time: PlainDateTime, email: string): Promise<Order[]> {
-    const possibleMeals = await this.mealService.getOrderable(time);
-    const possibleMealIDs = possibleMeals.map((meal) => meal.id);
-
     const options: FindManyOptions<Order> = {
       where: {
         profile: {
           email
         },
         meal: {
-          id: In(possibleMealIDs)
+          orderable: MoreThan(time.toString())
         }
       },
       relations: {
@@ -224,7 +217,7 @@ export class OrderService {
     return this.orderRepository.remove(order);
   }
 
-  async deleteOn(time: PlainDateTime, date: PlainDate, user: AuthUser, options?: OrderOptions): Promise<Order[]> {
+  async deleteOn(time: PlainDateTime, date: PlainDate, user: AuthUser, options?: OrderOptions): Promise<void> {
     const orders = await this.getOn(date, user.email);
 
     if (!orders.length) {
@@ -269,11 +262,9 @@ export class OrderService {
 
     const orderMonthPromises = Array.from(orderMonths.values()).map((orderMonth) => this.orderMonthService.update(orderMonth));
     const mealPromises = Array.from(meals.values()).map((meal) => this.mealService.update(meal));
-
-    await Promise.all([orderMonthPromises, mealPromises]);
-
     const deletedOrdersPromises = orders.map((order) => this.orderRepository.remove(order));
-    return Promise.all(deletedOrdersPromises);
+
+    await Promise.all([...deletedOrdersPromises, ...orderMonthPromises, ...mealPromises]);
   }
 
   private async mealAlreadyOrdered(mealId: string, email: string, guestName: string): Promise<boolean> {

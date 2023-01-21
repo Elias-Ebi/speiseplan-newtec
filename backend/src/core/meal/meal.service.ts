@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meal } from '../../data/entitites/meal.entity';
-import { FindManyOptions, FindOneOptions, FindOptionsWhere, LessThan, MoreThan, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, MoreThan, Repository } from 'typeorm';
 import { categoryExists } from '../../data/other-models/category.type';
 import { Temporal } from '@js-temporal/polyfill';
 import { UpdateMealOptions } from './options-models/update-meal.options';
@@ -56,17 +56,6 @@ export class MealService {
     const options: FindManyOptions<Meal> = {
       where: {
         orderable: MoreThan(time.toString())
-      }
-    };
-
-    return this.mealRepository.find(options);
-  }
-
-  async getUnchangeable(time: PlainDateTime) {
-    const options: FindManyOptions<Meal> = {
-      where: {
-        delivery: MoreThan(time.toString()),
-        orderable: LessThan(time.toString())
       }
     };
 
