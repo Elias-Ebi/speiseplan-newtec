@@ -6,7 +6,7 @@ export interface Order {
   id: string;
   profile: Profile;
   total: number;
-  date: Temporal.PlainDate;
+  date: string;
   meal: Meal;
   isGuestOrder: boolean;
   guestName: string | undefined;
