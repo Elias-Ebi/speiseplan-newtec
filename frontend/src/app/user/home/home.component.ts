@@ -97,14 +97,14 @@ export class HomeComponent implements OnInit {
   }
 
   private async loadDashboard(): Promise<void> {
-    const banditPlatePromise = this.apiService.getBanditPlates();
-    const saldoPromise = this.apiService.getSaldo();
-    const quickOrderMealsPromise = this.apiService.getNextOrderableMeals();
-    const todaysOrdersPromise = this.apiService.getUnchangeableOrders();
-    const openOrdersPromise = this.apiService.getOpenOrders();
+    const banditPlateP = this.apiService.getBanditPlates();
+    const saldoP = this.apiService.getSaldo();
+    const quickOrderMealsP = this.apiService.getNextOrderableMeals();
+    const unchangeableOrdersP = this.apiService.getUnchangeableOrders();
+    const openOrdersP = this.apiService.getOpenOrders();
 
     const [banditPlates, saldo, quickOrderMeals, todaysOrders, openOrders] = await Promise.all(
-      [banditPlatePromise, saldoPromise, quickOrderMealsPromise, todaysOrdersPromise, openOrdersPromise]
+      [banditPlateP, saldoP, quickOrderMealsP, unchangeableOrdersP, openOrdersP]
     );
 
     this.banditPlatesDays = this.transformBanditPlates(banditPlates);

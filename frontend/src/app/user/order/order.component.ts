@@ -37,10 +37,12 @@ export class OrderComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    const orderableMeals = await this.apiService.getOrderableMeals();
-    const groupedMeals = groupBy(orderableMeals, 'date');
+    const orderableMealsP = this.apiService.getOrderableMeals();
+    const openOrdersP = this.apiService.getOpenOrders();
 
-    const openOrders = await this.apiService.getOpenOrders();
+    const [orderableMeals, openOrders] = await Promise.all([orderableMealsP, openOrdersP]);
+
+    const groupedMeals = groupBy(orderableMeals, 'date');
     const groupedOrders = groupBy(openOrders, 'date');
 
     Object.keys(groupedMeals).forEach(day => {
@@ -88,8 +90,10 @@ export class OrderComponent implements OnInit {
   }
 
   private async updateOrderDay(date: PlainDate) {
-    const orders = await this.apiService.getOrdersDate(date);
-    const meals = await this.apiService.getMealsOn(date);
+    const ordersP = this.apiService.getOrdersDate(date);
+    const mealsP = this.apiService.getMealsOn(date);
+
+    const [orders, meals] = await Promise.all([ordersP, mealsP]);
 
     const orderDay = this.orderDays.find(orderDay => orderDay.date.equals(date));
     if (!orderDay) {
