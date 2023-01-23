@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meal } from '../../data/entitites/meal.entity';
-import { FindManyOptions, FindOneOptions, MoreThanOrEqual, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, MoreThan, Repository } from 'typeorm';
 import { categoryExists } from '../../data/other-models/category.type';
 import { Temporal } from '@js-temporal/polyfill';
+import { UpdateMealOptions } from './options-models/update-meal.options';
+import PlainDateTime = Temporal.PlainDateTime;
 import PlainDate = Temporal.PlainDate;
 
 @Injectable()
@@ -11,7 +13,7 @@ export class MealService {
   constructor(@InjectRepository(Meal) private mealRepository: Repository<Meal>) {
   }
 
-  async getMeal(id: string): Promise<Meal> {
+  async get(id: string): Promise<Meal> {
     const options: FindOneOptions<Meal> = { where: { id } };
 
     const meal = await this.mealRepository.findOne(options);
@@ -33,17 +35,34 @@ export class MealService {
     return this.mealRepository.find(options);
   }
 
-  async getMealsFrom(date: PlainDate): Promise<Meal[]> {
+  async getNextOrderable(time: PlainDateTime): Promise<Meal[]> {
+    const nextOrderableDate = await this.getMinDateFrom(time);
+
+    if (!nextOrderableDate) {
+      return [];
+    }
+
     const options: FindManyOptions<Meal> = {
       where: {
-        date: MoreThanOrEqual(date.toString())
+        date: nextOrderableDate,
+        orderable: MoreThan(time.toString())
       }
     };
 
     return this.mealRepository.find(options);
   }
 
-  async addMeal(meal: Meal): Promise<Meal> {
+  async getOrderable(time: PlainDateTime) {
+    const options: FindManyOptions<Meal> = {
+      where: {
+        orderable: MoreThan(time.toString())
+      }
+    };
+
+    return this.mealRepository.find(options);
+  }
+
+  async create(meal: Meal): Promise<Meal> {
     if (!categoryExists(meal.categoryId)) {
       throw new UnprocessableEntityException('CategoryID is invalid.');
     }
@@ -53,16 +72,30 @@ export class MealService {
     return this.mealRepository.save(meal);
   }
 
-  async updateMeal(meal: Meal): Promise<Meal> {
-    const currMeal = await this.getMeal(meal.id);
-
-    meal.orderCount = currMeal.orderCount;
+  async update(meal: Meal, options?: UpdateMealOptions): Promise<Meal> {
+    if (options?.replaceOrderCount) {
+      const currMeal = await this.get(meal.id);
+      meal.orderCount = currMeal.orderCount;
+    }
 
     return this.mealRepository.save(meal);
   }
 
-  async deleteMeal(id: string): Promise<void> {
-    const meal = await this.getMeal(id);
+  async delete(id: string): Promise<void> {
+    const meal = await this.get(id);
     await this.mealRepository.remove(meal);
+  }
+
+  private async getMinDateFrom(time: PlainDateTime): Promise<string> {
+    const options: FindOptionsWhere<Meal> = {
+      orderable: MoreThan(time.toString())
+    };
+
+    const { minDate } = await this.mealRepository.createQueryBuilder('meal')
+      .where(options)
+      .select('MIN(meal.date)', 'minDate')
+      .getRawOne<{ minDate: string }>();
+
+    return minDate;
   }
 }

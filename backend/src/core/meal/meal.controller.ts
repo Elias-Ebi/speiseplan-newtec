@@ -12,19 +12,25 @@ import {
 import { Meal } from '../../data/entitites/meal.entity';
 import { MealService } from './meal.service';
 import { AdminOnly } from '../../auth/decorators/admin-only.decorator';
-import { DateService } from '../../shared/date/date.service';
 import { Temporal } from '@js-temporal/polyfill';
+import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDate = Temporal.PlainDate;
 
 @Controller('meals')
 export class MealController {
-  constructor(private mealService: MealService, private dateService: DateService) {
+  constructor(private mealService: MealService) {
   }
 
   @Get()
   async getOrderableMeals(): Promise<Meal[]> {
-    const date = this.dateService.getNextOrderableDate();
-    return await this.mealService.getMealsFrom(date);
+    const time = Temporal.Now.plainDateTimeISO();
+    return await this.mealService.getOrderable(time);
+  }
+
+  @Get('next-orderable')
+  async getNextOrderable(): Promise<Meal[]> {
+    const time = Temporal.Now.plainDateTimeISO();
+    return await this.mealService.getNextOrderable(time);
   }
 
   @Get('date/:date')
@@ -40,7 +46,7 @@ export class MealController {
       throw new ConflictException('New meal must not contain an ID.');
     }
 
-    return await this.mealService.addMeal(meal);
+    return await this.mealService.create(meal);
   }
 
   @Put()
@@ -49,13 +55,13 @@ export class MealController {
     if (!meal.id) {
       throw new UnprocessableEntityException('Meal must contain an ID.');
     }
-
-    return await this.mealService.updateMeal(meal);
+    const options: UpdateMealOptions = { replaceOrderCount: true };
+    return await this.mealService.update(meal, options);
   }
 
   @Delete(':id')
   @AdminOnly()
   async deleteMeal(@Param('id') id: string): Promise<void> {
-    return await this.mealService.deleteMeal(id);
+    return await this.mealService.delete(id);
   }
 }

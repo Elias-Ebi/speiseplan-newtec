@@ -1,5 +1,5 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {Intl, Temporal} from "@js-temporal/polyfill";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Intl, Temporal } from "@js-temporal/polyfill";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 @Pipe({
