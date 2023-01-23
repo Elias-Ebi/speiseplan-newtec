@@ -14,7 +14,6 @@ import {ApiService} from "../../shared/services/api.service";
 import {Order} from "../../shared/models/order";
 import {DateService} from "../../shared/services/date.service";
 import {groupBy} from "../../user/shared/utils";
-import {forEach} from "lodash";
 import PlainDate = Temporal.PlainDate;
 import {OrdersMonth} from "../../user/order/models/orders-month";
 
