@@ -11,11 +11,9 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MatTableModule} from "@angular/material/table";
 import {ApiService} from "../../shared/services/api.service";
-import {Order} from "../../shared/models/order";
 import {DateService} from "../../shared/services/date.service";
-import {groupBy} from "../../user/shared/utils";
 import PlainDate = Temporal.PlainDate;
-import {OrdersMonth} from "../../user/order/models/orders-month";
+import {OrdersMonthByUser} from "../../user/order/models/orders-month-by-user";
 
 @Component({
   selector: 'app-monthoverview',
@@ -26,7 +24,8 @@ import {OrdersMonth} from "../../user/order/models/orders-month";
 })
 export class MonthoverviewComponent implements OnInit {
 
-  dataMap = new Map<PlainDate, [OrdersMonth]>();
+  dataMap = new Map<PlainDate, [OrdersMonthByUser]>();
+  lastSixMonths = this.dateService.getLastSixMonths();
 
   constructor(
     private apiService: ApiService,
@@ -34,112 +33,28 @@ export class MonthoverviewComponent implements OnInit {
   ) {
   }
 
-  async ngOnInit(): Promise<void> {
-    const lastSixMonths = this.dateService.getLastSixMonths();
-    const monthsOrder = [groupBy(await Promise.all(await this.apiService.getOrdersFromMonth(lastSixMonths[0])), 'profile')];
-    for (let i = 1; 1 < 6; i++) {
-      //group for user in Month-specific arrays
-      monthsOrder.push(groupBy(await Promise.all(await this.apiService.getOrdersFromMonth(lastSixMonths[i])), 'profile'));
-    }
-
-    monthsOrder.forEach((month, outerIndex) => {
-      //month x
-      let temp: OrdersMonth[] = []
-
-      //for each username in month
-      Object.keys(month).forEach(userName => {
-        let sumMeals = 0
-        let sumBill = 0
-
-        //for each order from specific user
-        month[userName].forEach(order => {
-          sumMeals += order.meal.orderCount
-          sumBill += order.meal.total
-        })
-        temp.push({name: userName, numberOfMeals: sumMeals, totalBill: sumBill, isPaid: false})
-      })
-
-      //edgecase: what happens when temp is empty?
-      // @ts-ignore
-      this.dataMap.set(lastSixMonths[outerIndex], temp);
-
-    })
-
+  async ngOnInit(): Promise<void>{
+    await this.loadMonthoverview();
   }
 
-  customers = [
-    {
-      name: "Birgit Beispiel",
-      count: 11,
-      total: 62.20,
-      paid: true
-    },
-    {
-      name: "Adam Sandler",
-      count: 2,
-      total: 10.30,
-      paid: false
-    },
-    {
-      name: "Jumbo Schreiner",
-      count: 41,
-      total: 162.40,
-      paid: true
-    },
-    {
-      name: "Max Mustermann",
-      count: 11,
-      total: 62.20,
-      paid: true
-    },
-    {
-      name: "Rudolph Carell",
-      count: 11,
-      total: 62.20,
-      paid: false
-    },
-    {
-      name: "Moritz Bleibtreu",
-      count: 11,
-      total: 62.20,
-      paid: true
-    },
-    {
-      name: "Hans Bärlach",
-      count: 18,
-      total: 82.90,
-      paid: true
+  private async loadMonthoverview(): Promise<void> {
+    this.lastSixMonths = this.dateService.getLastSixMonths();
+    const allOrders = [];
+    for(let i = 0; i < 6; i++){
+      allOrders[i] = await this.apiService.getOrdersFromMonth(this.lastSixMonths[i]);
     }
-  ]
 
-
-  /*
-    monthData = [
-      {
-        date: this.lastSixMonths[0].month.toString(),
-        customers: this.apiService.getOrdersFromMonth(this.lastSixMonths[0])
-      },
-      {
-        date: this.lastSixMonths[1].month.toString(),
-        customers: this.customers
-      },
-      {
-        date: this.lastSixMonths[2].month.toString(),
-        customers: this.customers
-      },
-      {
-        date: this.lastSixMonths[3].month.toString(),
-        customers: this.customers
-      },
-      {
-        date: this.lastSixMonths[4].month.toString(),
-        customers: this.customers
-      },
-      {
-        date: this.lastSixMonths[5].month.toString(),
-        customers: this.customers
-      },
-    ]*/
+    allOrders.forEach((month, outerIndex)=> {
+      //one Order-month-entity per user
+      //list with the datatype used for the representation
+      let currentMonthRep: OrdersMonthByUser[] = [];
+      month.forEach((user) => {
+        currentMonthRep.push({name: user.profile.name, numberOfMeals: user.orders.length, totalBill: user.total, isPaid: user.paid})
+       });
+      // @ts-ignore
+      this.dataMap.set(this.lastSixMonths[outerIndex], currentMonthRep);
+    });
+  }
 
   displayedColumns: string[] = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];
 }

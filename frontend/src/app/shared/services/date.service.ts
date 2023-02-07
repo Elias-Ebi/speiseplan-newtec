@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Temporal } from "@js-temporal/polyfill";
 import PlainDate = Temporal.PlainDate;
 import PlainTime = Temporal.PlainTime;
-import {parse} from "@angular/compiler-cli/linker/babel/src/babel_core";
+
 
 @Injectable({
   providedIn: 'root'
@@ -70,17 +70,12 @@ export class DateService {
   }
 
   public getLastSixMonths(){
-    const { startOfMonth } = require('date-fns');
-    const moment = require('moment');
-
-    const currentMonth = moment().format('MMMM');
-    const lastSixMonths = [startOfMonth(new Date())];
-
-    for (let i = 1; i < 6; i++) {
-      const monthName = moment().subtract(i, 'months').format('MMMM');
-      lastSixMonths.push(startOfMonth(parse(monthName, 'MMMM', new Date())));
+    const currentMonth = Temporal.Now.plainDateISO();
+    const lastSixMonths = [];
+    for (let i = 0; i < 6; i++) {
+      const monthName = currentMonth.subtract({months: i})
+      lastSixMonths.push(monthName);
     }
-
     return lastSixMonths;
   }
 }

@@ -7,6 +7,7 @@ import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import PlainDate = Temporal.PlainDate;
+import {OrderMonth} from "../models/orderMonth";
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,11 @@ export class ApiService {
 
   async getMealsOn(date: PlainDate): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/date/${date.toString()}`);
+    return lastValueFrom(response);
+  }
+
+  async getOrdersFromMonth(date: PlainDate): Promise<OrderMonth[]> {
+    const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/month/${date.month}/${date.year}`);
     return lastValueFrom(response);
   }
 

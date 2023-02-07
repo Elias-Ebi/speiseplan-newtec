@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreModule } from './core/core.module';
 import { environment } from './environment';
 import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
-import * as process from "process";
+
 import * as dotenv from 'dotenv'
 
 dotenv.config();
@@ -15,18 +15,23 @@ dotenv.config();
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
+      autoLoadEntities: true,
+      synchronize: environment.synchronize, //true for local docker
+
+      /* uncomment for local docker
       host: process.env.POSTGRES_HOST,
-    //  url: environment.dbUrl,
       port: parseInt(<string>process.env.POSTGRES_PORT),
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      autoLoadEntities: true,
-    //  synchronize: environment.synchronize,
-      //migrationsTableName: 'migrations',
-      //migrations: ["src/data/migrations/*{.ts,.js}"],
-      //migrationsRun: environment.migrationsRun,
-      ssl: false
+      */
+
+      url: environment.dbUrl,
+      migrationsTableName: 'migrations',
+      migrations: ["src/data/migrations/*{.ts,.js}"],
+      migrationsRun: environment.migrationsRun,
+
+      ssl: true //false for local docker
     }),
     AuthModule,
     CoreModule

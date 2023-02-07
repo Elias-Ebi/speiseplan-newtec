@@ -8,7 +8,7 @@ import { Temporal } from "@js-temporal/polyfill";
 export class MonthNamePipe implements PipeTransform {
 
   transform(date: Temporal.PlainDate): string {
-    return date.toLocaleString('default', {month: 'long'});
+    return date.toLocaleString('default', {month: 'long'}) +'  ' +date.year.toString();
   }
 
 }

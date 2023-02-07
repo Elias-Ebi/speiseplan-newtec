@@ -1,8 +1,8 @@
 <mat-tab-group class="main-content">
-  <mat-tab *ngFor="let month of monthData" [label]="month.date | monthName">
+  <mat-tab *ngFor="let month of lastSixMonths" [label]="month | monthName ">
     <section class="section">
       <div class="section-headline-container">
-        <h2>{{month.date | monthName }}</h2>
+        <h2>{{month | monthName}}</h2>
 
         <div class="headline-buttons">
           <button color="primary" mat-flat-button>
@@ -24,8 +24,8 @@
         <input matInput placeholder="Geben sie einen Suchbegriff ein" value="">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
-
-      <table [dataSource]="customers" mat-table>
+      <!-- xxxx -->
+      <table [dataSource]="dataMap.get(month)!" mat-table>
         <ng-container matColumnDef="customer">
           <th *matHeaderCellDef mat-header-cell>
             <h2>Besteller</h2>
@@ -40,7 +40,7 @@
             <h2>Anzahl</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <p>{{element.count}}</p>
+            <p>{{element.numberOfMeals}}</p>
           </td>
         </ng-container>
 
@@ -49,7 +49,7 @@
             <h2>Betrag</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <p>{{element.total}}</p>
+            <p>{{element.totalBill}}</p>
           </td>
         </ng-container>
 
@@ -58,11 +58,11 @@
             <h2>Bezahlstatus</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <div *ngIf="element.paid" class="icon-with-text">
+            <div *ngIf="element.isPaid" class="icon-with-text">
               <mat-icon class="clr-success">check</mat-icon>
               <p>bezahlt</p>
             </div>
-            <div *ngIf="!element.paid" class="icon-with-text">
+            <div *ngIf="!element.isPaid" class="icon-with-text">
               <mat-icon class="clr-error">close</mat-icon>
               <p>nicht bezahlt</p>
             </div>
@@ -73,17 +73,19 @@
           <th *matHeaderCellDef mat-header-cell></th>
           <td *matCellDef="let element" class="paid-button-cell" mat-cell>
             <button
-              (click)="element.paid = true"
-              *ngIf="!element.paid"
+              (click)="element.isPaid = true"
+              *ngIf="!element.isPaid"
+              class="icon-button"
               color="primary"
               mat-icon-button
             >
               <mat-icon>euro</mat-icon>
             </button>
             <button
-              (click)="element.paid = false"
-              *ngIf="element.paid"
+              (click)="element.isPaid = false"
+              *ngIf="element.isPaid"
               class="icon-button-outlined"
+              color="primary"
               mat-icon-button
             >
               <mat-icon>euro</mat-icon>
