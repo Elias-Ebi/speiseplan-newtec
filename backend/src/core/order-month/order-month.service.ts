@@ -1,62 +1,78 @@
-import { Injectable } from '@nestjs/common';
-import { OrderMonth } from '../../data/entitites/order-month.entity';
-import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { AuthService } from '../../auth/auth.service';
+import {Injectable} from '@nestjs/common';
+import {OrderMonth} from '../../data/entitites/order-month.entity';
+import {FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
+import {InjectRepository} from '@nestjs/typeorm';
+import {AuthService} from '../../auth/auth.service';
 
 @Injectable()
 export class OrderMonthService {
 
-  constructor(@InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>, private authService: AuthService) {
-  }
-
-  async getBalance(email: string): Promise<number> {
-    const options: FindOptionsWhere<OrderMonth> = {
-      profile: {
-        email
-      },
-      paid: false
-
-    };
-
-    const { sum } = await this.orderMonthRepository.createQueryBuilder('orderMonth')
-      .where(options)
-      .innerJoin('orderMonth.profile', 'profile')
-      .select('SUM(orderMonth.total)')
-      .getRawOne<{ sum: number }>();
-
-    return sum;
-  }
-
-  async get(month: number, year: number, email: string): Promise<OrderMonth> {
-    const options: FindOneOptions<OrderMonth> = {
-      where: { month, year, profile: { email } }
-    };
-
-    let orderMonth = await this.orderMonthRepository.findOne(options);
-
-    if (!orderMonth) {
-      orderMonth = await this.create(month, year, email);
+    constructor(@InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>, private authService: AuthService) {
     }
 
-    return orderMonth;
-  }
 
-  async update(orderMonth: OrderMonth): Promise<OrderMonth> {
-    return this.orderMonthRepository.save(orderMonth);
-  }
+    async getBalance(email: string): Promise<number> {
+        const options: FindOptionsWhere<OrderMonth> = {
+            profile: {
+                email
+            },
+            paid: false
 
-  private async create(month: number, year: number, email: string): Promise<OrderMonth> {
-    const profile = await this.authService.getProfile(email);
+        };
 
-    const orderMonth: OrderMonth = {
-      profile,
-      month,
-      year,
-      total: 0,
-      paid: false
-    } as OrderMonth;
+        const {sum} = await this.orderMonthRepository.createQueryBuilder('orderMonth')
+            .where(options)
+            .innerJoin('orderMonth.profile', 'profile')
+            .select('SUM(orderMonth.total)')
+            .getRawOne<{ sum: number }>();
 
-    return this.orderMonthRepository.save(orderMonth);
-  }
+        return sum;
+    }
+
+    async getMonthOrders(month: number, year: number): Promise<OrderMonth[]> {
+        const options: FindOneOptions<OrderMonth> = {
+            where: {
+                month: month,
+                year: year
+            },
+            relations: {
+                profile: true,
+                orders: true
+            }
+        };
+        return this.orderMonthRepository.find(options);
+    }
+
+    async get(month: number, year: number, email: string): Promise<OrderMonth> {
+        const options: FindOneOptions<OrderMonth> = {
+            where: {month, year, profile: {email}}
+        };
+
+        let orderMonth = await this.orderMonthRepository.findOne(options);
+
+        if (!orderMonth) {
+            orderMonth = await this.create(month, year, email);
+        }
+
+        return orderMonth;
+    }
+
+
+    async update(orderMonth: OrderMonth): Promise<OrderMonth> {
+        return this.orderMonthRepository.save(orderMonth);
+    }
+
+    private async create(month: number, year: number, email: string): Promise<OrderMonth> {
+        const profile = await this.authService.getProfile(email);
+
+        const orderMonth: OrderMonth = {
+            profile,
+            month,
+            year,
+            total: 0,
+            paid: false
+        } as OrderMonth;
+
+        return this.orderMonthRepository.save(orderMonth);
+    }
 }
