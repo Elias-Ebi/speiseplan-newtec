@@ -13,7 +13,7 @@ export class FullDatePipe implements PipeTransform {
       weekday: "long",
       year: "numeric",
       month: "2-digit",
-      day: "numeric",
+      day: "2-digit",
     };
     return date.toLocaleString('default', options);
   }

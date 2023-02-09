@@ -6,6 +6,7 @@ import { lastValueFrom } from "rxjs";
 import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
 import PlainDate = Temporal.PlainDate;
+import { OrderMonth } from "../models/order-month";
 
 @Injectable({
   providedIn: 'root'
@@ -50,11 +51,6 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getOrdersOn(date: PlainDate): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
-    return lastValueFrom(response);
-  }
-
   async getOpenOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/open`);
     return lastValueFrom(response);
@@ -77,6 +73,11 @@ export class ApiService {
 
   async deleteOrdersOn(date: PlainDate): Promise<Order[]> {
     const response = this.httpClient.delete<Order[]>(`${environment.apiUrl}/orders/delete-day/${date.toString()}`)
+    return lastValueFrom(response);
+  }
+
+  async getHistory(): Promise<OrderMonth[]> {
+    const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/history`);
     return lastValueFrom(response);
   }
 }

@@ -18,11 +18,9 @@ import { DateService } from "../../shared/services/date.service";
 import { Meal } from "../../shared/models/meal";
 import { CategoryService } from "../../shared/services/category.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
-import { HomeQuickOrderMeal } from "./models/home-quickorder-meal";
-import { HomeOpenOrderDay } from "./models/home-open-order-day";
-import { HomeUnchangeableOrderDay } from "./models/home-unchangeable-order-day";
 import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils";
 import PlainDate = Temporal.PlainDate;
+import { HomeOpenOrderDay, HomeQuickOrderMeal, HomeUnchangeableOrderDay } from "./home.models";
 
 @Component({
   selector: 'app-home',

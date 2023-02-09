@@ -185,7 +185,7 @@ export class OrderService {
       date: date.toString(),
       orderMonth,
       meal,
-      guestName: guestName || '',
+      guestName: guestName,
       isBanditplate: false
     } as Order;
 

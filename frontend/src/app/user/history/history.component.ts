@@ -1,88 +1,57 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
 import { EuroPipe } from "../../shared/pipes/euro.pipe";
-import { Temporal } from "@js-temporal/polyfill";
 import { WeekdayNamePipe } from "../../shared/pipes/weekday-name.pipe";
 import { MatTabsModule } from "@angular/material/tabs";
 import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
+import { HistoryOrderDay, HistoryOrderMonth } from "./history.models";
+import { FullDatePipe } from "../../shared/pipes/full-date.pipe";
+import { ApiService } from "../../shared/services/api.service";
+import { OrderMonth } from "../../shared/models/order-month";
+import { Temporal } from "@js-temporal/polyfill";
+import { Order } from "../../shared/models/order";
+import { groupBy, sortByDate } from "../shared/utils";
+import PlainDate = Temporal.PlainDate;
+
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe],
+  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe, FullDatePipe],
   templateUrl: './history.component.html',
   styleUrls: ['./history.component.scss']
 })
-export class HistoryComponent {
-  orders = [
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Bratlinge", "Salat"],
-      amount: 7
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Fleischküchle"],
-      amount: 3.5
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Burger"],
-      amount: 3.5
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Salat"],
-      amount: 3.5
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Pommes"],
-      amount: 3.5
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Schnitzel"],
-      amount: 3.5
-    },
-    {
-      date: Temporal.Now.plainDateISO(),
-      meals: ["Spaghetti"],
-      amount: 3.5
-    }
-  ];
+export class HistoryComponent implements OnInit {
+  months: HistoryOrderMonth[] = [];
 
-  historyData = [
-    {
-      date: Temporal.PlainDate.from("2022-12-01"),
-      orders: this.orders,
-      total: 35.5
-    },
-    {
-      date: Temporal.PlainDate.from("2022-11-01"),
-      orders: this.orders,
-      total: 50
-    },
-    {
-      date: Temporal.PlainDate.from("2022-10-01"),
-      orders: this.orders,
-      total: 32.5
-    },
-    {
-      date: Temporal.PlainDate.from("2022-09-01"),
-      orders: this.orders,
-      total: 12.5
-    },
-    {
-      date: Temporal.PlainDate.from("2022-08-01"),
-      orders: this.orders,
-      total: 25
-    },
-    {
-      date: Temporal.PlainDate.from("2022-07-01"),
-      orders: this.orders,
-      total: 42.5
-    }
-  ];
+  constructor(private apiService: ApiService) {
+  }
+
+  async ngOnInit(): Promise<void> {
+    const orderMonths = await this.apiService.getHistory();
+    this.months = this.transformMonths(orderMonths);
+  }
+
+  private transformMonths(orderMonths: OrderMonth[]): HistoryOrderMonth[] {
+    return orderMonths.map((orderMonth) => {
+      return {
+        date: PlainDate.from({year: orderMonth.year, month: orderMonth.month, day: 1}),
+        days: this.transformOrderDays(orderMonth.orders),
+        total: orderMonth.total,
+      };
+    }).sort((a, b) => sortByDate(a.date, b.date)).reverse();
+  }
+
+  private transformOrderDays(orders: Order[]): HistoryOrderDay[] {
+    const grouped = groupBy(orders, 'date');
+    return Object.entries<Order[]>(grouped).map(([date, orders]) => {
+      return {
+        date: PlainDate.from(date),
+        mealCount: orders.length,
+        mealNames: orders.map((order) => order.meal.name),
+        total: orders.map((order) => order.meal.total).reduce((acc, val) => acc + val, 0)
+      };
+    }).sort((a, b) => sortByDate(a.date, b.date)).reverse();
+  }
 }
