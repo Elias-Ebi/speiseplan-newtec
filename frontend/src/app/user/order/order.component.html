@@ -26,7 +26,10 @@
       <section class="section">
         <div class="section-headline-container">
           <h2>Gastbestellung</h2>
-          <button color="primary" mat-flat-button>
+          <button
+            (click)="openGuestOrderDialog(day.date)"
+            color="primary"
+            mat-flat-button>
             <mat-icon>group_add</mat-icon>
             Gast hinzufügen
           </button>
@@ -48,7 +51,10 @@
               </p>
 
 
-              <button class="span-1 justify-self-end icon-button" mat-icon-button>
+              <button
+                class="span-1 justify-self-end icon-button"
+                mat-icon-button
+                (click)="deleteOrder(guestOrder.id, day.date)">
                 <mat-icon>no_food</mat-icon>
               </button>
             </div>

@@ -109,7 +109,9 @@ export class HomeComponent implements OnInit {
     this.banditPlateCount = banditPlates.length;
     this.saldo = saldo;
 
-    this.quickOrderMeals = this.transformQuickOrderMeals(quickOrderMeals, openOrders);
+    const userOrders = openOrders.filter(order => !order.guestName)
+
+    this.quickOrderMeals = this.transformQuickOrderMeals(quickOrderMeals, userOrders);
     if (quickOrderMeals.length) {
       const dateString = quickOrderMeals[0].date
       this.quickOrderDate = PlainDate.from(dateString);

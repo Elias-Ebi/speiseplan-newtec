@@ -66,6 +66,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async orderGuestMeal(mealID: string, guestName:String): Promise<Order> {
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}?guestName=${guestName}`, {});
+    return lastValueFrom(response);
+  }
+
   async deleteOrder(orderID: string): Promise<Order> {
     const response = this.httpClient.delete<Order>(`${environment.apiUrl}/orders/${orderID}`)
     return lastValueFrom(response);
