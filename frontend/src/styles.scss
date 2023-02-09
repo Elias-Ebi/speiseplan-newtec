@@ -94,6 +94,12 @@ button {
   border-radius: 0.75rem;
 }
 
+.button-outlined.button-outlined.button-outlined {
+  color: var(--clrPrimary);
+  background: transparent;
+  box-shadow: 0 0 0 0.0625rem var(--clrPrimary) inset;
+}
+
 .link {
   cursor: pointer;
 

@@ -50,11 +50,6 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getOrdersOn(date: PlainDate): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
-    return lastValueFrom(response);
-  }
-
   async getOpenOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/open`);
     return lastValueFrom(response);
@@ -67,6 +62,11 @@ export class ApiService {
 
   async orderMeal(mealID: string): Promise<Order> {
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}`, {});
+    return lastValueFrom(response);
+  }
+
+  async orderGuestMeal(mealID: string, guestName:String): Promise<Order> {
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}?guestName=${guestName}`, {});
     return lastValueFrom(response);
   }
 

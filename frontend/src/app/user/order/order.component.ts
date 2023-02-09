@@ -15,6 +15,9 @@ import { OrderDay } from "./models/order-day";
 import { OrderMeal } from "./models/order-meal";
 import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils";
 import PlainDate = Temporal.PlainDate;
+import {MatDialog} from "@angular/material/dialog";
+import {GuestOrderDialogComponent} from "./guest-order-dialog/guest-order-dialog.component";
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-order',
@@ -30,6 +33,7 @@ export class OrderComponent implements OnInit {
 
 
   constructor(
+    private dialog: MatDialog,
     private apiService: ApiService,
     private categoryService: CategoryService,
     private snackBar: MatSnackBar
@@ -48,16 +52,42 @@ export class OrderComponent implements OnInit {
     Object.keys(groupedMeals).forEach(day => {
       const meals = groupedMeals[day];
       const orders = groupedOrders[day] || [];
+      const userOrders = orders.filter(order => !order.guestName);
 
       this.dataMap.set(PlainDate.from(day), {
         date: Temporal.PlainDate.from(day),
-        orderMeals: this.transformOrderCards(meals, orders),
+        orderMeals: this.transformOrderCards(meals, userOrders),
         guestOrders: this.transformGuestOrders(orders)
       });
     })
 
     this.orderDays = Array.from(this.dataMap.values());
     this.orderDays.sort((a, b) => sortByDate(a.date, b.date));
+  }
+
+  openGuestOrderDialog(date: PlainDate): void {
+    const guestOrderDay = this.orderDays.find(orderDay => orderDay.date.equals(date));
+    if(!guestOrderDay){
+      return
+    }
+    const guestOrderDayCopy = _.cloneDeep(guestOrderDay);
+    guestOrderDayCopy.orderMeals.forEach((orderMeal) => orderMeal.ordered = false);
+
+    this.dialog.open(GuestOrderDialogComponent, {
+      data: guestOrderDayCopy,
+      autoFocus: false,
+    })
+      .afterClosed().subscribe(async (values: { guestName: string, mealIds: string[] }) => {
+        console.log("value", values)
+      if (values) {
+        const promises = [];
+        for (const mealId of values.mealIds) {
+          promises.push(this.apiService.orderGuestMeal(mealId, values.guestName));
+        }
+        await Promise.all(promises);
+        await this.updateOrderDay(date);
+      }
+    });
   }
 
   orderOrDelete(mealId: string, orderId: string, date: PlainDate) {
@@ -85,9 +115,11 @@ export class OrderComponent implements OnInit {
     }).sort((a, b) => sortByNumber(a.orderIndex, b.orderIndex) || sortByString(a.id, b.id));
   }
 
+
   private transformGuestOrders(orders: Order[]): Order[] {
     return orders.filter((order) => order.guestName).sort((a, b) => sortByString(a.id, b.id));
   }
+
 
   private async updateOrderDay(date: PlainDate) {
     const ordersP = this.apiService.getOrdersDate(date);
@@ -100,9 +132,11 @@ export class OrderComponent implements OnInit {
       return;
     }
 
-    orderDay.orderMeals = this.transformOrderCards(meals, orders);
-    orderDay.guestOrders = this.transformGuestOrders(orders);
+    const userOrders = orders.filter(order => !order.guestName)
 
+
+    orderDay.orderMeals = this.transformOrderCards(meals, userOrders);
+    orderDay.guestOrders = this.transformGuestOrders(orders);
   }
 
   private orderMeal(mealId: string, date: PlainDate) {
@@ -118,7 +152,7 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  private deleteOrder(orderId: string, date: PlainDate) {
+  deleteOrder(orderId: string, date: PlainDate) {
     this.apiService.deleteOrder(orderId).then(async (order) => {
       await this.updateOrderDay(date);
 
