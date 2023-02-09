@@ -26,7 +26,7 @@
       <button (click)="closeDialog()" mat-stroked-button type="button">
         Abbrechen
       </button>
-      <button [disabled]="form.invalid" [mat-dialog-close]="values" color="primary" mat-flat-button type="submit">
+      <button [disabled]="form.invalid || !selectedIds.length" [mat-dialog-close]="values" color="primary" mat-flat-button type="submit">
         Bestätigen
       </button>
     </div>
