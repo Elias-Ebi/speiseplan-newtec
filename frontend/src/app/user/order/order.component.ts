@@ -11,13 +11,13 @@ import { Meal } from "../../shared/models/meal";
 import { CategoryService } from "../../shared/services/category.service";
 import { Order } from "../../shared/models/order";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
-import { OrderDay } from "./models/order-day";
-import { OrderMeal } from "./models/order-meal";
-import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils";
-import PlainDate = Temporal.PlainDate;
-import {MatDialog} from "@angular/material/dialog";
-import {GuestOrderDialogComponent} from "./guest-order-dialog/guest-order-dialog.component";
+import { sortByDate, sortByNumber, sortByString } from "../shared/utils";
+import { MatDialog } from "@angular/material/dialog";
+import { GuestOrderDialogComponent } from "./guest-order-dialog/guest-order-dialog.component";
 import * as _ from "lodash";
+import { GuestOrderDialogValues, OrderDay, OrderMeal } from "./order.models";
+import { lastValueFrom } from "rxjs";
+import PlainDate = Temporal.PlainDate;
 
 @Component({
   selector: 'app-order',
@@ -46,8 +46,8 @@ export class OrderComponent implements OnInit {
 
     const [orderableMeals, openOrders] = await Promise.all([orderableMealsP, openOrdersP]);
 
-    const groupedMeals = groupBy(orderableMeals, 'date');
-    const groupedOrders = groupBy(openOrders, 'date');
+    const groupedMeals = _.groupBy(orderableMeals, 'date');
+    const groupedOrders = _.groupBy(openOrders, 'date');
 
     Object.keys(groupedMeals).forEach(day => {
       const meals = groupedMeals[day];
@@ -67,32 +67,32 @@ export class OrderComponent implements OnInit {
 
   openGuestOrderDialog(date: PlainDate): void {
     const guestOrderDay = this.orderDays.find(orderDay => orderDay.date.equals(date));
-    if(!guestOrderDay){
+    if (!guestOrderDay) {
       return
     }
+
     const guestOrderDayCopy = _.cloneDeep(guestOrderDay);
     guestOrderDayCopy.orderMeals.forEach((orderMeal) => orderMeal.ordered = false);
 
-    this.dialog.open(GuestOrderDialogComponent, {
+    const dialogRef = this.dialog.open(GuestOrderDialogComponent, {
       data: guestOrderDayCopy,
       autoFocus: false,
-    })
-      .afterClosed().subscribe(async (values: { guestName: string, mealIds: string[] }) => {
-        console.log("value", values)
-      if (values) {
-        const promises = [];
-        for (const mealId of values.mealIds) {
-          promises.push(this.apiService.orderGuestMeal(mealId, values.guestName));
-        }
-        await Promise.all(promises);
-        await this.updateOrderDay(date);
+    });
+
+    const dialogClosedPromise = lastValueFrom(dialogRef.afterClosed());
+    dialogClosedPromise.then(async (values: GuestOrderDialogValues) => {
+      if (!values) {
+        return;
       }
+
+      await this.resolveGuestOrderDialog(values, date);
     });
   }
 
-  orderOrDelete(mealId: string, orderId: string, date: PlainDate) {
-    if (orderId) {
+  orderOrDelete(mealId: string, orderId: string, date: PlainDate, ordered: boolean) {
+    if (ordered) {
       this.deleteOrder(orderId, date);
+      return;
     }
 
     this.orderMeal(mealId, date);
@@ -134,7 +134,6 @@ export class OrderComponent implements OnInit {
 
     const userOrders = orders.filter(order => !order.guestName)
 
-
     orderDay.orderMeals = this.transformOrderCards(meals, userOrders);
     orderDay.guestOrders = this.transformGuestOrders(orders);
   }
@@ -163,5 +162,15 @@ export class OrderComponent implements OnInit {
     }).catch((err) => {
       this.snackBar.open(`Bestellung konnte nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
     });
+  }
+
+  async resolveGuestOrderDialog(values: GuestOrderDialogValues, date: PlainDate) {
+    const promises = [];
+    for (const mealId of values.mealIds) {
+      promises.push(this.apiService.orderMeal(mealId, values.guestName));
+    }
+    await Promise.all(promises);
+
+    await this.updateOrderDay(date);
   }
 }

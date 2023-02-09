@@ -1,15 +1,15 @@
-import {Component, Inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
-import {MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {FullDatePipe} from "../../../shared/pipes/full-date.pipe";
-import {OrderDay} from "../models/order-day";
-import {OrderCardComponent} from "../../shared/components/order-card/order-card.component";
-import {ApiService} from "../../../shared/services/api.service";
-import {MatSnackBar, MatSnackBarModule} from "@angular/material/snack-bar";
-import {MatInputModule} from "@angular/material/input";
-import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
+import { Component, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
+import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
+import { OrderCardComponent } from "../../shared/components/order-card/order-card.component";
+import { ApiService } from "../../../shared/services/api.service";
+import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatInputModule } from "@angular/material/input";
+import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { GuestOrderDialogValues, OrderDay } from "../order.models";
 
 @Component({
   selector: 'app-guest-order-dialog',
@@ -20,10 +20,10 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 })
 export class GuestOrderDialogComponent {
   form = this.initializeForm();
-  guestOrderMealIds: string[] = [];
+  selectedIds: string[] = [];
 
   constructor(@Inject(MAT_DIALOG_DATA)
-              public guestOrderDay: OrderDay,
+              public orderDay: OrderDay,
               private dialogRef: MatDialogRef<GuestOrderDialogComponent>,
               private apiService: ApiService,
               private snackBar: MatSnackBar,
@@ -42,16 +42,19 @@ export class GuestOrderDialogComponent {
   }
 
   updateOrdered(index: number) {
-    const orderMeal = this.guestOrderDay.orderMeals[index];
+    const orderMeal = this.orderDay.orderMeals[index];
+
+    if (!orderMeal.ordered) {
+      this.selectedIds.push(orderMeal.id);
+    } else {
+      this.selectedIds = this.selectedIds.filter((id) => id != orderMeal.id);
+    }
+
     orderMeal.ordered = !orderMeal.ordered;
   }
 
-  async orderGuestMeals() {
-    this.guestOrderMealIds = this.guestOrderDay.orderMeals.filter((orderMeal) => orderMeal.ordered).map((orderMeal) => orderMeal.id);
-  }
-
-  get values (): {guestName: string, mealIds: string[]} {
-    return {guestName: this.form.value.guestName, mealIds: this.guestOrderMealIds};
+  get values(): GuestOrderDialogValues {
+    return {guestName: this.form.value.guestName, mealIds: this.selectedIds};
   }
 
 }

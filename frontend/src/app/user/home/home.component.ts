@@ -18,9 +18,10 @@ import { DateService } from "../../shared/services/date.service";
 import { Meal } from "../../shared/models/meal";
 import { CategoryService } from "../../shared/services/category.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
-import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils";
+import { sortByDate, sortByNumber, sortByString } from "../shared/utils";
 import PlainDate = Temporal.PlainDate;
 import { HomeOpenOrderDay, HomeQuickOrderMeal, HomeUnchangeableOrderDay } from "./home.models";
+import * as _ from "lodash";
 
 @Component({
   selector: 'app-home',
@@ -148,7 +149,7 @@ export class HomeComponent implements OnInit {
   }
 
   private transformBanditPlates(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrders = _.groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       return {
@@ -177,7 +178,7 @@ export class HomeComponent implements OnInit {
   }
 
   private transformUnchangeableOrders(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrders = _.groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       return {
@@ -188,7 +189,7 @@ export class HomeComponent implements OnInit {
   }
 
   private transformOpenOrders(orders: Order[]): HomeOpenOrderDay[] {
-    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrders = _.groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       const sortedById = orders.sort((a, b) => sortByString(a.id, b.id));

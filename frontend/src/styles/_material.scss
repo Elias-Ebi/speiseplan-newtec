@@ -12,6 +12,18 @@
   border-radius: inherit;
 }
 
+.mat-mdc-icon-button.mat-mdc-icon-button {
+  color: white;
+  background: var(--clrPrimary);
+  border-radius: 0.75rem;
+}
+
+.mat-mdc-outlined-button.mat-mdc-outlined-button.mat-mdc-outlined-button {
+  color: var(--clrPrimary);
+  background: transparent;
+  box-shadow: 0 0 0 0.0625rem var(--clrPrimary) inset;
+}
+
 /* Loading Spinner Dialog */
 .spinner-dialog .mdc-dialog__surface.mdc-dialog__surface.mdc-dialog__surface {
   border-radius: 2.5rem;

@@ -5,8 +5,8 @@ import { environment } from "../../environment";
 import { lastValueFrom } from "rxjs";
 import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
-import PlainDate = Temporal.PlainDate;
 import { OrderMonth } from "../models/order-month";
+import PlainDate = Temporal.PlainDate;
 
 @Injectable({
   providedIn: 'root'
@@ -61,13 +61,13 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async orderMeal(mealID: string): Promise<Order> {
-    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}`, {});
-    return lastValueFrom(response);
-  }
+  async orderMeal(mealID: string, guestName?: string): Promise<Order> {
+    let params = {};
+    if (guestName) {
+      params = {guestName}
+    }
 
-  async orderGuestMeal(mealID: string, guestName:String): Promise<Order> {
-    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}?guestName=${guestName}`, {});
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}`, {}, {params});
     return lastValueFrom(response);
   }
 
