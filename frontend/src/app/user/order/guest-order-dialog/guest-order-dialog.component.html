@@ -4,7 +4,7 @@
 
     <mat-form-field class="example-full-width">
       <mat-label>Name des Gastes</mat-label>
-      <input required matInput formControlName="guestName">
+      <input formControlName="guestName" matInput required>
     </mat-form-field>
 
     <div class="grid">
@@ -26,7 +26,11 @@
       <button (click)="closeDialog()" mat-stroked-button type="button">
         Abbrechen
       </button>
-      <button [disabled]="form.invalid || !selectedIds.length" [mat-dialog-close]="values" color="primary" mat-flat-button type="submit">
+      <button
+        [disabled]="form.invalid || !selectedIds.length" [mat-dialog-close]="values"
+        color="primary"
+        mat-flat-button type="submit"
+      >
         Bestätigen
       </button>
     </div>

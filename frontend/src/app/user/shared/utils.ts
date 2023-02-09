@@ -1,5 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
 import PlainDate = Temporal.PlainDate;
+
 export function sortByNumber(a: number, b: number): number {
   return a - b;
 }

@@ -12,8 +12,8 @@ import { OrderMonth } from "../../shared/models/order-month";
 import { Temporal } from "@js-temporal/polyfill";
 import { Order } from "../../shared/models/order";
 import { sortByDate } from "../shared/utils";
-import PlainDate = Temporal.PlainDate;
 import * as _ from "lodash";
+import PlainDate = Temporal.PlainDate;
 
 
 @Component({

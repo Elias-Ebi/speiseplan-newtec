@@ -31,6 +31,10 @@ export class GuestOrderDialogComponent {
   ) {
   }
 
+  get values(): GuestOrderDialogValues {
+    return {guestName: this.form.value.guestName, mealIds: this.selectedIds};
+  }
+
   initializeForm(): FormGroup {
     return this.fb.group({
       guestName: ['']
@@ -52,9 +56,4 @@ export class GuestOrderDialogComponent {
 
     orderMeal.ordered = !orderMeal.ordered;
   }
-
-  get values(): GuestOrderDialogValues {
-    return {guestName: this.form.value.guestName, mealIds: this.selectedIds};
-  }
-
 }

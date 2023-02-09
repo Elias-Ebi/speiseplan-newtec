@@ -19,9 +19,9 @@ import { Meal } from "../../shared/models/meal";
 import { CategoryService } from "../../shared/services/category.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { sortByDate, sortByNumber, sortByString } from "../shared/utils";
-import PlainDate = Temporal.PlainDate;
 import { HomeOpenOrderDay, HomeQuickOrderMeal, HomeUnchangeableOrderDay } from "./home.models";
 import * as _ from "lodash";
+import PlainDate = Temporal.PlainDate;
 
 @Component({
   selector: 'app-home',

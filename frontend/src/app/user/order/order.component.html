@@ -52,9 +52,9 @@
 
 
               <button
+                (click)="deleteOrder(guestOrder.id, day.date)"
                 class="span-1 justify-self-end"
                 mat-icon-button
-                (click)="deleteOrder(guestOrder.id, day.date)"
               >
                 <mat-icon>no_food</mat-icon>
               </button>

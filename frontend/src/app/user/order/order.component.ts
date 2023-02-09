@@ -98,6 +98,29 @@ export class OrderComponent implements OnInit {
     this.orderMeal(mealId, date);
   }
 
+  deleteOrder(orderId: string, date: PlainDate) {
+    this.apiService.deleteOrder(orderId).then(async (order) => {
+      await this.updateOrderDay(date);
+
+      this.snackBar.open(`${order.meal.name} erfolgreich storniert.`, '', {
+        duration: 2000,
+        panelClass: 'success-snackbar'
+      });
+    }).catch((err) => {
+      this.snackBar.open(`Bestellung konnte nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
+    });
+  }
+
+  async resolveGuestOrderDialog(values: GuestOrderDialogValues, date: PlainDate) {
+    const promises = [];
+    for (const mealId of values.mealIds) {
+      promises.push(this.apiService.orderMeal(mealId, values.guestName));
+    }
+    await Promise.all(promises);
+
+    await this.updateOrderDay(date);
+  }
+
   private transformOrderCards(meals: Meal[], orders: Order[]): OrderMeal[] {
     return meals.map((meal) => {
       const orderForMeal = orders.find((order) => order.meal.id === meal.id);
@@ -115,11 +138,9 @@ export class OrderComponent implements OnInit {
     }).sort((a, b) => sortByNumber(a.orderIndex, b.orderIndex) || sortByString(a.id, b.id));
   }
 
-
   private transformGuestOrders(orders: Order[]): Order[] {
     return orders.filter((order) => order.guestName).sort((a, b) => sortByString(a.id, b.id));
   }
-
 
   private async updateOrderDay(date: PlainDate) {
     const ordersP = this.apiService.getOrdersDate(date);
@@ -149,28 +170,5 @@ export class OrderComponent implements OnInit {
     }).catch((err) => {
       this.snackBar.open(`Bestellung konnte nicht bestellt werden! ${err.message.message}`, '', {duration: 2000});
     });
-  }
-
-  deleteOrder(orderId: string, date: PlainDate) {
-    this.apiService.deleteOrder(orderId).then(async (order) => {
-      await this.updateOrderDay(date);
-
-      this.snackBar.open(`${order.meal.name} erfolgreich storniert.`, '', {
-        duration: 2000,
-        panelClass: 'success-snackbar'
-      });
-    }).catch((err) => {
-      this.snackBar.open(`Bestellung konnte nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
-    });
-  }
-
-  async resolveGuestOrderDialog(values: GuestOrderDialogValues, date: PlainDate) {
-    const promises = [];
-    for (const mealId of values.mealIds) {
-      promises.push(this.apiService.orderMeal(mealId, values.guestName));
-    }
-    await Promise.all(promises);
-
-    await this.updateOrderDay(date);
   }
 }
