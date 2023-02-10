@@ -111,6 +111,10 @@ export class OrderService {
     return order;
   }
 
+  async getMultipleOrders() {
+    //TODO
+  }
+
   async order(mealId: string, email: string, considerOrderableDate: boolean, guestName?: string): Promise<Order> {
     const meal = await this.mealService.getMeal(mealId);
 

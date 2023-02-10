@@ -28,6 +28,20 @@ export class OrderController {
     return this.orderService.getOrdersOn(date, user.email);
   }
 
+  /*
+  @Get('multiple-orders')
+  async allOrders(@Request() req): Promise<Order[]> {
+    const user = req.user as AuthUser;
+    const filter = {
+      meal: 'testmeal',
+      buyer: 'testuser',
+      guest: 'testguest',
+      date: this.dateService.getLatestUnchangeableDate()
+    }
+    return this.orderService.getMultipleOrders(user.email, filter);
+  }
+  */
+
   @Get('open')
   async openOrders(@Request() req): Promise<Order[]> {
     const user = req.user as AuthUser;
