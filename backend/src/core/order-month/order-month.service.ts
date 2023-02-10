@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OrderMonth } from '../../data/entitites/order-month.entity';
-import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../../auth/auth.service';
 
@@ -26,6 +26,24 @@ export class OrderMonthService {
       .getRawOne<{ sum: number }>();
 
     return sum;
+  }
+
+  async getHistory(email: string): Promise<OrderMonth[]> {
+    const options: FindManyOptions<OrderMonth> = {
+      where: { profile: { email } },
+      relations: {
+        orders: {
+          meal: true
+        }
+      }
+    };
+
+    const orderMonths = await this.orderMonthRepository.find(options);
+    orderMonths.forEach((orderMonth) => {
+      orderMonth.orders = orderMonth.orders.filter((order) => !order.guestName);
+    });
+
+    return orderMonths;
   }
 
   async get(month: number, year: number, email: string): Promise<OrderMonth> {

@@ -5,6 +5,7 @@ import { environment } from "../../environment";
 import { lastValueFrom } from "rxjs";
 import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
+import { OrderMonth } from "../models/order-month";
 import PlainDate = Temporal.PlainDate;
 
 @Injectable({
@@ -50,11 +51,6 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getOrdersOn(date: PlainDate): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
-    return lastValueFrom(response);
-  }
-
   async getOpenOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/open`);
     return lastValueFrom(response);
@@ -65,8 +61,13 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async orderMeal(mealID: string): Promise<Order> {
-    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}`, {});
+  async orderMeal(mealID: string, guestName?: string): Promise<Order> {
+    let params = {};
+    if (guestName) {
+      params = {guestName}
+    }
+
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}`, {}, {params});
     return lastValueFrom(response);
   }
 
@@ -77,6 +78,11 @@ export class ApiService {
 
   async deleteOrdersOn(date: PlainDate): Promise<Order[]> {
     const response = this.httpClient.delete<Order[]>(`${environment.apiUrl}/orders/delete-day/${date.toString()}`)
+    return lastValueFrom(response);
+  }
+
+  async getHistory(): Promise<OrderMonth[]> {
+    const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/history`);
     return lastValueFrom(response);
   }
 }

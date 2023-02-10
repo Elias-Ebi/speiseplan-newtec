@@ -8,7 +8,7 @@
 
         <div class="grid">
           <app-order-card
-            (click)="orderOrDelete(orderMeal.id, orderMeal.orderId, day.date)"
+            (click)="orderOrDelete(orderMeal.id, orderMeal.orderId, day.date, orderMeal.ordered)"
             *ngFor="let orderMeal of day.orderMeals"
             [amount]="orderMeal.orderCount"
             [description]="orderMeal.description"
@@ -26,7 +26,10 @@
       <section class="section">
         <div class="section-headline-container">
           <h2>Gastbestellung</h2>
-          <button color="primary" mat-flat-button>
+          <button
+            (click)="openGuestOrderDialog(day.date)"
+            color="primary"
+            mat-flat-button>
             <mat-icon>group_add</mat-icon>
             Gast hinzufügen
           </button>
@@ -48,7 +51,11 @@
               </p>
 
 
-              <button class="span-1 justify-self-end icon-button" mat-icon-button>
+              <button
+                (click)="deleteOrder(guestOrder.id, day.date)"
+                class="span-1 justify-self-end"
+                mat-icon-button
+              >
                 <mat-icon>no_food</mat-icon>
               </button>
             </div>

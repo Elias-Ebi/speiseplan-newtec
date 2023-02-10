@@ -18,10 +18,9 @@ import { DateService } from "../../shared/services/date.service";
 import { Meal } from "../../shared/models/meal";
 import { CategoryService } from "../../shared/services/category.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
-import { HomeQuickOrderMeal } from "./models/home-quickorder-meal";
-import { HomeOpenOrderDay } from "./models/home-open-order-day";
-import { HomeUnchangeableOrderDay } from "./models/home-unchangeable-order-day";
-import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils";
+import { sortByDate, sortByNumber, sortByString } from "../shared/utils";
+import { HomeOpenOrderDay, HomeQuickOrderMeal, HomeUnchangeableOrderDay } from "./home.models";
+import * as _ from "lodash";
 import PlainDate = Temporal.PlainDate;
 
 @Component({
@@ -111,7 +110,9 @@ export class HomeComponent implements OnInit {
     this.banditPlateCount = banditPlates.length;
     this.saldo = saldo;
 
-    this.quickOrderMeals = this.transformQuickOrderMeals(quickOrderMeals, openOrders);
+    const userOrders = openOrders.filter(order => !order.guestName)
+
+    this.quickOrderMeals = this.transformQuickOrderMeals(quickOrderMeals, userOrders);
     if (quickOrderMeals.length) {
       const dateString = quickOrderMeals[0].date
       this.quickOrderDate = PlainDate.from(dateString);
@@ -148,7 +149,7 @@ export class HomeComponent implements OnInit {
   }
 
   private transformBanditPlates(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrders = _.groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       return {
@@ -177,7 +178,7 @@ export class HomeComponent implements OnInit {
   }
 
   private transformUnchangeableOrders(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrders = _.groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       return {
@@ -188,7 +189,7 @@ export class HomeComponent implements OnInit {
   }
 
   private transformOpenOrders(orders: Order[]): HomeOpenOrderDay[] {
-    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrders = _.groupBy(orders, 'date');
 
     return Object.entries(groupedOrders).map(([dateString, orders]) => {
       const sortedById = orders.sort((a, b) => sortByString(a.id, b.id));
