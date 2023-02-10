@@ -1,0 +1,38 @@
+<form [formGroup]="form" class="dialog-container">
+  <section class="section">
+    <h2>Gastbestellung</h2>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Name des Gastes</mat-label>
+      <input formControlName="guestName" matInput required>
+    </mat-form-field>
+
+    <div class="grid">
+      <app-order-card
+        (click)="updateOrdered(i)"
+        *ngFor="let orderMeal of orderDay.orderMeals; let i = index"
+        [amount]="orderMeal.orderCount"
+        [description]="orderMeal.description"
+        [icon]="orderMeal.icon"
+        [name]="orderMeal.name"
+        [ngClass]="{'selected': orderMeal.ordered}"
+        [selected]="orderMeal.ordered"
+        class="span-4 mat-elevation-z1"
+      >
+      </app-order-card>
+    </div>
+
+    <div class="button-container">
+      <button (click)="closeDialog()" mat-stroked-button type="button">Abbrechen</button>
+
+      <button
+        [disabled]="form.invalid || !selectedIds.length" [mat-dialog-close]="values"
+        color="primary"
+        mat-flat-button type="submit"
+      >
+        Bestätigen
+      </button>
+    </div>
+  </section>
+</form>
+
