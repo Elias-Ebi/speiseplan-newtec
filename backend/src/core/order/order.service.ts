@@ -171,9 +171,9 @@ export class OrderService {
   async create(email: string, meal: Meal, guestName: string): Promise<Order> {
     const date = PlainDate.from(meal.date);
 
-    const profilePromise = this.authService.getProfile(email);
-    const orderMonthPromise = this.orderMonthService.get(date.month, date.year, email);
-    const [profile, orderMonth] = await Promise.all([profilePromise, orderMonthPromise]);
+    const profileP = this.authService.getProfile(email);
+    const orderMonthP = this.orderMonthService.get(date.month, date.year, email);
+    const [profile, orderMonth] = await Promise.all([profileP, orderMonthP]);
 
     const order: Order = {
       profile,
@@ -256,11 +256,11 @@ export class OrderService {
       meal.orderCount -= 1;
     });
 
-    const orderMonthsPromise = this.orderMonthRepository.save(Array.from(orderMonths.values()));
-    const mealsPromise = this.mealRepository.save(Array.from(meals.values()));
-    const deletedOrdersPromise = this.orderRepository.remove(orders);
+    const orderMonthsP = this.orderMonthRepository.save(Array.from(orderMonths.values()));
+    const mealsP = this.mealRepository.save(Array.from(meals.values()));
+    const deletedOrdersP = this.orderRepository.remove(orders);
 
-    await Promise.all([deletedOrdersPromise, orderMonthsPromise, mealsPromise]);
+    await Promise.all([deletedOrdersP, orderMonthsP, mealsP]);
   }
 
   private async mealAlreadyOrdered(mealId: string, email: string, guestName: string): Promise<boolean> {
