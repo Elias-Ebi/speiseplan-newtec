@@ -17,6 +17,8 @@ import PlainDateTime = Temporal.PlainDateTime;
 export class OrderService {
   constructor(
     @InjectRepository(Order) private orderRepository: Repository<Order>,
+    @InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>,
+    @InjectRepository(Meal) private mealRepository: Repository<Meal>,
     private authService: AuthService,
     private mealService: MealService,
     private orderMonthService: OrderMonthService
@@ -52,21 +54,15 @@ export class OrderService {
       throw new BadRequestException('Order already offered.');
     }
 
-    if (
-      PlainDateTime.compare(time, order.meal.orderable) !== 1
-      && PlainDateTime.compare(time, order.meal.delivery) !== -1
-    ) {
+    const orderable = PlainDateTime.from(order.meal.orderable);
+    const delivery = PlainDateTime.from(order.meal.delivery);
+    if (!this.isAfter(time, orderable) && !this.isBefore(time, delivery)) {
       throw new BadRequestException('Order can not be offered at the moment.');
     }
 
     order.isBanditplate = true;
 
     return this.orderRepository.save(order);
-  }
-
-
-  async getCurrentBalance(email: string): Promise<number> {
-    return this.orderMonthService.getBalance(email);
   }
 
   async getUnchangeable(time: PlainDateTime, email: string): Promise<Order[]> {
@@ -145,8 +141,7 @@ export class OrderService {
     const meal = await this.mealService.get(mealId);
 
     const orderableTime = PlainDateTime.from(meal.orderable);
-
-    if (!options?.ignoreOrderableDate && PlainDateTime.compare(orderableTime, time) !== 1) {
+    if (!options?.ignoreOrderableDate && !this.isAfter(orderableTime, time)) {
       throw new BadRequestException('Too late to order this meal.');
     }
 
@@ -158,16 +153,16 @@ export class OrderService {
 
     const order = await this.create(email, meal, guestName);
 
-    const promises: Promise<any>[] = [];
+    const promises = [];
 
     // only increase total if order is not for guest
     if (!guestName) {
       order.orderMonth.total += meal.total;
-      promises.push(this.orderMonthService.update(order.orderMonth));
+      promises.push(this.orderRepository.save(order.orderMonth));
     }
 
     meal.orderCount += 1;
-    promises.push(this.mealService.update(meal));
+    promises.push(this.mealRepository.save(meal));
 
     await Promise.all(promises);
     return order;
@@ -185,7 +180,7 @@ export class OrderService {
       date: date.toString(),
       orderMonth,
       meal,
-      guestName: guestName || '',
+      guestName: guestName,
       isBanditplate: false
     } as Order;
 
@@ -195,12 +190,12 @@ export class OrderService {
   async delete(time: PlainDateTime, id: string, user: AuthUser, options?: OrderOptions): Promise<Order> {
     const order = await this.get(id);
 
-    if (!options?.ignoreOrderableDate && !this.canBeEdited(order, time)) {
-      throw new BadRequestException('Too late to delete this order.');
-    }
-
     if (!this.canEdit(order, user)) {
       throw new UnauthorizedException();
+    }
+
+    if (!options?.ignoreOrderableDate && !this.canCurrentlyBeEdited(order, time)) {
+      throw new BadRequestException('Order can not be deleted anymore.');
     }
 
     const orderMonth = order.orderMonth;
@@ -213,7 +208,9 @@ export class OrderService {
 
     meal.orderCount -= 1;
 
-    await Promise.all([this.orderMonthService.update(orderMonth), this.mealService.update(meal)]);
+    const promises = [this.orderRepository.save(orderMonth), this.mealRepository.save(meal)];
+    await Promise.all(promises);
+
     return this.orderRepository.remove(order);
   }
 
@@ -227,44 +224,33 @@ export class OrderService {
     let ordersToDelete = orders.filter((order) => this.canEdit(order, user));
 
     if (!options?.ignoreOrderableDate) {
-      ordersToDelete = ordersToDelete.filter((order) => this.canBeEdited(order, time));
+      ordersToDelete = ordersToDelete.filter((order) => this.canCurrentlyBeEdited(order, time));
     }
 
-    const otherOrders = orders.filter((order) => !ordersToDelete.includes(order));
-
-    if (otherOrders.length) {
+    if (orders.length !== ordersToDelete.length) {
       throw new BadRequestException('User tried to delete orders which can not be deleted.');
     }
 
-    const orderMonths: Map<string, OrderMonth> = new Map<string, OrderMonth>();
-    const meals: Map<string, Meal> = new Map<string, Meal>();
+    const orderMonths = new Set<OrderMonth>();
+    const meals = new Set<Meal>();
 
     orders.forEach((order) => {
-      let orderMonth = orderMonths.get(order.orderMonth.id);
-      if (!orderMonth) {
-        orderMonths.set(order.orderMonth.id, order.orderMonth);
-        orderMonth = order.orderMonth;
-      }
-
-      let meal = meals.get(order.meal.id);
-      if (!meal) {
-        meals.set(order.meal.id, order.meal);
-        meal = order.meal;
-      }
+      orderMonths.add(order.orderMonth);
+      meals.add(order.meal);
 
       // only decrease total if order is not for guest
       if (!order.guestName) {
-        orderMonth.total -= meal.total;
+        order.orderMonth.total -= order.meal.total;
       }
 
-      meal.orderCount -= 1;
+      order.meal.orderCount -= 1;
     });
 
-    const orderMonthPromises = Array.from(orderMonths.values()).map((orderMonth) => this.orderMonthService.update(orderMonth));
-    const mealPromises = Array.from(meals.values()).map((meal) => this.mealService.update(meal));
-    const deletedOrdersPromises = orders.map((order) => this.orderRepository.remove(order));
+    const orderMonthPromise = this.orderMonthRepository.save(Array.from(orderMonths));
+    const mealPromise = this.mealRepository.save(Array.from(meals));
+    const deletedOrderPromise = this.orderRepository.remove(orders);
 
-    await Promise.all([...deletedOrdersPromises, ...orderMonthPromises, ...mealPromises]);
+    await Promise.all([deletedOrderPromise, orderMonthPromise, mealPromise]);
   }
 
   private async mealAlreadyOrdered(mealId: string, email: string, guestName: string): Promise<boolean> {
@@ -288,7 +274,15 @@ export class OrderService {
     return order.profile.email === user.email || user.isAdmin;
   }
 
-  private canBeEdited(order: Order, time: PlainDateTime) {
+  private canCurrentlyBeEdited(order: Order, time: PlainDateTime) {
     return PlainDateTime.compare(order.meal.orderable, time) !== -1;
+  }
+
+  private isAfter(time1: PlainDateTime, time2: PlainDateTime): boolean {
+    return PlainDateTime.compare(time1, time2) === 1;
+  }
+
+  private isBefore(time1: PlainDateTime, time2: PlainDateTime): boolean {
+    return PlainDateTime.compare(time1, time2) === -1;
   }
 }
