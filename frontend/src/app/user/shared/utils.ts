@@ -6,7 +6,7 @@ export function sortByNumber(a: number, b: number): number {
 }
 
 export function sortByString(a: string, b: string): number {
-  return a.localeCompare(b)
+  return a?.localeCompare(b) || -1;
 }
 
 export function sortByDate(a: PlainDate, b: PlainDate): number {

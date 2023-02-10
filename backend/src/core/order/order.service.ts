@@ -158,7 +158,7 @@ export class OrderService {
     // only increase total if order is not for guest
     if (!guestName) {
       order.orderMonth.total += meal.total;
-      promises.push(this.orderRepository.save(order.orderMonth));
+      promises.push(this.orderMonthRepository.save(order.orderMonth));
     }
 
     meal.orderCount += 1;
@@ -208,7 +208,7 @@ export class OrderService {
 
     meal.orderCount -= 1;
 
-    const promises = [this.orderRepository.save(orderMonth), this.mealRepository.save(meal)];
+    const promises = [this.orderMonthRepository.save(orderMonth), this.mealRepository.save(meal)];
     await Promise.all(promises);
 
     return this.orderRepository.remove(order);
@@ -231,23 +231,33 @@ export class OrderService {
       throw new BadRequestException('User tried to delete orders which can not be deleted.');
     }
 
-    const orderMonths = new Set<OrderMonth>();
-    const meals = new Set<Meal>();
+
+    const orderMonths: Map<string, OrderMonth> = new Map<string, OrderMonth>();
+    const meals: Map<string, Meal> = new Map<string, Meal>();
 
     orders.forEach((order) => {
-      orderMonths.add(order.orderMonth);
-      meals.add(order.meal);
+      let orderMonth = orderMonths.get(order.orderMonth.id);
+      if (!orderMonth) {
+        orderMonths.set(order.orderMonth.id, order.orderMonth);
+        orderMonth = order.orderMonth;
+      }
+
+      let meal = meals.get(order.meal.id);
+      if (!meal) {
+        meals.set(order.meal.id, order.meal);
+        meal = order.meal;
+      }
 
       // only decrease total if order is not for guest
       if (!order.guestName) {
-        order.orderMonth.total -= order.meal.total;
+        orderMonth.total -= meal.total;
       }
 
-      order.meal.orderCount -= 1;
+      meal.orderCount -= 1;
     });
 
-    const orderMonthPromise = this.orderMonthRepository.save(Array.from(orderMonths));
-    const mealPromise = this.mealRepository.save(Array.from(meals));
+    const orderMonthPromise = this.orderMonthRepository.save(Array.from(orderMonths.values()));
+    const mealPromise = this.mealRepository.save(Array.from(meals.values()));
     const deletedOrderPromise = this.orderRepository.remove(orders);
 
     await Promise.all([deletedOrderPromise, orderMonthPromise, mealPromise]);
