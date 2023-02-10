@@ -256,11 +256,11 @@ export class OrderService {
       meal.orderCount -= 1;
     });
 
-    const orderMonthPromise = this.orderMonthRepository.save(Array.from(orderMonths.values()));
-    const mealPromise = this.mealRepository.save(Array.from(meals.values()));
-    const deletedOrderPromise = this.orderRepository.remove(orders);
+    const orderMonthsPromise = this.orderMonthRepository.save(Array.from(orderMonths.values()));
+    const mealsPromise = this.mealRepository.save(Array.from(meals.values()));
+    const deletedOrdersPromise = this.orderRepository.remove(orders);
 
-    await Promise.all([deletedOrderPromise, orderMonthPromise, mealPromise]);
+    await Promise.all([deletedOrdersPromise, orderMonthsPromise, mealsPromise]);
   }
 
   private async mealAlreadyOrdered(mealId: string, email: string, guestName: string): Promise<boolean> {
