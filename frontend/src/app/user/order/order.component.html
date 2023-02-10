@@ -1,5 +1,5 @@
 <mat-tab-group class="main-content">
-  <mat-tab *ngFor="let day of data" [label]="day.date | fullDate">
+  <mat-tab *ngFor="let day of orderDays" [label]="day.date | fullDate">
     <div class="content">
       <!-- Meine Bestellung -->
       <section class="section">
@@ -8,13 +8,14 @@
 
         <div class="grid">
           <app-order-card
-            *ngFor="let menu of day.meals"
-            [amount]="menu.orderCount"
-            [description]="menu.description"
-            [icon]="getIcon(menu.categoryId)"
-            [name]="menu.name"
-            [ngClass]="{'selected': false}"
-            [selected]="false"
+            (click)="orderOrDelete(orderMeal.id, orderMeal.orderId, day.date, orderMeal.ordered)"
+            *ngFor="let orderMeal of day.orderMeals"
+            [amount]="orderMeal.orderCount"
+            [description]="orderMeal.description"
+            [icon]="orderMeal.icon"
+            [name]="orderMeal.name"
+            [ngClass]="{'selected': orderMeal.ordered}"
+            [selected]="orderMeal.ordered"
             class="span-4 mat-elevation-z1"
           >
           </app-order-card>
@@ -25,7 +26,10 @@
       <section class="section">
         <div class="section-headline-container">
           <h2>Gastbestellung</h2>
-          <button mat-flat-button color="primary">
+          <button
+            (click)="openGuestOrderDialog(day.date)"
+            color="primary"
+            mat-flat-button>
             <mat-icon>group_add</mat-icon>
             Gast hinzufügen
           </button>
@@ -34,33 +38,32 @@
         <hr class="bg-neutral"/>
 
         <div class="list-container">
-          <ng-container *ngFor="let order of day.guestOrders; let last = last">
+          <ng-container *ngFor="let guestOrder of day.guestOrders; let last = last">
             <div class="grid align-center">
               <!-- Name -->
-              <div class="span-3 icon-with-text">
-                <mat-icon>person</mat-icon>
-                <p>{{order.name}}</p>
-              </div>
+              <p class="span-3">
+                {{guestOrder.guestName}}
+              </p>
 
-              <!-- Meal -->
-              <div class="span-7 icon-with-text">
-                <mat-icon>restaurant</mat-icon>
-                <p>{{order.meal}}</p>
-              </div>
+              <!-- MealName -->
+              <p class="span-8">
+                {{guestOrder.meal.name}}
+              </p>
 
-              <div class="span-2 button-container">
-                <button mat-icon-button class="icon-button-outlined">
-                  <mat-icon>edit</mat-icon>
-                </button>
 
-                <button mat-icon-button class="icon-button">
-                  <mat-icon>no_food</mat-icon>
-                </button>
-              </div>
+              <button
+                (click)="deleteOrder(guestOrder.id, day.date)"
+                class="span-1 justify-self-end"
+                mat-icon-button
+              >
+                <mat-icon>no_food</mat-icon>
+              </button>
             </div>
 
             <hr *ngIf="!last">
           </ng-container>
+
+          <p *ngIf="!day.guestOrders.length">Keine Bestellungen vorhanden.</p>
         </div>
       </section>
     </div>

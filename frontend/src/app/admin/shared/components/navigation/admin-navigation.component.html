@@ -1,0 +1,33 @@
+<nav class="mat-elevation-z6">
+  <div class="content-wrapper nav-container">
+    <!-- Logo and User Area-->
+    <div class="logo-container">
+      <img alt="NewTec Speiseplan Admin Logo" class="logo" routerLink="/admin" src="/assets/logo-admin.svg">
+      <p class="nav-link" routerLink="/">Nutzer-Bereich</p>
+    </div>
+
+    <!-- Links -->
+    <ul class="links-container">
+      <li routerLink="#">
+        <p>Gerichte</p>
+      </li>
+
+      <li routerLink="/admin/order-management">
+        <p>Bestellungen</p>
+      </li>
+
+      <li routerLink="/admin/month-overview">
+        <p>Monatsübersicht</p>
+      </li>
+
+      <li routerLink="#">
+        <p>Nutzer</p>
+      </li>
+
+      <li (click)="logout()">
+        <p>Logout</p>
+      </li>
+    </ul>
+  </div>
+</nav>
+

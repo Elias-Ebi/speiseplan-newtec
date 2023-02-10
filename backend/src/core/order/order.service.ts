@@ -1,34 +1,35 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, MoreThanOrEqual, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository } from 'typeorm';
 import { Order } from '../../data/entitites/order.entity';
-import { OrderMonth } from '../../data/entitites/order-month.entity';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Meal } from '../../data/entitites/meal.entity';
 import { AuthService } from '../../auth/auth.service';
 import { Temporal } from '@js-temporal/polyfill';
-import { DateService } from '../../shared/date/date.service';
 import { MealService } from '../meal/meal.service';
 import { OrderMonthService } from '../order-month/order-month.service';
+import { OrderMonth } from '../../data/entitites/order-month.entity';
+import { OrderOptions } from './options-models/order.options';
 import PlainDate = Temporal.PlainDate;
+import PlainDateTime = Temporal.PlainDateTime;
 
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(Order) private orderRepository: Repository<Order>,
-    @InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>,
-    @InjectRepository(Meal) private mealRepository: Repository<Meal>,
     private authService: AuthService,
-    private dateService: DateService,
     private mealService: MealService,
     private orderMonthService: OrderMonthService
   ) {
   }
 
-  async getBanditPlates(date: PlainDate): Promise<Order[]> {
+  async getBanditPlates(time: PlainDateTime): Promise<Order[]> {
     const options: FindManyOptions<Order> = {
       where: {
-        date: date.toString(),
+        meal: {
+          delivery: MoreThan(time.toString()),
+          orderable: LessThan(time.toString())
+        },
         isBanditplate: true
       },
       relations: {
@@ -40,33 +41,44 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
+  async offerAsBanditplate(time: PlainDateTime, id: string, user: AuthUser): Promise<Order> {
+    const order = await this.get(id);
 
-  async currentTotal(email: string): Promise<number> {
-    const options: FindManyOptions<OrderMonth> = {
-      where: {
-        profile: {
-          email
-        },
-        paid: false
-      }
-    };
+    if (!this.canEdit(order, user)) {
+      throw new UnauthorizedException();
+    }
 
-    const { sum } = await this.orderMonthRepository.createQueryBuilder('orderMonth')
-      .where(options.where)
-      .innerJoin('orderMonth.profile', 'profile')
-      .select('SUM(orderMonth.total)')
-      .getRawOne<{ sum: number }>();
+    if (order.isBanditplate) {
+      throw new BadRequestException('Order already offered.');
+    }
 
-    return sum;
+    if (
+      PlainDateTime.compare(time, order.meal.orderable) !== 1
+      && PlainDateTime.compare(time, order.meal.delivery) !== -1
+    ) {
+      throw new BadRequestException('Order can not be offered at the moment.');
+    }
+
+    order.isBanditplate = true;
+
+    return this.orderRepository.save(order);
   }
 
-  async getOrdersOn(date: PlainDate, email: string): Promise<Order[]> {
+
+  async getCurrentBalance(email: string): Promise<number> {
+    return this.orderMonthService.getBalance(email);
+  }
+
+  async getUnchangeable(time: PlainDateTime, email: string): Promise<Order[]> {
     const options: FindManyOptions<Order> = {
       where: {
         profile: {
           email
         },
-        date: date.toString()
+        meal: {
+          delivery: MoreThan(time.toString()),
+          orderable: LessThan(time.toString())
+        }
       },
       relations: {
         meal: true
@@ -76,13 +88,15 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
-  async getOrdersFrom(date: PlainDate, email: string): Promise<Order[]> {
+  async getChangeable(time: PlainDateTime, email: string): Promise<Order[]> {
     const options: FindManyOptions<Order> = {
       where: {
         profile: {
           email
         },
-        date: MoreThanOrEqual(date.toString())
+        meal: {
+          orderable: MoreThan(time.toString())
+        }
       },
       relations: {
         meal: true
@@ -92,7 +106,7 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
-  async getOrder(orderId: string): Promise<Order> {
+  async get(orderId: string): Promise<Order> {
     const options: FindOneOptions<Order> = {
       where: { id: orderId },
       relations: {
@@ -111,47 +125,59 @@ export class OrderService {
     return order;
   }
 
-  async getMultipleOrders() {
-    //TODO
+  async getOn(date: PlainDate, email: string): Promise<Order[]> {
+    const options: FindOneOptions<Order> = {
+      where: {
+        date: date.toString(),
+        profile: { email }
+      },
+      relations: {
+        profile: true,
+        orderMonth: true,
+        meal: true
+      }
+    };
+
+    return this.orderRepository.find(options);
   }
 
-  async order(mealId: string, email: string, considerOrderableDate: boolean, guestName?: string): Promise<Order> {
-    const meal = await this.mealService.getMeal(mealId);
+  async order(time: PlainDateTime, mealId: string, email: string, guestName?: string, options?: OrderOptions): Promise<Order> {
+    const meal = await this.mealService.get(mealId);
 
-    const mealDate = Temporal.PlainDate.from(meal.date);
-    const firstOrderableDate = this.dateService.getNextOrderableDate();
+    const orderableTime = PlainDateTime.from(meal.orderable);
 
-    if (considerOrderableDate && PlainDate.compare(mealDate, firstOrderableDate) === -1) {
+    if (!options?.ignoreOrderableDate && PlainDateTime.compare(orderableTime, time) !== 1) {
       throw new BadRequestException('Too late to order this meal.');
     }
 
-    const mealAlreadyOrdered = await this.mealAlreadyOrdered(mealId, email);
+    const mealAlreadyOrdered = await this.mealAlreadyOrdered(mealId, email, guestName);
     if (mealAlreadyOrdered) {
-      throw new BadRequestException('User already ordered this meal.');
+      const additionalText = guestName ? ` for ${guestName}.` : '.';
+      throw new BadRequestException(`User already ordered this meal${additionalText}`);
     }
 
-    const order = await this.addOrder(email, meal, guestName);
+    const order = await this.create(email, meal, guestName);
 
     const promises: Promise<any>[] = [];
 
     // only increase total if order is not for guest
     if (!guestName) {
       order.orderMonth.total += meal.total;
-      promises.push(this.orderMonthRepository.save(order.orderMonth));
+      promises.push(this.orderMonthService.update(order.orderMonth));
     }
 
     meal.orderCount += 1;
-    promises.push(this.mealRepository.save(meal));
+    promises.push(this.mealService.update(meal));
 
     await Promise.all(promises);
     return order;
   }
 
-  async addOrder(email: string, meal: Meal, guestName: string): Promise<Order> {
+  async create(email: string, meal: Meal, guestName: string): Promise<Order> {
     const date = PlainDate.from(meal.date);
 
     const profilePromise = this.authService.getProfile(email);
-    const orderMonthPromise = this.orderMonthService.getOrderMonth(date.month, date.year, email);
+    const orderMonthPromise = this.orderMonthService.get(date.month, date.year, email);
     const [profile, orderMonth] = await Promise.all([profilePromise, orderMonthPromise]);
 
     const order: Order = {
@@ -166,13 +192,10 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
-  async deleteOrder(id: string, user: AuthUser, considerOrderableDate: boolean): Promise<Order> {
-    const order = await this.getOrder(id);
+  async delete(time: PlainDateTime, id: string, user: AuthUser, options?: OrderOptions): Promise<Order> {
+    const order = await this.get(id);
 
-    const orderDate = PlainDate.from(order.date);
-    const firstOrderableDate = this.dateService.getNextOrderableDate();
-
-    if (considerOrderableDate && PlainDate.compare(orderDate, firstOrderableDate) === -1) {
+    if (!options?.ignoreOrderableDate && !this.canBeEdited(order, time)) {
       throw new BadRequestException('Too late to delete this order.');
     }
 
@@ -190,11 +213,61 @@ export class OrderService {
 
     meal.orderCount -= 1;
 
-    await Promise.all([this.orderMonthRepository.save(orderMonth), this.mealRepository.save(meal)]);
+    await Promise.all([this.orderMonthService.update(orderMonth), this.mealService.update(meal)]);
     return this.orderRepository.remove(order);
   }
 
-  private async mealAlreadyOrdered(mealId: string, email: string): Promise<boolean> {
+  async deleteOn(time: PlainDateTime, date: PlainDate, user: AuthUser, options?: OrderOptions): Promise<void> {
+    const orders = await this.getOn(date, user.email);
+
+    if (!orders.length) {
+      throw new BadRequestException('No orders to delete.');
+    }
+
+    let ordersToDelete = orders.filter((order) => this.canEdit(order, user));
+
+    if (!options?.ignoreOrderableDate) {
+      ordersToDelete = ordersToDelete.filter((order) => this.canBeEdited(order, time));
+    }
+
+    const otherOrders = orders.filter((order) => !ordersToDelete.includes(order));
+
+    if (otherOrders.length) {
+      throw new BadRequestException('User tried to delete orders which can not be deleted.');
+    }
+
+    const orderMonths: Map<string, OrderMonth> = new Map<string, OrderMonth>();
+    const meals: Map<string, Meal> = new Map<string, Meal>();
+
+    orders.forEach((order) => {
+      let orderMonth = orderMonths.get(order.orderMonth.id);
+      if (!orderMonth) {
+        orderMonths.set(order.orderMonth.id, order.orderMonth);
+        orderMonth = order.orderMonth;
+      }
+
+      let meal = meals.get(order.meal.id);
+      if (!meal) {
+        meals.set(order.meal.id, order.meal);
+        meal = order.meal;
+      }
+
+      // only decrease total if order is not for guest
+      if (!order.guestName) {
+        orderMonth.total -= meal.total;
+      }
+
+      meal.orderCount -= 1;
+    });
+
+    const orderMonthPromises = Array.from(orderMonths.values()).map((orderMonth) => this.orderMonthService.update(orderMonth));
+    const mealPromises = Array.from(meals.values()).map((meal) => this.mealService.update(meal));
+    const deletedOrdersPromises = orders.map((order) => this.orderRepository.remove(order));
+
+    await Promise.all([...deletedOrdersPromises, ...orderMonthPromises, ...mealPromises]);
+  }
+
+  private async mealAlreadyOrdered(mealId: string, email: string, guestName: string): Promise<boolean> {
     const orderOptions: FindManyOptions<Order> = {
       where: {
         profile: {
@@ -203,7 +276,7 @@ export class OrderService {
         meal: {
           id: mealId
         },
-        guestName: ''
+        guestName: guestName || ''
       }
     };
 
@@ -213,5 +286,9 @@ export class OrderService {
 
   private canEdit(order: Order, user: AuthUser): boolean {
     return order.profile.email === user.email || user.isAdmin;
+  }
+
+  private canBeEdited(order: Order, time: PlainDateTime) {
+    return PlainDateTime.compare(order.meal.orderable, time) !== -1;
   }
 }

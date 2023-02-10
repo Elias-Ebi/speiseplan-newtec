@@ -1,5 +1,5 @@
-import {Pipe, PipeTransform} from '@angular/core';
-import {Intl, Temporal} from "@js-temporal/polyfill";
+import { Pipe, PipeTransform } from '@angular/core';
+import { Intl, Temporal } from "@js-temporal/polyfill";
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
 @Pipe({
@@ -13,7 +13,7 @@ export class FullDatePipe implements PipeTransform {
       weekday: "long",
       year: "numeric",
       month: "2-digit",
-      day: "numeric",
+      day: "2-digit",
     };
     return date.toLocaleString('default', options);
   }

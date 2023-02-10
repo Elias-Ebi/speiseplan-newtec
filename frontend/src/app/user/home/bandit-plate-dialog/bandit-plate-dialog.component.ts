@@ -3,11 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
-import { Order } from "../../../shared/models/order";
-import { Temporal } from "@js-temporal/polyfill";
-import { DateService } from "../../../shared/services/date.service";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
-import PlainDate = Temporal.PlainDate;
+import { HomeUnchangeableOrderDay } from "../home.models";
 
 @Component({
   selector: 'app-bandit-plate-dialog',
@@ -17,10 +14,8 @@ import PlainDate = Temporal.PlainDate;
   styleUrls: ['./bandit-plate-dialog.component.scss']
 })
 export class BanditPlateDialogComponent {
-  date: PlainDate;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public banditPlates: Order[], private dialogRef: MatDialogRef<BanditPlateDialogComponent>, private dateService: DateService) {
-    this.date = this.dateService.getLatestUnchangeableDate();
+  constructor(@Inject(MAT_DIALOG_DATA) public banditPlateDays: HomeUnchangeableOrderDay[], private dialogRef: MatDialogRef<BanditPlateDialogComponent>) {
   }
 
   closeDialog() {

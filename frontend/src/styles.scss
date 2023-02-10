@@ -81,12 +81,6 @@ button {
   }
 }
 
-.icon-button.icon-button {
-  color: white;
-  background: var(--clrPrimary);
-  border-radius: 0.75rem;
-}
-
 .icon-button-outlined.icon-button-outlined {
   color: var(--clrPrimary);
   background: transparent;
@@ -105,7 +99,11 @@ button {
 .success-snackbar {
   color: white;
   --mdc-snackbar-container-color: var(--clrPrimary);
-  button {background:var(--clrPrimary); color: white !important}
+
+  button {
+    background: var(--clrPrimary);
+    color: white !important
+  }
 }
 
 

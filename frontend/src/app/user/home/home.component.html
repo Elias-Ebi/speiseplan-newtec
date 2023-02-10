@@ -2,25 +2,27 @@
   <section class="grid">
     <!-- Räuberteller -->
     <div class="span-6 box-home">
-      <h2>Verfügbare Räuberteller: {{banditPlates.length}}</h2>
-      <button (click)="openBanditPlateDialog()" color="primary" mat-flat-button [disabled]="!banditPlates.length">Anzeigen</button>
+      <h2>Verfügbare Räuberteller: {{banditPlateCount}}</h2>
+      <button (click)="openBanditPlateDialog()" [disabled]="!banditPlatesDays.length" color="primary" mat-flat-button>
+        Anzeigen
+      </button>
     </div>
 
     <!-- Saldo -->
     <div class="span-6 box-home">
-      <h2>Saldo {{currentDate | monthName}} {{currentDate.year}}</h2>
+      <h2>Aktueller Kontostand</h2>
       <h2 class="clr-black">{{saldo | euro}}</h2>
     </div>
   </section>
 
   <!-- Schnelle Bestellung -->
-  <section class="section">
-    <h2>Schnelle Bestellung — {{nextOrderableDate | fullDate}}</h2>
+  <section *ngIf="quickOrderMeals.length; else noQuickOrder" class="section">
+    <h2>Schnelle Bestellung — {{quickOrderDate | fullDate}}</h2>
     <hr class="bg-neutral"/>
 
-    <div class="grid" *ngIf="quickOrderMeals.length">
+    <div class="grid">
       <app-order-card
-        (click)="orderOrDelete(menu.id, menu.name, menu.orderId)"
+        (click)="orderOrDeleteMeal(menu.id, menu.orderId, menu.ordered)"
         *ngFor="let menu of quickOrderMeals"
         [amount]="menu.orderCount"
         [description]="menu.description"
@@ -32,83 +34,111 @@
       >
       </app-order-card>
     </div>
-
-    <p *ngIf="!quickOrderMeals.length">Für diesen Tag gibt es keine Mahlzeiten zu bestellen.</p>
   </section>
 
-  <!-- Meine Bestellung -->
-  <section class="section">
-    <h2>Meine Bestellung — {{latestUnchangableDate | fullDate}}</h2>
-    <hr class="bg-neutral"/>
+  <!-- Meine Mahlzeit -->
+  <ng-container *ngIf="unchangeableOrderDays.length; else noUnchangeableOrders">
+    <section *ngFor="let orderDay of unchangeableOrderDays" class="section">
+      <h2>Meine Mahlzeit — {{orderDay.date | fullDate}}</h2>
+      <hr class="bg-neutral"/>
 
-    <div class="list-container">
-      <ng-container *ngFor="let order of todaysOrders; let last = last;">
-        <div class="grid align-center">
-          <!-- Name -->
-          <div class="span-3 icon-with-text">
-            <mat-icon>person</mat-icon>
-            <p>{{order.guestName || "Ich"}}</p>
+      <div class="list-container">
+        <ng-container *ngFor="let order of orderDay.orders; let last = last;">
+          <div class="grid align-center">
+            <!-- Name -->
+            <div class="span-3 icon-with-text">
+              <mat-icon>person</mat-icon>
+              <p>{{order.guestName || "Ich"}}</p>
+            </div>
+
+            <!-- Meal Name -->
+            <div class="span-7 icon-with-text">
+              <mat-icon>restaurant</mat-icon>
+              <p>{{order.meal.name}}</p>
+            </div>
+
+            <button
+              (click)="offerOrderAsBanditPlate(order.id)"
+              [disabled]="order.isBanditplate"
+              class="span-2 justify-self-end"
+              color="primary"
+              mat-flat-button
+            >
+              {{order.isBanditplate ? "Angeboten" : "Anbieten"}}
+            </button>
           </div>
 
-          <!-- Meal Name -->
-          <div class="span-7 icon-with-text">
-            <mat-icon>restaurant</mat-icon>
-            <p>{{order.meal.name}}</p>
-          </div>
-
-          <button
-            [disabled]="order.isBanditplate"
-            class="span-2 justify-self-end"
-            color="primary"
-            mat-flat-button
-          >
-            {{order.isBanditplate ? "Angeboten" : "Anbieten"}}
-          </button>
-        </div>
-
-        <hr *ngIf="!last">
-      </ng-container>
-
-      <p *ngIf="!todaysOrders.length">Keine Bestellungen vorhanden.</p>
-    </div>
-  </section>
+          <hr *ngIf="!last">
+        </ng-container>
+      </div>
+    </section>
+  </ng-container>
 
   <!-- Offene Bestellungen -->
+  <ng-container *ngIf="openOrdersDays.length; else noOpenOrders">
+    <section class="section">
+      <h2>Offene Bestellungen</h2>
+      <hr class="bg-neutral"/>
+
+      <div class="list-container">
+        <ng-container *ngFor="let orderDay of openOrdersDays; let last = last">
+          <div class="grid align-center">
+            <!-- Date -->
+            <p class="span-3 clr-primary link" routerLink="/bestellen">
+              {{orderDay.date | fullDate}}
+            </p>
+
+            <!-- Meal -->
+            <div class="span-4 icon-with-text">
+              <mat-icon>restaurant</mat-icon>
+              <p>{{orderDay.mealNames.join(", ")}}</p>
+            </div>
+
+            <!-- Guests -->
+            <div *ngIf="orderDay.guestCount" class="span-4 icon-with-text">
+              <mat-icon fontSet="material-icons-outlined">group_add</mat-icon>
+              <p>{{orderDay.guestCount}}</p>
+            </div>
+
+            <div *ngIf="!orderDay.guestCount" class="span-4"></div>
+
+            <button (click)="deleteOrdersOn(orderDay.date)" class="span-1 justify-self-end" mat-icon-button>
+              <mat-icon>no_food</mat-icon>
+            </button>
+          </div>
+
+          <hr *ngIf="!last">
+        </ng-container>
+      </div>
+    </section>
+  </ng-container>
+</div>
+
+
+<!-- Keine Schnelle Bestellung verfügbar -->
+<ng-template #noQuickOrder>
+  <section class="section">
+    <h2>Schnelle Bestellung</h2>
+    <hr class="bg-neutral"/>
+    <p>Zur Zeit gibt es keine Mahlzeiten zu bestellen.</p>
+  </section>
+</ng-template>
+
+
+<!-- Keine Mahlzeiten -->
+<ng-template #noUnchangeableOrders>
+  <section *ngIf="!unchangeableOrderDays.length" class="section">
+    <h2>Meine Mahlzeit</h2>
+    <hr class="bg-neutral"/>
+    <p>Aktuell keine Mahlzeiten, die zum Verzehr anstehen.</p>
+  </section>
+</ng-template>
+
+<!-- Kein Offenen Bestellungen -->
+<ng-template #noOpenOrders>
   <section class="section">
     <h2>Offene Bestellungen</h2>
     <hr class="bg-neutral"/>
-
-    <div class="list-container">
-      <ng-container *ngFor="let order of openOrders; let last = last">
-        <div class="grid align-center">
-          <!-- Date -->
-          <p class="span-3 clr-primary link" routerLink="/bestellen">
-            {{order.date | fullDate}}
-          </p>
-
-          <!-- Meal -->
-          <div class="span-4 icon-with-text">
-            <mat-icon>restaurant</mat-icon>
-            <p>{{order.mealNames.join(", ")}}</p>
-          </div>
-
-          <!-- Guests -->
-          <div *ngIf="order.guests" class="span-4 icon-with-text">
-            <mat-icon fontSet="material-icons-outlined">group_add</mat-icon>
-            <p>{{order.guests}}</p>
-          </div>
-
-          <div *ngIf="!order.guests" class="span-4"></div>
-
-          <button class="span-1 justify-self-end icon-button" mat-icon-button>
-            <mat-icon>no_food</mat-icon>
-          </button>
-        </div>
-
-        <hr *ngIf="!last">
-      </ng-container>
-
-      <p *ngIf="!openOrders.length">Keine Bestellungen vorhanden.</p>
-    </div>
+    <p>Aktuell keine offenen Bestellungen.</p>
   </section>
-</div>
+</ng-template>
