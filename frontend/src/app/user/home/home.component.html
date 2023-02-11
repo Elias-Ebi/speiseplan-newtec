@@ -22,7 +22,7 @@
 
     <div class="grid">
       <app-order-card
-        (click)="orderOrDeleteMeal(menu.id, menu.orderId, menu.ordered)"
+        (click)="handleOrder(menu.id, menu.orderId, menu.ordered)"
         *ngFor="let menu of quickOrderMeals"
         [amount]="menu.orderCount"
         [description]="menu.description"

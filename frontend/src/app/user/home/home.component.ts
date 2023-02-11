@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from "@angular/material/button";
-import { MatListModule } from "@angular/material/list";
 import { OrderCardComponent } from "../shared/components/order-card/order-card.component";
 import { EuroPipe } from "../../shared/pipes/euro.pipe";
-import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
 import { Temporal } from "@js-temporal/polyfill";
 import { MatIconModule } from "@angular/material/icon";
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 import { BanditPlateDialogComponent } from "./bandit-plate-dialog/bandit-plate-dialog.component";
-import { WeekdayNamePipe } from "../../shared/pipes/weekday-name.pipe";
 import { RouterLink } from "@angular/router";
 import { ApiService } from "../../shared/services/api.service";
 import { Order } from "../../shared/models/order";
@@ -17,16 +14,16 @@ import { FullDatePipe } from "../../shared/pipes/full-date.pipe";
 import { DateService } from "../../shared/services/date.service";
 import { Meal } from "../../shared/models/meal";
 import { CategoryService } from "../../shared/services/category.service";
-import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
-import { sortByDate, sortByNumber, sortByString } from "../shared/utils";
+import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils";
 import { HomeOpenOrderDay, HomeQuickOrderMeal, HomeUnchangeableOrderDay } from "./home.models";
-import * as _ from "lodash";
+import { SnackbarService } from "../../shared/services/snackbar.service";
+import { OrderService } from "../shared/services/order.service";
 import PlainDate = Temporal.PlainDate;
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatListModule, OrderCardComponent, EuroPipe, MonthNamePipe, MatIconModule, MatDialogModule, MatSnackBarModule, WeekdayNamePipe, RouterLink, FullDatePipe],
+  imports: [CommonModule, MatButtonModule, OrderCardComponent, EuroPipe, MatIconModule, RouterLink, FullDatePipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -44,7 +41,8 @@ export class HomeComponent implements OnInit {
     private apiService: ApiService,
     private dateService: DateService,
     private categoryService: CategoryService,
-    private snackBar: MatSnackBar
+    private snackbarService: SnackbarService,
+    private orderService: OrderService
   ) {
   }
 
@@ -58,27 +56,18 @@ export class HomeComponent implements OnInit {
     await this.loadDashboard();
   }
 
-  orderOrDeleteMeal(mealId: string, orderId: string, ordered: boolean) {
-    if (ordered) {
-      this.deleteOrder(orderId);
-      return;
-    }
-
-    this.orderMeal(mealId);
+  handleOrder(mealId: string, orderId: string, ordered: boolean) {
+    this.orderService.handleOrder(mealId, orderId, ordered, this.loadDashboard);
   }
 
   async offerOrderAsBanditPlate(orderId: string) {
-    this.apiService.offerBanditPlate(orderId)
-      .then(async (order) => {
-        await this.loadDashboard();
+    this.apiService.offerBanditPlate(orderId).then(async (order) => {
+      await this.loadDashboard();
 
-        this.snackBar.open(`${order.meal.name} erfolgreich angeboten.`, '', {
-          duration: 2000,
-          panelClass: 'success-snackbar'
-        });
-      })
+      this.snackbarService.success(`${order.meal.name} erfolgreich angeboten.`);
+    })
       .catch((err) => {
-        this.snackBar.open(`Das Menü konnte nicht als Räuberteller angeboten werden! ${err.message.message}`, '', {duration: 2000});
+        this.snackbarService.error(`Das Menü konnte nicht als Räuberteller angeboten werden! ${err.message.message}`);
       });
   }
 
@@ -86,13 +75,11 @@ export class HomeComponent implements OnInit {
     this.apiService.deleteOrdersOn(date).then(async () => {
       await this.loadDashboard();
 
-      this.snackBar.open(`Bestellungen für den ${date.toLocaleString()} erfolgreich storniert.`, '', {
-        duration: 2000,
-        panelClass: 'success-snackbar'
-      });
-    }).catch((err) => {
-      this.snackBar.open(`Bestellungen konnten nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
+      this.snackbarService.success(`Bestellungen für den ${date.toLocaleString()} erfolgreich storniert.`);
     })
+      .catch((err) => {
+        this.snackbarService.error(`Bestellungen konnten nicht storniert werden! ${err.message.message}`);
+      });
   }
 
   private async loadDashboard(): Promise<void> {
@@ -122,36 +109,11 @@ export class HomeComponent implements OnInit {
     this.openOrdersDays = this.transformOpenOrders(openOrders);
   }
 
-  private orderMeal(mealId: string) {
-    this.apiService.orderMeal(mealId).then(async (order) => {
-      await this.loadDashboard();
-
-      this.snackBar.open(`${order.meal.name} erfolgreich bestellt.`, '', {
-        duration: 2000,
-        panelClass: 'success-snackbar'
-      });
-    }).catch((err) => {
-      this.snackBar.open(`Menü konnte nicht bestellt werden! ${err.message.message}`, '', {duration: 2000});
-    });
-  }
-
-  private deleteOrder(orderId: string) {
-    this.apiService.deleteOrder(orderId).then(async (order) => {
-      await this.loadDashboard();
-
-      this.snackBar.open(`${order.meal.name} erfolgreich storniert.`, '', {
-        duration: 2000,
-        panelClass: 'success-snackbar'
-      });
-    }).catch((err) => {
-      this.snackBar.open(`Bestellung konnte nicht storniert werden! ${err.message.message}`, '', {duration: 2000});
-    });
-  }
-
   private transformBanditPlates(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = _.groupBy(orders, 'date');
+    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrdersArray = Array.from(groupedOrders.entries());
 
-    return Object.entries(groupedOrders).map(([dateString, orders]) => {
+    return groupedOrdersArray.map(([dateString, orders]) => {
       return {
         date: Temporal.PlainDate.from(dateString),
         orders: orders
@@ -160,8 +122,11 @@ export class HomeComponent implements OnInit {
   }
 
   private transformQuickOrderMeals(meals: Meal[], openOrders: Order[]): HomeQuickOrderMeal[] {
+    openOrders = openOrders.sort((a, b) => sortByString(a.meal.id, b.meal.id));
+
     return meals.map((meal) => {
-      const orderForMeal = openOrders.find((order) => order.meal.id === meal.id);
+      const orderIndex = openOrders.findIndex((order) => order.meal.id === meal.id);
+      const orderForMeal = orderIndex !== -1 ? openOrders[orderIndex] : null;
       const category = this.categoryService.getCategory(meal.categoryId);
 
       return {
@@ -178,27 +143,33 @@ export class HomeComponent implements OnInit {
   }
 
   private transformUnchangeableOrders(orders: Order[]): HomeUnchangeableOrderDay[] {
-    const groupedOrders = _.groupBy(orders, 'date');
+    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrdersArray = Array.from(groupedOrders.entries());
 
-    return Object.entries(groupedOrders).map(([dateString, orders]) => {
+    return groupedOrdersArray.map(([dateString, orders]) => {
+      const sortedOrders = orders.sort((a, b) => sortByString(a.guestName, b.guestName) || sortByString(a.id, b.id));
+
       return {
         date: Temporal.PlainDate.from(dateString),
-        orders: orders.sort((a, b) => sortByString(a.guestName, b.guestName) || sortByString(a.id, b.id))
+        orders: sortedOrders
       }
     }).sort((a, b) => sortByDate(a.date, b.date));
   }
 
   private transformOpenOrders(orders: Order[]): HomeOpenOrderDay[] {
-    const groupedOrders = _.groupBy(orders, 'date');
+    const groupedOrders = groupBy(orders, 'date');
+    const groupedOrdersArray = Array.from(groupedOrders.entries());
 
-    return Object.entries(groupedOrders).map(([dateString, orders]) => {
-      const sortedById = orders.sort((a, b) => sortByString(a.id, b.id));
+    return groupedOrdersArray.map(([dateString, orders]) => {
+      const sortedOrders = orders.sort((a, b) => sortByString(a.id, b.id));
+      const mealNames = sortedOrders.filter(order => !order.guestName).map(order => order.meal.name);
+      const guestCount = sortedOrders.filter(order => order.guestName).length;
 
       return {
         date: Temporal.PlainDate.from(dateString),
-        orders: sortedById,
-        mealNames: sortedById.filter(order => !order.guestName).map(order => order.meal.name),
-        guestCount: sortedById.filter(order => order.guestName).length
+        orders: sortedOrders,
+        mealNames,
+        guestCount
       }
     }).sort((a, b) => sortByDate(a.date, b.date));
   }

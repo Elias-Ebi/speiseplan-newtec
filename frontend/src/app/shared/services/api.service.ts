@@ -62,11 +62,7 @@ export class ApiService {
   }
 
   async orderMeal(mealID: string, guestName?: string): Promise<Order> {
-    let params = {};
-    if (guestName) {
-      params = {guestName}
-    }
-
+    const params = {guestName: guestName || ''};
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/${mealID}`, {}, {params});
     return lastValueFrom(response);
   }

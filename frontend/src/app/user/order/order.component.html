@@ -8,7 +8,7 @@
 
         <div class="grid">
           <app-order-card
-            (click)="orderOrDelete(orderMeal.id, orderMeal.orderId, day.date, orderMeal.ordered)"
+            (click)="handleOrder(orderMeal.id, orderMeal.orderId, day.date, orderMeal.ordered)"
             *ngFor="let orderMeal of day.orderMeals"
             [amount]="orderMeal.orderCount"
             [description]="orderMeal.description"
@@ -54,7 +54,7 @@
 
 
               <button
-                (click)="deleteOrder(guestOrder.id, day.date)"
+                (click)="handleOrder(guestOrder.id, '', day.date, false)"
                 class="span-1 justify-self-end icon-button"
                 mat-icon-button
               >

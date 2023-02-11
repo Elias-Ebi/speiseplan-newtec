@@ -1,6 +1,19 @@
 import { Temporal } from "@js-temporal/polyfill";
 import PlainDate = Temporal.PlainDate;
 
+export function groupBy<T>(arr: T[], key: keyof T): Map<string, T[]> {
+  const grouped = new Map<string, T[]>();
+  arr.forEach((item) => {
+    const keyValue = (item[key] as unknown as object).toString();
+    if (!grouped.has(keyValue)) {
+      grouped.set(keyValue, []);
+    }
+    grouped.get(keyValue)?.push(item);
+  });
+
+  return grouped;
+}
+
 export function sortByNumber(a: number, b: number): number {
   return a - b;
 }

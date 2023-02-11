@@ -6,7 +6,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
 import { OrderCardComponent } from "../../shared/components/order-card/order-card.component";
 import { ApiService } from "../../../shared/services/api.service";
-import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatInputModule } from "@angular/material/input";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { GuestOrderDialogValues, OrderDay } from "../order.models";
@@ -14,7 +14,7 @@ import { GuestOrderDialogValues, OrderDay } from "../order.models";
 @Component({
   selector: 'app-guest-order-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, FullDatePipe, OrderCardComponent, MatSnackBarModule, MatInputModule, ReactiveFormsModule, MatDialogModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, FullDatePipe, OrderCardComponent, MatInputModule, ReactiveFormsModule, MatDialogModule],
   templateUrl: './guest-order-dialog.component.html',
   styleUrls: ['./guest-order-dialog.component.scss']
 })
