@@ -56,8 +56,9 @@ export class HomeComponent implements OnInit {
     await this.loadDashboard();
   }
 
-  handleOrder(mealId: string, orderId: string, ordered: boolean) {
-    this.orderService.handleOrder(mealId, orderId, ordered, this.loadDashboard);
+  async handleOrder(mealId: string, orderId: string, ordered: boolean) {
+    await this.orderService.handleOrder(mealId, orderId, ordered);
+    await this.loadDashboard();
   }
 
   async offerOrderAsBanditPlate(orderId: string) {

@@ -28,7 +28,7 @@ import PlainDate = Temporal.PlainDate;
 })
 export class OrderComponent implements OnInit {
   orderDays: OrderDay[] = [];
-  private dataMap = new Map<PlainDate, OrderDay>();
+  private dataMap = new Map<string, OrderDay>();
 
   constructor(
     private dialog: MatDialog,
@@ -52,7 +52,7 @@ export class OrderComponent implements OnInit {
       const orders = groupedOrders.get(day) || [];
       const userOrders = orders.filter(order => !order.guestName);
 
-      this.dataMap.set(PlainDate.from(day), {
+      this.dataMap.set(day, {
         date: Temporal.PlainDate.from(day),
         orderMeals: this.transformOrderCards(meals, userOrders),
         guestOrders: this.transformGuestOrders(orders)
@@ -63,7 +63,7 @@ export class OrderComponent implements OnInit {
   }
 
   openGuestOrderDialog(date: PlainDate): void {
-    const orderDay = this.dataMap.get(date);
+    const orderDay = this.dataMap.get(date.toString());
     if (!orderDay) {
       return;
     }
@@ -85,8 +85,9 @@ export class OrderComponent implements OnInit {
     });
   }
 
-  handleOrder(mealId: string, orderId: string, date: PlainDate, ordered: boolean) {
-    this.orderService.handleOrder(mealId, orderId, ordered, () => this.updateOrderDay(date))
+  async handleOrder(mealId: string, orderId: string, date: PlainDate, ordered: boolean) {
+    await this.orderService.handleOrder(mealId, orderId, ordered);
+    await this.updateOrderDay(date);
   }
 
   async resolveGuestOrderDialog(values: GuestOrderDialogValues, date: PlainDate) {
@@ -123,7 +124,7 @@ export class OrderComponent implements OnInit {
 
     const [orders, meals] = await Promise.all([ordersP, mealsP]);
 
-    const orderDay = this.dataMap.get(date);
+    const orderDay = this.dataMap.get(date.toString());
     if (!orderDay) {
       return;
     }

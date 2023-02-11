@@ -9,29 +9,24 @@ export class OrderService {
   constructor(private apiService: ApiService, private snackbarService: SnackbarService) {
   }
 
-  handleOrder(mealId: string, orderId: string, ordered: boolean, callback: () => void) {
+  async handleOrder(mealId: string, orderId: string, ordered: boolean): Promise<void> {
     if (ordered) {
-      this.deleteOrder(orderId, callback);
-      return;
+      return this.deleteOrder(orderId);
     }
 
-    this.order(mealId, callback);
+    return this.order(mealId);
   }
 
-  private order(mealId: string, callback: () => void) {
-    this.apiService.orderMeal(mealId).then(async (order) => {
-      callback();
-
+  private async order(mealId: string) {
+    return this.apiService.orderMeal(mealId).then(async (order) => {
       this.snackbarService.success(`${order.meal.name} erfolgreich bestellt.`);
     }).catch((err) => {
       this.snackbarService.error(`Menü konnte nicht bestellt werden! ${err.message.message}`);
     });
   }
 
-  private deleteOrder(orderId: string, callback: () => void) {
-    this.apiService.deleteOrder(orderId).then(async (order) => {
-      callback();
-
+  private async deleteOrder(orderId: string) {
+    return this.apiService.deleteOrder(orderId).then(async (order) => {
       this.snackbarService.success(`${order.meal.name} erfolgreich storniert.`);
     }).catch((err) => {
       this.snackbarService.error(`Bestellung konnte nicht storniert werden! ${err.message.message}`);
