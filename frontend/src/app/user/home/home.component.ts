@@ -164,7 +164,8 @@ export class HomeComponent implements OnInit {
     return groupedOrdersArray.map(([dateString, orders]) => {
       const sortedOrders = orders.sort((a, b) => sortByString(a.id, b.id));
       const mealNames = sortedOrders.filter(order => !order.guestName).map(order => order.meal.name);
-      const guestCount = sortedOrders.filter(order => order.guestName).length;
+      const guestNames = sortedOrders.filter(order => order.guestName).map(order => order.guestName);
+      const guestCount = new Set(guestNames).size;
 
       return {
         date: Temporal.PlainDate.from(dateString),
