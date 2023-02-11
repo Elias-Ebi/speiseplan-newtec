@@ -54,7 +54,7 @@
 
 
               <button
-                (click)="handleOrder(guestOrder.id, '', day.date, false)"
+                (click)="handleOrder(guestOrder.meal.id, guestOrder.id, day.date, true)"
                 class="span-1 justify-self-end icon-button"
                 mat-icon-button
               >

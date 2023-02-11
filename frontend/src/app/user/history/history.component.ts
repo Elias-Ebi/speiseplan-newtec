@@ -58,6 +58,6 @@ export class HistoryComponent implements OnInit {
         mealNames,
         total
       };
-    }).sort((a, b) => sortByDate(b.date, a.date)).reverse();
+    }).sort((a, b) => sortByDate(a.date, b.date)).reverse();
   }
 }
