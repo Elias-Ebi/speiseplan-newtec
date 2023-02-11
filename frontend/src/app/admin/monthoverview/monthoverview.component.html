@@ -1,8 +1,8 @@
 <mat-tab-group class="main-content">
-  <mat-tab *ngFor="let month of lastSixMonths" [label]="month | monthName ">
+  <mat-tab *ngFor="let month of lastSixMonths" [label]="month | monthYearName ">
     <section class="section">
       <div class="section-headline-container">
-        <h2>{{month | monthName}}</h2>
+        <h2>{{month | monthYearName}}</h2>
 
         <div class="headline-buttons">
           <button color="primary" mat-flat-button>
@@ -31,7 +31,7 @@
             <h2>Besteller</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <p>{{element.name}}</p>
+            <p>{{element.profile.name}}</p>
           </td>
         </ng-container>
 
@@ -40,7 +40,7 @@
             <h2>Anzahl</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <p>{{element.numberOfMeals}}</p>
+            <p>{{element.orders.length}}</p>
           </td>
         </ng-container>
 
@@ -49,7 +49,7 @@
             <h2>Betrag</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <p>{{element.totalBill}}</p>
+            <p>{{element.total}}</p>
           </td>
         </ng-container>
 
@@ -58,11 +58,11 @@
             <h2>Bezahlstatus</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <div *ngIf="element.isPaid" class="icon-with-text">
+            <div *ngIf="element.paid" class="icon-with-text">
               <mat-icon class="clr-success">check</mat-icon>
               <p>bezahlt</p>
             </div>
-            <div *ngIf="!element.isPaid" class="icon-with-text">
+            <div *ngIf="!element.paid" class="icon-with-text">
               <mat-icon class="clr-error">close</mat-icon>
               <p>nicht bezahlt</p>
             </div>
@@ -73,8 +73,8 @@
           <th *matHeaderCellDef mat-header-cell></th>
           <td *matCellDef="let element" class="paid-button-cell" mat-cell>
             <button
-              (click)="element.isPaid = true"
-              *ngIf="!element.isPaid"
+              (click)="changePaymentStatus(element, true)"
+              *ngIf="!element.paid"
               class="icon-button"
               color="primary"
               mat-icon-button
@@ -82,8 +82,8 @@
               <mat-icon>euro</mat-icon>
             </button>
             <button
-              (click)="element.isPaid = false"
-              *ngIf="element.isPaid"
+              (click)="changePaymentStatus(element, false)"
+              *ngIf="element.paid"
               class="icon-button-outlined"
               color="primary"
               mat-icon-button

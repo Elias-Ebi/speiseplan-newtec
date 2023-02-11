@@ -41,6 +41,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async updatePaymentStatus(order: OrderMonth): Promise<OrderMonth> {
+    const response = this.httpClient.put<OrderMonth>(`${environment.apiUrl}/order-month/change-payment-status`, order);
+    return lastValueFrom(response);
+  }
+
   async getNextOrderableMeals(): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/next-orderable`);
     return lastValueFrom(response);
