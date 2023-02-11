@@ -15,6 +15,8 @@ import {ApiService} from "../../shared/services/api.service";
 import {DateService} from "../../shared/services/date.service";
 import PlainDate = Temporal.PlainDate;
 import {OrderMonth} from "../../shared/models/orderMonth";
+import {saveAs} from "file-saver";
+import {OrdersMonthRep} from "./models/order-month-rep";
 
 @Component({
   selector: 'app-monthoverview',
@@ -27,7 +29,6 @@ export class MonthoverviewComponent implements OnInit {
 
   //todo: Suche, Zahlungserinnerung, Export (csv, pdf)
   dataMap = new Map<PlainDate, [OrderMonth]>();
-//  eqivalentMap = new Map<OrdersMonthByUser, OrderMonth>();
   lastSixMonths = this.dateService.getLastSixMonths();
 
   constructor(
@@ -42,47 +43,43 @@ export class MonthoverviewComponent implements OnInit {
 
   private async loadMonthoverview(): Promise<void> {
     this.lastSixMonths = this.dateService.getLastSixMonths();
-    /*
-    const allOrders = [];
-    for (let i = 0; i < 6; i++) {
-      allOrders[i] = await this.apiService.getOrdersFromMonth(this.lastSixMonths[i]);
-    }
-*/
     for (const month of this.lastSixMonths) {
       // @ts-ignore
       this.dataMap.set(month, await this.apiService.getOrdersFromMonth(month));
     }
-    /*
-    allOrders.forEach((month, outerIndex) => {
-      //one Order-month-entity per user
-      //list with the datatype used for the representation
-      let currentMonthRep: OrdersMonthByUser[] = [];
-      month.forEach((user) => {
-
-        let temp: OrdersMonthByUser = {
-          name: user.profile.name,
-          numberOfMeals: user.orders.length,
-          totalBill: user.total,
-          isPaid: user.paid
-        };
-        currentMonthRep.push(temp);
-        this.eqivalentMap.set(temp, user);
-      });
-      // @ts-ignore
-      this.dataMap.set(this.lastSixMonths[outerIndex], month);
-    }); */
   }
 
-  async changePaymentStatus(who: OrderMonth, what: boolean): Promise<OrderMonth> {
-
-    console.log('was: '+ who.paid);
-    who.paid = what;
-    console.log('is: '+ who.paid);
-    console.log('shall: '+what);
+  async changePaymentStatus(user: OrderMonth, paymentStatus: boolean): Promise<OrderMonth> {
+    user.paid = paymentStatus;
     // @ts-ignore
-    let temp: Promise<OrderMonth> = await this.apiService.updatePaymentStatus(who);
-   // this.loadMonthoverview();// todo works only oneway??
-    return temp;
+    return await this.apiService.updatePaymentStatus(user);
+  }
+
+  downloadMonthAsCsv(month: PlainDate) {
+    const monthData = this.dataMap.get(month);
+    let data: OrdersMonthRep[] = [];
+    // @ts-ignore
+    monthData.forEach((user) => {
+      data.push({Besteller: user.profile.name, Anzahl: user.orders.length, Betrag: user.total, Bezahlstatus: user.paid});
+    });
+    const replacer = (key: any, value: null) => (value === null ? '' : value);
+    const header = Object.keys(data[0]);
+    const csv = data.map((row) =>
+      header.map((fieldName) => JSON.stringify(row[fieldName as keyof OrdersMonthRep], replacer)).join(',')
+    );
+    csv.unshift(header.join(','));
+    const csvArray = csv.join('\r\n');
+
+    const a = document.createElement('a');
+    const blob = new Blob([csvArray], {type: 'text/csv'});
+    const url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = 'Bestellungen_' + month.toLocaleString('default', {month: 'long'}) +'_' +month.year.toString()+ '.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+
   }
 
   displayedColumns: string[] = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];

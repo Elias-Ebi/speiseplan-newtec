@@ -10,7 +10,8 @@
             Zahlungserinnerung
           </button>
 
-          <button color="primary" mat-flat-button>
+          <button (click)="downloadMonthAsCsv(month)"
+                  color="primary" mat-flat-button>
             <mat-icon>picture_as_pdf</mat-icon>
             Exportieren
           </button>
