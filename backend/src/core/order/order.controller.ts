@@ -51,6 +51,13 @@ export class OrderController {
     return await this.orderService.getOn(requestedDate, user.email);
   }
 
+  @Get('date/all-orders/:date')
+  async getAllOrdersOn(@Param('date') date: string, @Request() req): Promise<Order[]> {
+    const user = req.user as AuthUser;
+    const requestedDate = PlainDate.from(date);
+    return await this.orderService.getAllOn(requestedDate);
+  }
+
   @Post(':mealId')
   async order(@Param('mealId') mealId: string, @Request() req, @Query('guestName') guestName?: string): Promise<Order> {
     const user = req.user as AuthUser;
