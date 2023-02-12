@@ -20,19 +20,22 @@ import { GuestOrderDialogValues, OrderDay } from "../order.models";
 })
 export class GuestOrderDialogComponent {
   form = this.initializeForm();
-  selectedIds: string[] = [];
+  selectedIds = new Set<string>();
 
-  constructor(@Inject(MAT_DIALOG_DATA)
-              public orderDay: OrderDay,
-              private dialogRef: MatDialogRef<GuestOrderDialogComponent>,
-              private apiService: ApiService,
-              private snackBar: MatSnackBar,
-              private fb: FormBuilder
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public orderDay: OrderDay,
+    private dialogRef: MatDialogRef<GuestOrderDialogComponent>,
+    private apiService: ApiService,
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder
   ) {
   }
 
   get values(): GuestOrderDialogValues {
-    return {guestName: this.form.value.guestName, mealIds: this.selectedIds};
+    const guestName = this.form.value.guestName;
+    const mealIds = Array.from(this.selectedIds);
+
+    return {guestName, mealIds};
   }
 
   initializeForm(): FormGroup {
@@ -47,12 +50,9 @@ export class GuestOrderDialogComponent {
 
   updateOrdered(index: number) {
     const orderMeal = this.orderDay.orderMeals[index];
+    const id = orderMeal.id;
 
-    if (!orderMeal.ordered) {
-      this.selectedIds.push(orderMeal.id);
-    } else {
-      this.selectedIds = this.selectedIds.filter((id) => id != orderMeal.id);
-    }
+    orderMeal.ordered ? this.selectedIds.delete(id) : this.selectedIds.add(id);
 
     orderMeal.ordered = !orderMeal.ordered;
   }
