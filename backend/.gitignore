@@ -36,3 +36,4 @@ lerna-debug.log*
 
 # environment variables
 /src/environment.ts
+/.env
