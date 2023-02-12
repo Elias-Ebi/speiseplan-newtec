@@ -1,0 +1,53 @@
+<div class="dialog-container">
+  <section class="section">
+    <h2>Mehrere Bestellung Bearbeiten</h2>
+    <p>Alle markierten Felder werden mit den eingetragenen Daten überschrieben.</p>
+
+    <div class="field-to-edit-container">
+      <mat-checkbox class="field-to-edit" [checked]="toUpdate.updateDate"  (change)="editDateFields($event.checked)" color="primary">Datum</mat-checkbox>
+      <mat-form-field *ngIf="toUpdate.updateDate" class="field-to-edit" appearance="fill">
+        <mat-label>Datum auswählen</mat-label>
+        <input [(ngModel)]="changes.overwriteDate" [matDatepicker]="datepicker" matInput>
+        <mat-hint>TT/MM/JJJJ</mat-hint>
+        <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
+        <mat-datepicker #datepicker>
+          <mat-datepicker-actions>
+            <button mat-button matDatepickerCancel>Abbrechen</button>
+            <button color="primary" mat-raised-button matDatepickerApply>OK</button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
+      </mat-form-field>
+    </div>
+      
+    <div class="field-to-edit-container">
+    <mat-checkbox class="field-to-edit" [checked]="toUpdate.updateName"  (change)="editNameFields($event.checked)" color="primary">Besteller</mat-checkbox>
+    <mat-form-field *ngIf="toUpdate.updateName" class="field-to-edit">
+      <mat-label>Besteller</mat-label>
+      <input [(ngModel)]="changes.overwriteName" matInput type="text"/>
+    </mat-form-field>
+    </div>
+
+    <div class="field-to-edit-container">
+      <mat-checkbox class="field-to-edit" [checked]="toUpdate.updateGuestName"  (change)="editGuestNameFields($event.checked)" color="primary">Gast</mat-checkbox>
+    <mat-form-field *ngIf="toUpdate.updateGuestName" class="field-to-edit">
+      <mat-label>Gast</mat-label>
+      <input [(ngModel)]="changes.overwriteGuestName" matInput type="text"/>
+    </mat-form-field>
+    </div>
+
+    <div class="field-to-edit-container">
+      <mat-checkbox class="field-to-edit" [checked]="toUpdate.updateMeal"  (change)="editMealFields($event.checked)" color="primary">Menü</mat-checkbox>
+    <mat-form-field *ngIf="toUpdate.updateMeal" class="field-to-edit">
+      <mat-label>Menü</mat-label>
+      <input [(ngModel)]="changes.overwriteMeal" matInput type="text"/>
+    </mat-form-field>
+    </div>
+
+    <button (click)="closeDialog(false)" class="secondary-btn" color="primary" mat-flat-button> STORNIEREN</button>
+
+    <div class="dialog-btn-container">
+      <button (click)="closeDialog(false)" class="secondary-btn" color="primary" mat-flat-button> ABBRECHEN</button>
+      <button (click)="closeDialog(true)" color="primary" mat-flat-button> BESTÄTIGEN</button>
+    </div>
+  </section>
+</div>

@@ -3,7 +3,7 @@
     <div class=" list-container-wide">
       <div class="section-headline-container">
         <h2 class="clr-black">Filter</h2>
-        <button (click)="toggleFilter()" mat-icon-button>
+        <button class="close-filter-btn" (click)="toggleFilter()" mat-icon-button>
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -11,10 +11,10 @@
       <div class="filter-form-fields">
         <mat-form-field>
           <mat-label>Besteller</mat-label>
-          <input (keyup)="filterOrdersByBuyer($event)" [(ngModel)]="buyerFilter" matInput/>
+          <input (keyup)="filterOrdersByBuyer($event)" [(ngModel)]="filter.buyerFilter" matInput/>
           <button
-            (click)="buyerFilter = ''"
-            *ngIf="buyerFilter"
+            (click)="filter.buyerFilter = ''"
+            *ngIf="filter.buyerFilter"
             mat-icon-button
             matSuffix
           >
@@ -24,10 +24,10 @@
 
         <mat-form-field>
           <mat-label>Gast</mat-label>
-          <input (keyup)="filterOrdersByGuest($event)" [(ngModel)]="guestFilter" matInput/>
+          <input (keyup)="filterOrdersByGuest($event)" [(ngModel)]="filter.guestFilter" matInput/>
           <button
-            (click)="guestFilter = ''"
-            *ngIf="guestFilter"
+            (click)="filter.guestFilter = ''"
+            *ngIf="filter.guestFilter"
             mat-icon-button
             matSuffix
           >
@@ -37,10 +37,10 @@
 
         <mat-form-field>
           <mat-label>Menü</mat-label>
-          <input (keyup)="filterOrdersByMenu($event)" [(ngModel)]="mealFilter" matInput/>
+          <input (keyup)="filterOrdersByMenu($event)" [(ngModel)]="filter.mealFilter" matInput/>
           <button
-            (click)="mealFilter = ''"
-            *ngIf="mealFilter"
+            (click)="filter.mealFilter = ''"
+            *ngIf="filter.mealFilter"
             mat-icon-button
             matSuffix
           >
@@ -63,7 +63,7 @@
       <mat-form-field *ngIf="!useDateInterval">
         <mat-label>Datum auswählen</mat-label>
         <input (dateChange)="filterOrdersByDate($event)" [matDatepicker]="datepicker" matInput>
-        <mat-hint>MM/TT/JJJJ</mat-hint>
+        <mat-hint>TT/MM/JJJJ</mat-hint>
         <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
         <mat-datepicker #datepicker></mat-datepicker>
       </mat-form-field>
@@ -74,7 +74,7 @@
           <input matStartDate placeholder="Startdatum">
           <input matEndDate placeholder="Enddatum">
         </mat-date-range-input>
-        <mat-hint>MM/TT/JJJJ – MM/TT/JJJJ</mat-hint>
+        <mat-hint>TT/MM/JJJJ – TT/MM/JJJJ</mat-hint>
         <mat-datepicker-toggle [for]="rangePicker" matIconSuffix></mat-datepicker-toggle>
         <mat-date-range-picker #rangePicker></mat-date-range-picker>
       </mat-form-field>
@@ -100,7 +100,7 @@
             Mehrere Bearbeiten
           </mat-slide-toggle>
 
-          <button *ngIf="editMultipleOrders" [@fadeInOut] color="primary" mat-flat-button>
+          <button *ngIf="editMultipleOrders" (click)="openMultipleEditDialog()" [disabled]="checkedOrders.length === 0" [@fadeInOut] color="primary" mat-flat-button>
             <mat-icon>edit</mat-icon>
             Markierte bearbeiten
           </button>
@@ -113,7 +113,7 @@
           <th *matHeaderCellDef mat-header-cell>
             <h2>Datum</h2>
           </th>
-          <td *matCellDef="let element" mat-cell>{{ element.date.toLocaleString() }}</td>
+          <td *matCellDef="let element" mat-cell>{{  temporal.PlainDate.from(element.date) | fullDate}}</td>
         </ng-container>
 
         <!-- Buyer Column -->
@@ -121,7 +121,7 @@
           <th *matHeaderCellDef mat-header-cell>
             <h2>Besteller</h2>
           </th>
-          <td *matCellDef="let element" mat-cell>{{ element.buyer }}</td>
+          <td *matCellDef="let element" mat-cell>{{ element.profile.name }}</td>
         </ng-container>
 
         <!-- Meals Column -->
@@ -132,7 +132,7 @@
           <td *matCellDef="let element" mat-cell>
             <div class="icon-with-text">
               <mat-icon>restaurant</mat-icon>
-              <p>{{ element.meals }} </p>
+              <p>{{ element.meal.name }} </p>
             </div>
           </td>
         </ng-container>
@@ -142,9 +142,11 @@
           <th *matHeaderCellDef mat-header-cell>
             <h2>Gast</h2>
           </th>
-          <td *matCellDef="let element" mat-cell>{{ element.guest }}</td>
+          <td *matCellDef="let element" mat-cell>{{ element.guestName }}</td>
         </ng-container>
 
+
+        <!-- Aktion Clomuns Single -->
         <ng-container matColumnDef="action-single">
           <th *matHeaderCellDef class="action-column" mat-header-cell>
             <h2>Aktion</h2>
@@ -166,12 +168,13 @@
           </td>
         </ng-container>
 
+        <!-- Aktion Clomuns Multiple -->
         <ng-container matColumnDef="action-multiple">
           <th *matHeaderCellDef class="action-column" mat-header-cell>
             <h2>Aktion</h2>
           </th>
           <td *matCellDef="let element" class="action-column" mat-cell>
-            <mat-checkbox color="primary"></mat-checkbox>
+            <mat-checkbox (change)="checkOrders($event.checked, element)" color="primary"></mat-checkbox>
           </td>
         </ng-container>
 
@@ -179,7 +182,7 @@
         <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
       </table>
 
-      <mat-paginator
+      <mat-paginator class="paginator"
         [pageSizeOptions]="[5, 10, 20]"
         showFirstLastButtons
       >

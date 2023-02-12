@@ -5,7 +5,7 @@
     <mat-form-field appearance="fill" class="example-form-field">
       <mat-label>Datum auswählen</mat-label>
       <input [(ngModel)]="order.date" [matDatepicker]="datepicker" matInput>
-      <mat-hint>MM/TT/JJJJ</mat-hint>
+      <mat-hint>TT/MM/JJJJ</mat-hint>
       <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
       <mat-datepicker #datepicker>
         <mat-datepicker-actions>
@@ -17,17 +17,17 @@
 
     <mat-form-field class="example-form-field">
       <mat-label>Besteller</mat-label>
-      <input [(ngModel)]="order.buyer" matInput type="text"/>
+      <input [(ngModel)]="order.profile.name" matInput type="text"/>
     </mat-form-field>
 
     <mat-form-field class="example-form-field">
       <mat-label>Gast</mat-label>
-      <input [(ngModel)]="order.guest" matInput type="text"/>
+      <input [(ngModel)]="order.guestName" matInput type="text"/>
     </mat-form-field>
 
     <mat-form-field class="example-form-field">
       <mat-label>Menü</mat-label>
-      <input [(ngModel)]="order.meals" matInput type="text"/>
+      <input [(ngModel)]="order.meal.name" matInput type="text"/>
     </mat-form-field>
 
     <button (click)="closeDialog(false)" class="secondary-btn" color="primary" mat-flat-button> STORNIEREN</button>

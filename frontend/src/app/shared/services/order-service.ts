@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Temporal } from "@js-temporal/polyfill";
+import { ApiService } from "./api.service";
 
 // TODO: remove file
 @Injectable({
@@ -8,8 +9,10 @@ import { Temporal } from "@js-temporal/polyfill";
 export class OrderService {
   orders: any[] = []
 
-  constructor() {
+  constructor(private apiService: ApiService) {
+
     // use dummy values
+    /*
     this.orders = [
       {
         date: new Temporal.PlainDate(2022, 8, 8),
@@ -61,10 +64,16 @@ export class OrderService {
         amount: 3.5
       }
     ];
+    */
 
     this.orders.forEach(element => {
       // element.date = element.date.toString();
     });
+  }
+
+  async ngOnInit(): Promise<void> {
+    const openOrders = await this.apiService.getOpenOrders();
+    this.orders = openOrders;
   }
 
 

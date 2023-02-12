@@ -106,6 +106,19 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
+
+  async getAllOrders(): Promise<Order[]> {
+    const options: FindOneOptions<Order> = {
+      where: {},
+      relations: {
+        profile: true,
+        meal: true
+      }
+    };
+
+    return this.orderRepository.find(options);
+  }
+
   async get(orderId: string): Promise<Order> {
     const options: FindOneOptions<Order> = {
       where: { id: orderId },
@@ -171,6 +184,56 @@ export class OrderService {
 
     await Promise.all(promises);
     return order;
+  }
+
+
+  async updateOrder(orderId: string, updatedOrder: Order){
+    try {
+      const order = await this.get(orderId);
+      this.orderRepository.save(updatedOrder)
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  async updateMultipleOrders(orders: Order[], changes: any){
+    try {
+      for (const order of orders) {
+        if (changes.overwriteName !== null && changes.overwriteName !== undefined) {
+          order.profile.name = changes.overwriteName
+        }
+        if (changes.overwriteGuestName !== null && changes.overwriteGuestName !== undefined) {
+          order.guestName = changes.overwriteGuestName
+        }
+        if (changes.overwriteMeal !== null && changes.overwriteMeal !== undefined) {
+          order.meal = changes.overwriteMeal
+        }
+        if (changes.overwriteDate !== null && changes.overwriteMeal !== undefined) {
+          order.date = changes.overwriteDate
+        }
+        await this.updateOrder(order.id, order)
+      }
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
+  async deleteOrderByAdmin(orderId: string) {
+    const order = await this.get(orderId);
+    return this.orderRepository.remove(order);
+  }
+
+  async deleteMultipleOrdersByAdmin(orders: Order[]) {
+    try {
+      for (const order of orders) {
+        await this.deleteOrderByAdmin(order.id)
+      }
+      return true;
+    } catch(erros) {
+      return false;
+    }
   }
 
   async create(email: string, meal: Meal, guestName: string): Promise<Order> {

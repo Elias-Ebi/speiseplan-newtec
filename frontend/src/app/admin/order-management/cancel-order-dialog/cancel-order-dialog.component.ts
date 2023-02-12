@@ -6,6 +6,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from '@angular/material/input';
 import { Temporal } from '@js-temporal/polyfill';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ApiService } from 'src/app/shared/services/api.service';
+import { Order } from 'src/app/shared/models/order';
 
 @Component({
   selector: 'app-cancel-order-dialog',
@@ -17,22 +19,21 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class CancelOrderDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public order:
-      {
-        date: Temporal.PlainDate,
-        buyer: string,
-        meals: string,
-        guest: string,
-      }
-    ,
+    public order: Order,
     private dialogRef: MatDialogRef<CancelOrderDialogComponent>,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private apiService: ApiService,
   ) {
   }
 
-  closeDialog(isCancelingOrderConfirmed: boolean) {
+  async closeDialog(isCancelingOrderConfirmed: boolean) {
     if (isCancelingOrderConfirmed) {
-      //TODO: cancel order
+      try {
+        const res = await this.apiService.deleteOrderAdmin(this.order.id);
+      } catch (e) {
+        console.error(e);
+      }
+      
       this.snackBar.open("Bestellung erfolgreich storniert!", "OK", {
         duration: 3000,
         panelClass: 'success-snackbar'

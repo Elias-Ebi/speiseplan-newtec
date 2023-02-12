@@ -56,6 +56,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getOpenOrdersAdmin(): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/admin`);
+    return lastValueFrom(response);
+  }
+
   async getOrderableMeals(): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals`);
     return lastValueFrom(response);
@@ -83,6 +88,36 @@ export class ApiService {
 
   async getHistory(): Promise<OrderMonth[]> {
     const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/history`);
+    return lastValueFrom(response);
+  }
+
+  async updateOrder(order: Order): Promise<any> {
+    const orderId = order.id
+    const body = { order: order }
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/admin/${orderId}`, body)
+    return lastValueFrom(response);
+  }
+
+  async updateMultipleOrders(orders: Order[], changes: any): Promise<any> {
+    const body = { orders: orders, changes: changes }
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/admin`, body)
+    return lastValueFrom(response);
+  }
+
+  async deleteOrderAdmin(orderID: string): Promise<Order> {
+    const response = this.httpClient.delete<Order>(`${environment.apiUrl}/orders/admin/${orderID}`)
+    return lastValueFrom(response);
+  }
+
+  async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
+    const body = { orders: orders }
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/admin/`, body)
+    return lastValueFrom(response);
+  }
+
+  async applyFilter(filter: any): Promise<Order[]> {
+    const body = {filter: filter}
+    const response = this.httpClient.post<Order[]>(`${environment.apiUrl}/orders/filter`, body)
     return lastValueFrom(response);
   }
 }

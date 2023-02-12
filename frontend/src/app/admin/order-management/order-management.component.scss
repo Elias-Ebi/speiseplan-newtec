@@ -61,6 +61,7 @@ th {
   left: 0;
   width: 100vw;
   height: 100vh;
+  padding-top: 50px;
 }
 
 .drawer {
@@ -72,3 +73,10 @@ th {
 .filter-form-fields {
   display: grid;
 }
+
+.close-filter-btn {
+  background-color: transparent;
+  color: var(--clrNeutral);
+}
+
+

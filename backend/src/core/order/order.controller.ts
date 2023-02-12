@@ -4,6 +4,7 @@ import { AuthUser } from '../../auth/models/AuthUser';
 import { Order } from '../../data/entitites/order.entity';
 import { Temporal } from '@js-temporal/polyfill';
 import PlainDate = Temporal.PlainDate;
+import { AdminOnly } from 'src/auth/decorators/admin-only.decorator';
 
 
 @Controller('orders')
@@ -58,6 +59,12 @@ export class OrderController {
     return this.orderService.getChangeable(time, user.email);
   }
 
+  @Get('admin')
+  @AdminOnly()
+  async openOrdersAdmin(@Request() req): Promise<Order[]> {
+    return this.orderService.getAllOrders();
+  }
+
   @Get('date/:date')
   async getOrdersOn(@Param('date') date: string, @Request() req): Promise<Order[]> {
     const user = req.user as AuthUser;
@@ -70,6 +77,32 @@ export class OrderController {
     const user = req.user as AuthUser;
     const time = Temporal.Now.plainDateTimeISO();
     return this.orderService.order(time, mealId, user.email, guestName);
+  }
+
+
+  @Post('admin/:orderId')
+  @AdminOnly()
+  async updateOrder(@Param('orderId') orderId: string, @Request() req): Promise<boolean> {
+    return this.orderService.updateOrder(orderId, req.body.order);
+  }
+  
+  @Post('/multiple-orders/admin')
+  @AdminOnly()
+  async updateMultipleOrders(@Request() req): Promise<boolean> {
+    return this.orderService.updateMultipleOrders(req.body.orders as Order[], req.body.changes);
+  }
+
+  @Delete('admin/:id')
+  @AdminOnly()
+  async deleteOrderAdmin(@Param('id') id: string, @Request() req): Promise<Order> {
+    return this.orderService.deleteOrderByAdmin(id);
+  }
+  
+   // http client cannot add body, so post is used instead
+  @Post('/multiple-orders/delet/admin')
+  @AdminOnly()
+  async deleteMultipleOrdersAdmin( @Request() req): Promise<boolean> {
+    return this.orderService.deleteMultipleOrdersByAdmin(req.body.orders as Order[]);
   }
 
   @Delete(':id')
