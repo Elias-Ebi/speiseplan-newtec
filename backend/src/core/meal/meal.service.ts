@@ -7,10 +7,11 @@ import { Temporal } from '@js-temporal/polyfill';
 import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDateTime = Temporal.PlainDateTime;
 import PlainDate = Temporal.PlainDate;
+import { MealTemplate } from 'src/data/entitites/meal-template.entity';
 
 @Injectable()
 export class MealService {
-  constructor(@InjectRepository(Meal) private mealRepository: Repository<Meal>) {
+  constructor(@InjectRepository(Meal) private mealRepository: Repository<Meal>, @InjectRepository(MealTemplate) private mealTemplateRepository: Repository<MealTemplate>) {
   }
 
   async get(id: string): Promise<Meal> {
@@ -97,5 +98,29 @@ export class MealService {
       .getRawOne<{ minDate: string }>();
 
     return minDate;
+  }
+
+  async createTemplate(mealTemplate: MealTemplate): Promise<MealTemplate> {
+    return this.mealTemplateRepository.save(mealTemplate);
+  }
+
+  async getTemplates(): Promise<MealTemplate[]> {
+    const options: FindOneOptions<MealTemplate> = {
+      where: {},
+    };
+
+    return this.mealTemplateRepository.find(options);
+  }
+
+  async deleteTemplate(id: string): Promise<void> {
+    const options: FindOneOptions<MealTemplate> = { where: { id } };
+
+    const meal = await this.mealTemplateRepository.findOne(options);
+
+    if (!meal) {
+      throw new NotFoundException();
+    }
+
+    await this.mealTemplateRepository.remove(meal);
   }
 }

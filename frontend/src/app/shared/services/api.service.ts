@@ -7,6 +7,7 @@ import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import PlainDate = Temporal.PlainDate;
+import { MealTemplate } from '../models/mealtemplate';
 
 @Injectable({
   providedIn: 'root'
@@ -83,6 +84,21 @@ export class ApiService {
 
   async getHistory(): Promise<OrderMonth[]> {
     const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/history`);
+    return lastValueFrom(response);
+  }
+
+  async getMealTemplate(): Promise<MealTemplate[]> {
+    const response = this.httpClient.get<MealTemplate[]>(`${environment.apiUrl}/meals/mealTemplates`);
+    return lastValueFrom(response);
+  }
+
+  async putMealTemplate(data: any): Promise<MealTemplate> {
+    const response = this.httpClient.put<MealTemplate>(`${environment.apiUrl}/meals/mealTemplates`, data);
+    return lastValueFrom(response);
+  }
+
+  async deleteMealTemplate(id: string): Promise<MealTemplate> {
+    const response = this.httpClient.delete<MealTemplate>(`${environment.apiUrl}/meals/mealTemplates/remove/${id}`);
     return lastValueFrom(response);
   }
 }

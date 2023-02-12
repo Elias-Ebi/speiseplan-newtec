@@ -1,0 +1,11 @@
+<h1 mat-dialog-title class="d-title">Nutzer löschen</h1>
+<div class="d-content">
+  <p class="fs-body">Durch das Löschen des Nutzers wird dieser vollständig entfernt.</p>
+  <p class="fs-body-bold">Möchten Sie den Nutzer <span style="color: var(--clrPrimary)">{{data.name}}</span> wirklich löschen?</p>
+</div>
+<div mat-dialog-actions class="d-actions">
+  <button mat-stroked-button color="primary" (click)="onClickCancel()">ABBRECHEN</button>
+  <a mat-raised-button color="primary" (click)="onClickApply()" aria-label="add-user" [mat-dialog-close]="data">
+    <span>BESTÄTIGEN</span>
+  </a>
+</div>

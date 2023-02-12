@@ -10,9 +10,10 @@ import { OrderMonth } from '../data/entitites/order-month.entity';
 import { AuthModule } from '../auth/auth.module';
 import { OrderMonthController } from './order-month/order-month.controller';
 import { OrderMonthService } from './order-month/order-month.service';
+import { MealTemplate } from 'src/data/entitites/meal-template.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Meal, Order, OrderMonth]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Meal, Order, OrderMonth, MealTemplate]), AuthModule],
   controllers: [MealController, OrderController, OrderMonthController],
   providers: [MealService, OrderService, OrderMonthService]
 })

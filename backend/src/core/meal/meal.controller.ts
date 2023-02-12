@@ -15,6 +15,7 @@ import { AdminOnly } from '../../auth/decorators/admin-only.decorator';
 import { Temporal } from '@js-temporal/polyfill';
 import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDate = Temporal.PlainDate;
+import { MealTemplate } from 'src/data/entitites/meal-template.entity';
 
 @Controller('meals')
 export class MealController {
@@ -63,5 +64,22 @@ export class MealController {
   @AdminOnly()
   async deleteMeal(@Param('id') id: string): Promise<void> {
     return await this.mealService.delete(id);
+  }
+
+  @Put('mealTemplates')
+  @AdminOnly()
+  async addMealTemplate(@Body() mealTemplate: MealTemplate): Promise<MealTemplate>{
+    return await this.mealService.createTemplate(mealTemplate);
+  }
+
+  @Get('mealTemplates')
+  async getMealTemplates(): Promise<MealTemplate[]> {
+    return await this.mealService.getTemplates();
+  }
+
+  @Delete('mealTemplates/remove/:id')
+  @AdminOnly()
+  async deleteMealTemplate(@Param('id') id: string): Promise<void> {
+    return await this.mealService.deleteTemplate(id);
   }
 }

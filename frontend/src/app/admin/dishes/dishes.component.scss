@@ -1,0 +1,57 @@
+.dishes--main-container {
+  position: relative;
+  top: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.65rem;
+
+  .dishes--date-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65rem 1.65rem 0.35rem 1.65rem;
+
+    border: solid 1px var(--clrLine);
+    border-radius: 0.35rem;
+
+    .arrow-back {
+      color: var(--clrNeutral);
+      cursor: pointer;
+    }
+
+    .arrow-back:hover {
+      color: var(--clrPrimary);
+    }
+
+    .arrow-forward {
+      color: var(--clrNeutral);
+      cursor: pointer;
+    }
+
+    .arrow-forward:hover {
+      color: var(--clrPrimary);
+    }
+  }
+
+  .dish-table {
+    width: 100%;
+
+    td, th {
+      vertical-align: middle;
+    }
+  }
+
+  .button-publish {
+    position: relative;
+    margin: .65rem 0 .65rem 0;
+    left: 100%;
+    transform: translateX(-100%);
+  }
+
+  .button-add {
+    margin: .65rem 0 .65rem 0;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
