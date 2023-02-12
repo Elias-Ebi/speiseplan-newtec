@@ -59,7 +59,6 @@ export class MealService {
         orderable: MoreThan(time.toString())
       }
     };
-
     return this.mealRepository.find(options);
   }
 

@@ -148,6 +148,11 @@ export class DgChooseDishComponent implements AfterViewInit, OnInit {
     this.matDialogRef.close();
   }
 
+  onClickApply(clicked: Set<MealTemplate>) {
+    let mealTemplate: MealTemplate = clicked.keys().next().value;
+    this.matDialogRef.close(mealTemplate);
+  }
+
   async onClickDelete(row: any) {
     await this.api.deleteMealTemplate(row.id);
     this.dishes = await this.api.getMealTemplate();

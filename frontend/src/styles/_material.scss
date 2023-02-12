@@ -29,3 +29,11 @@
   border-radius: 2.5rem;
   padding: 1rem;
 }
+
+mat-paginator {
+  .mat-mdc-icon-button.mat-mdc-icon-button {
+    color: white;
+    background: transparent;
+    border-radius: 0.75rem;
+  }
+}

@@ -101,4 +101,9 @@ export class ApiService {
     const response = this.httpClient.delete<MealTemplate>(`${environment.apiUrl}/meals/mealTemplates/remove/${id}`);
     return lastValueFrom(response);
   }
+
+  async addMeal(meal: Meal): Promise<Meal> {
+    const response = this.httpClient.post<Meal>(`${environment.apiUrl}/meals`, meal);
+    return lastValueFrom(response);
+  }
 }
