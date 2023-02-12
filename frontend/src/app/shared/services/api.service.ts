@@ -7,7 +7,6 @@ import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import PlainDate = Temporal.PlainDate;
-import {OrderMonth} from "../models/orderMonth";
 
 @Injectable({
   providedIn: 'root'
@@ -37,7 +36,12 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getOrdersFromMonth(date: PlainDate): Promise<OrderMonth[]> {
+  async getOrdersFromMonth(date: PlainDate): Promise<Order[]>{
+    const response= this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/${date.month.toString()}`)
+    return lastValueFrom(response);
+  }
+
+  async getOrderMonthFromMonth(date: PlainDate): Promise<OrderMonth[]> {
     const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/month/${date.month}/${date.year}`);
     return lastValueFrom(response);
   }
@@ -63,10 +67,6 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getNextOrderableMeals(): Promise<Meal[]> {
-    const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/next-orderable`);
-    return lastValueFrom(response);
-  }
 
   async getAllOrdersOnDate(date: PlainDate): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/all-orders/${date.toString()}`);
@@ -75,21 +75,6 @@ export class ApiService {
 
   async getOrdersOn(date: PlainDate): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
-    return lastValueFrom(response);
-  }
-
-  async getOrdersDate(date: PlainDate): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/${date.toString()}`);
-    return lastValueFrom(response);
-  }
-
-  async getOrdersOn(date: PlainDate): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
-    return lastValueFrom(response);
-  }
-
-  async getOrdersFromMonth(date: PlainDate): Promise<Order[]>{
-    const response= this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/${date.month.toString()}`)
     return lastValueFrom(response);
   }
 

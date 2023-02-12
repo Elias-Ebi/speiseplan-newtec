@@ -15,7 +15,6 @@ import { sortByDate, sortByNumber, sortByString } from "../shared/utils";
 import { MatDialog } from "@angular/material/dialog";
 import { GuestOrderDialogComponent } from "./guest-order-dialog/guest-order-dialog.component";
 import * as _ from "lodash";
-import { CategoryService } from "../../shared/services/category.service";
 import { GuestOrderDialogValues, OrderDay, OrderMeal } from "./order.models";
 import { lastValueFrom } from "rxjs";
 import PlainDate = Temporal.PlainDate;

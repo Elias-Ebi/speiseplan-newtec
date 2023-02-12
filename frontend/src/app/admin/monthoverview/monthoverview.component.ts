@@ -44,7 +44,7 @@ export class MonthoverviewComponent implements OnInit {
     this.lastSixMonths = this.dateService.getLastSixMonths();
     for (const month of this.lastSixMonths) {
       // @ts-ignore
-      this.dataMap.set(month, await this.apiService.getOrdersFromMonth(month));
+      this.dataMap.set(month, await this.apiService.getOrderMonthFromMonth(month));
     }
   }
 
@@ -56,12 +56,12 @@ export class MonthoverviewComponent implements OnInit {
 
   async search(month: PlainDate){
     if (this.searchTerm != ""){
-      let filteredOrders = await this.apiService.getOrdersFromMonth(month);
+      let filteredOrders = await this.apiService.getOrderMonthFromMonth(month);
       filteredOrders = filteredOrders.filter(item => item.profile.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
       // @ts-ignore
       this.dataMap.set(month, filteredOrders);
     } else {
-      let filteredOrders = await this.apiService.getOrdersFromMonth(month);
+      let filteredOrders = await this.apiService.getOrderMonthFromMonth(month);
       // @ts-ignore
       this.dataMap.set(month, filteredOrders);
     }
