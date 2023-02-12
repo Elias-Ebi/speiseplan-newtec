@@ -78,4 +78,16 @@ export class DateService {
     }
     return lastSixMonths;
   }
+
+  public getNextFiveWeekDays(){
+    let currentDate = Temporal.Now.plainDateISO();
+    const weekdays = [];
+    while (weekdays.length < 5) {
+      if (currentDate.dayOfWeek >= 1 && currentDate.dayOfWeek <= 5) {
+        weekdays.push(new PlainDate(currentDate.year, currentDate.month, currentDate.day));
+      }
+      currentDate = currentDate.add({days:1})
+    }
+    return weekdays;
+  }
 }
