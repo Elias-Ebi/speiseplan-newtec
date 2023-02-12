@@ -15,7 +15,6 @@ import {ApiService} from "../../shared/services/api.service";
 import {DateService} from "../../shared/services/date.service";
 import PlainDate = Temporal.PlainDate;
 import {OrderMonth} from "../../shared/models/orderMonth";
-import {saveAs} from "file-saver";
 import {OrdersMonthRep} from "./models/order-month-rep";
 
 @Component({
@@ -27,9 +26,9 @@ import {OrdersMonthRep} from "./models/order-month-rep";
 })
 export class MonthoverviewComponent implements OnInit {
 
-  //todo: Suche, Zahlungserinnerung, Export (csv, pdf)
   dataMap = new Map<PlainDate, [OrderMonth]>();
   lastSixMonths = this.dateService.getLastSixMonths();
+  searchTerm: string="";
 
   constructor(
     private apiService: ApiService,
@@ -53,6 +52,19 @@ export class MonthoverviewComponent implements OnInit {
     user.paid = paymentStatus;
     // @ts-ignore
     return await this.apiService.updatePaymentStatus(user);
+  }
+
+  async search(month: PlainDate){
+    if (this.searchTerm != ""){
+      let filteredOrders = await this.apiService.getOrdersFromMonth(month);
+      filteredOrders = filteredOrders.filter(item => item.profile.name.toLowerCase().includes(this.searchTerm.toLowerCase()));
+      // @ts-ignore
+      this.dataMap.set(month, filteredOrders);
+    } else {
+      let filteredOrders = await this.apiService.getOrdersFromMonth(month);
+      // @ts-ignore
+      this.dataMap.set(month, filteredOrders);
+    }
   }
 
   downloadMonthAsCsv(month: PlainDate) {
@@ -81,6 +93,5 @@ export class MonthoverviewComponent implements OnInit {
     a.remove();
 
   }
-
   displayedColumns: string[] = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];
 }

@@ -22,7 +22,7 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Suchen</mat-label>
-        <input matInput placeholder="Geben sie einen Suchbegriff ein" value="">
+        <input matInput placeholder="Geben sie einen Namen ein" [(ngModel)]="searchTerm" (keyup)="search(month)">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
       <!-- xxxx -->
