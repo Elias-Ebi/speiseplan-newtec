@@ -1,8 +1,8 @@
 <mat-tab-group class="main-content">
-  <mat-tab *ngFor="let month of lastSixMonths" [label]="month | monthYearName ">
+  <mat-tab *ngFor="let month of lastSixMonths" [label]="month | monthName ">
     <section class="section">
       <div class="section-headline-container">
-        <h2>{{month | monthYearName}}</h2>
+        <h2>{{month | monthName}}</h2>
 
         <div class="headline-buttons">
           <button color="primary" mat-flat-button>

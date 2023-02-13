@@ -6,7 +6,6 @@ import {Temporal} from "@js-temporal/polyfill";
 import {WeekdayNamePipe} from "../../shared/pipes/weekday-name.pipe";
 import {MatTabsModule} from "@angular/material/tabs";
 import {MonthNamePipe} from "../../shared/pipes/month-name.pipe";
-import {MonthYearNamePipe} from "../../shared/pipes/month-year-name.pipe";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
@@ -21,7 +20,7 @@ import {saveAs} from "file-saver";
 @Component({
   selector: 'app-monthoverview',
   standalone: true,
-  imports: [CommonModule, MatIconModule, EuroPipe, MonthYearNamePipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule],
+  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule],
   templateUrl: './monthoverview.component.html',
   styleUrls: ['./monthoverview.component.scss']
 })
