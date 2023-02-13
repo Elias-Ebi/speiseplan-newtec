@@ -66,7 +66,14 @@ export class EditMultipleOrdersDialogComponent {
           let changesToSend:any = {};
 
           if(this.toUpdate.updateDate){
-            !this.changes.overwriteDate? changesToSend.overwriteDate = '' : changesToSend.overwriteDate = this.changes.overwriteDate
+           
+          !this.changes.overwriteDate? changesToSend.overwriteDate = '' : changesToSend.overwriteDate = this.changes.overwriteDate
+           /*
+            let tmp = changesToSend.overwriteDate as unknown as Date;
+            let month = (tmp.getMonth()+1).toString().padStart(2, '0');
+            let day = tmp.getDate().toString().padStart(2, '0');;
+            changesToSend.overwriteDate = tmp.getFullYear() + '-' + month + '-' + day
+            */
           }
 
           if(this.toUpdate.updateName){

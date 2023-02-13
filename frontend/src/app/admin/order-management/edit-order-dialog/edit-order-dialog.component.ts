@@ -44,16 +44,25 @@ export class EditOrderDialogComponent {
   async closeDialog(isEditConfirmed: boolean) {
     if (isEditConfirmed) {
       try {
-        const res = await this.apiService.updateOrder(this.order);
-      } catch (e) {
-        console.error(e);
+        if(typeof this.order.date === 'object'){
+        let tmp = this.order.date as unknown as Date;
+        let month = (tmp.getMonth()+1).toString().padStart(2, '0');
+        let day = tmp.getDate().toString().padStart(2, '0');
+        this.order.date = tmp.getFullYear() + '-' + month + '-' + day
       }
-
-      this.snackBar.open("Bestellung erfolgreich bearbeitet!", "OK", {
-        duration: 3000,
-        panelClass: 'success-snackbar'
-      })
+        const res = await this.apiService.updateOrder(this.order);
+        
+    } catch (e) {
+      console.error(e);
     }
-    this.dialogRef.close();
+    
+    this.snackBar.open("Bestellung erfolgreich bearbeitet!", "OK", {
+      duration: 3000,
+      panelClass: 'success-snackbar'
+    })
   }
+  this.dialogRef.close();
+}
+
+
 }

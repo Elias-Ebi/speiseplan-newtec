@@ -39,7 +39,7 @@
           <mat-label>Menü</mat-label>
           <input (keyup)="filterOrdersByMenu($event)" [(ngModel)]="filter.mealFilter" matInput/>
           <button
-            (click)="filter.mealFilter = ''"
+            (click)="removeFilterMenu()" 
             *ngIf="filter.mealFilter"
             mat-icon-button
             matSuffix

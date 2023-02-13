@@ -38,20 +38,6 @@ export class OrderController {
     return this.orderService.getUnchangeable(time, user.email);
   }
 
-  /*
-  @Get('multiple-orders')
-  async allOrders(@Request() req): Promise<Order[]> {
-    const user = req.user as AuthUser;
-    const filter = {
-      meal: 'testmeal',
-      buyer: 'testuser',
-      guest: 'testguest',
-      date: this.dateService.getLatestUnchangeableDate()
-    }
-    return this.orderService.getMultipleOrders(user.email, filter);
-  }
-  */
-
   @Get('open')
   async openOrders(@Request() req): Promise<Order[]> {
     const user = req.user as AuthUser;
@@ -63,6 +49,12 @@ export class OrderController {
   @AdminOnly()
   async openOrdersAdmin(@Request() req): Promise<Order[]> {
     return this.orderService.getAllOrders();
+  }
+  @Post('filter')
+  @AdminOnly()
+  async filterOrders(@Request() req): Promise<Order[]> {
+    const filter = req.body.filter;
+    return this.orderService.applyFilter(filter);
   }
 
   @Get('date/:date')

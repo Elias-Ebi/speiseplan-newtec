@@ -177,15 +177,51 @@ export class OrderManagementComponent implements AfterViewInit {
     this.useDateInterval = !this.useDateInterval;
   }
 
-  filterOrdersByMenu(event: Event) {}
+  async filterOrdersByMenu(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.filter.mealFilter = filterValue;
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.dataSource = new MatTableDataSource<any>(this.orders);
+  }
+
+  async removeFilterMenu(){
+    this.filter.mealFilter = '';
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.dataSource = new MatTableDataSource<any>(this.orders);
+  }
   
   async filterOrdersByBuyer(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filter.buyerFilter = filterValue;
-    await this.apiService.applyFilter(this.filter);
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.dataSource = new MatTableDataSource<any>(this.orders);
   }
 
-  filterOrdersByGuest(event: Event) {}
+  async removeFilterBuyer(){
+    this.filter.buyerFilter = '';
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.dataSource = new MatTableDataSource<any>(this.orders);
+  }
+
+  async filterOrdersByGuest(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.filter.guestFilter = filterValue;
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.dataSource = new MatTableDataSource<any>(this.orders);
+  }
+
+  async removeFilterGuest(){
+    this.filter.guestFilter = '';
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.dataSource = new MatTableDataSource<any>(this.orders);
+  }
+
   filterOrdersByDate(event: any) {}
 
   /*
