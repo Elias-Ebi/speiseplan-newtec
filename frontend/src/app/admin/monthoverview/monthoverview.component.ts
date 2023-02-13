@@ -16,6 +16,7 @@ import {DateService} from "../../shared/services/date.service";
 import PlainDate = Temporal.PlainDate;
 import {OrderMonth} from "../../shared/models/order-month";
 import {OrdersMonthRep} from "./models/order-month-rep";
+import {saveAs} from "file-saver";
 
 @Component({
   selector: 'app-monthoverview',
@@ -81,17 +82,8 @@ export class MonthoverviewComponent implements OnInit {
     );
     csv.unshift(header.join(','));
     const csvArray = csv.join('\r\n');
-
-    const a = document.createElement('a');
     const blob = new Blob([csvArray], {type: 'text/csv'});
-    const url = window.URL.createObjectURL(blob);
-
-    a.href = url;
-    a.download = 'Bestellungen_' + month.toLocaleString('default', {month: 'long'}) +'_' +month.year.toString()+ '.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-    a.remove();
-
+    saveAs(blob, 'Bestellungen_' + month.toLocaleString('default', {month: 'long'}) +'_' +month.year.toString()+ '.csv');
   }
   displayedColumns: string[] = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];
 }

@@ -15,6 +15,7 @@ import {DayoverviewRep} from "./models/dayoverview-rep";
 import {Mealoverview} from "./models/mealoverview";
 import {Profile} from "../../shared/models/profile";
 import {Meal} from "../../shared/models/meal";
+import {saveAs} from "file-saver";
 
 @Component({
   selector: 'app-overview',
@@ -91,17 +92,8 @@ export class OverviewComponent {
     csv.unshift(header.join(','));
     const csvArray = csv.join('\r\n');
 
-
-    const a = document.createElement('a');
     const blob = new Blob([csvArray], {type: 'text/csv'});
-    const url = window.URL.createObjectURL(blob);
-
-    a.href = url;
-    a.download = 'Bestellungen_' + day.toString() + '.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-    a.remove();
-
+    saveAs(blob, 'Bestellungen_' + day.toString() + '.csv');
   }
 
 }
