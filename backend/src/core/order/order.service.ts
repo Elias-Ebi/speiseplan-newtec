@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, LessThan, Like, MoreThan, Repository } from 'typeorm';
 import { Order } from '../../data/entitites/order.entity';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Meal } from '../../data/entitites/meal.entity';
@@ -119,6 +119,28 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
+  async applyFilter(filter): Promise<Order[]> {
+
+      const options: FindOneOptions<Order> = {
+        where: {
+          profile: {
+            name: Like(('%' + filter.buyerFilter + '%'))
+          },
+          meal: {
+            name: Like(('%' + filter.mealFilter + '%')),
+          },
+          guestName: Like(('%' + filter.guestFilter + '%')),
+          //TODO: date 
+        },
+        relations: {
+          profile: true,
+          meal: true
+        }
+      };
+
+    return this.orderRepository.find(options);
+  }
+
   async get(orderId: string): Promise<Order> {
     const options: FindOneOptions<Order> = {
       where: { id: orderId },
@@ -211,6 +233,7 @@ export class OrderService {
         }
         if (changes.overwriteDate !== null && changes.overwriteMeal !== undefined) {
           order.date = changes.overwriteDate
+
         }
         await this.updateOrder(order.id, order)
       }
