@@ -16,6 +16,7 @@ import PlainDate = Temporal.PlainDate;
 import {OrderMonth} from "../../shared/models/order-month";
 import {OrdersMonthRep} from "./models/order-month-rep";
 import {saveAs} from "file-saver";
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-monthoverview',
@@ -42,9 +43,14 @@ export class MonthoverviewComponent implements OnInit {
 
   private async loadMonthoverview(): Promise<void> {
     this.lastSixMonths = this.dateService.getLastSixMonths();
-    for (const month of this.lastSixMonths) {
+    const requests = this.lastSixMonths.map(month =>
       // @ts-ignore
-      this.dataMap.set(month, await this.apiService.getOrderMonthFromMonth(month));
+        this.apiService.getOrderMonthFromMonth(month)
+    );
+    const results = await Promise.all(requests);
+    for (let i = 0; i < this.lastSixMonths.length; i++) {
+      // @ts-ignore
+      this.dataMap.set(this.lastSixMonths[i], results[i]);
     }
   }
 

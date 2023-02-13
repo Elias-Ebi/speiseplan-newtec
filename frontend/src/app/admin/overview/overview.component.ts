@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatIconModule} from "@angular/material/icon";
 import {EuroPipe} from "../../shared/pipes/euro.pipe";
@@ -24,7 +24,7 @@ import {saveAs} from "file-saver";
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss']
 })
-export class OverviewComponent {
+export class OverviewComponent implements OnInit {
 
   dataMap = new Map<PlainDate, [Mealoverview]>();
   weekdays = this.dateService.getNextFiveWeekDays();
@@ -40,11 +40,21 @@ export class OverviewComponent {
 
   async loadWeek(): Promise<void> {
     this.weekdays = this.dateService.getNextFiveWeekDays();
+    const week= new Map<PlainDate, [Order]>();
+
+    const requests = this.weekdays.map(day =>
+      // @ts-ignore
+      this.apiService.getAllOrdersOnDate(day)
+    );
+    const results = await Promise.all(requests);
+    for (let i = 0; i < this.weekdays.length; i++) {
+      // @ts-ignore
+      week.set(this.weekdays[i], results[i]);
+    }
 
     for (const day of this.weekdays) {
-      let dayOrders: Order[] = await this.apiService.getAllOrdersOnDate(day);
-      //slight variation of the groupBy function in utils for meals
-      const temp = dayOrders.reduce((acc, item) => {
+      // @ts-ignore
+      const temp = week.get(day).reduce((acc, item) => {
         const group = item.meal.name;
         acc[group] = acc[group] || [];
         acc[group].push(item);
