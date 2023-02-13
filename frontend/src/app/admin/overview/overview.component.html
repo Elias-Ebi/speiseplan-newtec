@@ -22,7 +22,7 @@
 
               <p>{{order.total}}</p>
 
-              <button color="primary" mat-flat-button>
+              <button (click)="$event.stopPropagation()" color="primary" mat-flat-button>
                 <mat-icon>no_meals</mat-icon>
                 Absagen
               </button>

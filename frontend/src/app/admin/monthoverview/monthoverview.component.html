@@ -9,12 +9,6 @@
             <mat-icon>notifications_active</mat-icon>
             Zahlungserinnerung
           </button>
-
-          <button (click)="downloadMonthAsCsv(month)"
-                  color="primary" mat-flat-button>
-            <mat-icon>picture_as_pdf</mat-icon>
-            Exportieren
-          </button>
         </div>
       </div>
 
@@ -74,7 +68,7 @@
           <th *matHeaderCellDef mat-header-cell></th>
           <td *matCellDef="let element" class="paid-button-cell" mat-cell>
             <button
-              (click)="changePaymentStatus(element, true)"
+              (click)="changePaymentStatus(element, month)"
               *ngIf="!element.paid"
               class="icon-button"
               color="primary"
@@ -83,7 +77,7 @@
               <mat-icon>euro</mat-icon>
             </button>
             <button
-              (click)="changePaymentStatus(element, false)"
+              (click)="changePaymentStatus(element, month)"
               *ngIf="element.paid"
               class="icon-button-outlined"
               color="primary"

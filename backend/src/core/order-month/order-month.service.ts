@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import { OrderMonth } from '../../data/entitites/order-month.entity';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -69,6 +69,17 @@ export class OrderMonthService {
     return orderMonth;
   }
 
+  async getById(id: string): Promise<OrderMonth> {
+    const options: FindOneOptions<OrderMonth> = { where: { id } };
+
+    const orderMonth = await this.orderMonthRepository.findOne(options);
+
+    if (!orderMonth) {
+      throw new NotFoundException();
+    }
+
+    return orderMonth;
+  }
 
   async update(orderMonth: OrderMonth): Promise<OrderMonth> {
     return this.orderMonthRepository.save(orderMonth);

@@ -34,7 +34,10 @@ export class OrderMonthController {
 
   @Put('change-payment-status')
   @AdminOnly()
-  async changePaymentStatus(@Body() order: OrderMonth): Promise<OrderMonth> {
+  async changePaymentStatus(@Body() user: OrderMonth): Promise<OrderMonth> {
+    const order: OrderMonth = await this.orderMonthService.getById(user.id);
+    //just flip it
+    order.paid = !order.paid;
     return await this.orderMonthService.update(order);
   }
 }
