@@ -1,24 +1,30 @@
-import {Body, Controller, Get, Param, Put, Request} from '@nestjs/common';
-import {AuthUser} from "../../auth/models/AuthUser";
-import {OrderMonthService} from "./order-month.service";
-import {OrderMonth} from "../../data/entitites/order-month.entity";
-import {AdminOnly} from "../../auth/decorators/admin-only.decorator";
+import { Body, Controller, Get, Param, Put, Request } from '@nestjs/common';
+import { AuthUser } from "../../auth/models/AuthUser";
+import { OrderMonthService } from "./order-month.service";
+import { OrderMonth } from "../../data/entitites/order-month.entity";
+import { AdminOnly } from "../../auth/decorators/admin-only.decorator";
 
 @Controller('order-month')
 export class OrderMonthController {
-    constructor(private orderMonthService: OrderMonthService) {
-    }
+  constructor(private orderMonthService: OrderMonthService) {
+  }
 
-    @Get('month/:month/:year')
-    @AdminOnly()
-    async monthOrders(@Param('month') month: string, @Param('year') year: string, @Request() req): Promise<OrderMonth[]> {
-        const user = req.user as AuthUser;
-         if (!user.isAdmin){
-             console.log("Not authorized!!")
-             return ;
-         }
-        return await this.orderMonthService.getMonthOrders(Number(month), Number(year));
+  @Get('current-balance')
+  async currentBalance(@Request() req): Promise<number> {
+    const user = req.user as AuthUser;
+    return this.orderMonthService.getBalance(user.email);
+  }
+
+  @Get('month/:month/:year')
+  @AdminOnly()
+  async monthOrders(@Param('month') month: string, @Param('year') year: string, @Request() req): Promise<OrderMonth[]> {
+    const user = req.user as AuthUser;
+    if (!user.isAdmin) {
+      console.log("Not authorized!!")
+      return;
     }
+    return await this.orderMonthService.getMonthOrders(Number(month), Number(year));
+  }
 
   @Get('history')
   async order(@Request() req): Promise<OrderMonth[]> {
@@ -26,9 +32,9 @@ export class OrderMonthController {
     return this.orderMonthService.getHistory(user.email);
   }
 
-    @Put('change-payment-status')
-    @AdminOnly()
-    async changePaymentStatus(@Body() order: OrderMonth): Promise<OrderMonth> {
-        return await this.orderMonthService.update(order);
-    }
+  @Put('change-payment-status')
+  @AdminOnly()
+  async changePaymentStatus(@Body() order: OrderMonth): Promise<OrderMonth> {
+    return await this.orderMonthService.update(order);
+  }
 }

@@ -27,7 +27,7 @@ export class ApiService {
   }
 
   async getSaldo(): Promise<number> {
-    const response = this.httpClient.get<number>(`${environment.apiUrl}/orders/current-balance`);
+    const response = this.httpClient.get<number>(`${environment.apiUrl}/order-month/current-balance`);
     return lastValueFrom(response);
   }
 
@@ -61,12 +61,10 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-
   async getOrdersDate(date: PlainDate): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/${date.toString()}`);
     return lastValueFrom(response);
   }
-
 
   async getAllOrdersOnDate(date: PlainDate): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/all-orders/${date.toString()}`);

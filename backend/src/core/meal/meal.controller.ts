@@ -39,7 +39,6 @@ export class MealController {
     return await this.mealService.getMealsOn(requestedDate);
   }
 
-
   @Post()
   @AdminOnly()
   async addMeal(@Body() meal: Meal): Promise<Meal> {

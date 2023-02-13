@@ -14,7 +14,7 @@ import {MatTableModule} from "@angular/material/table";
 import {ApiService} from "../../shared/services/api.service";
 import {DateService} from "../../shared/services/date.service";
 import PlainDate = Temporal.PlainDate;
-import {OrderMonth} from "../../shared/models/orderMonth";
+import {OrderMonth} from "../../shared/models/order-month";
 import {OrdersMonthRep} from "./models/order-month-rep";
 
 @Component({

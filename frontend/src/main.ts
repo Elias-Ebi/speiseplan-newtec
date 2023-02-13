@@ -9,14 +9,16 @@ import { registerLocaleData } from "@angular/common";
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { AuthInterceptor } from "./app/shared/interceptors/auth.interceptor";
 import { LoadingInterceptor } from "./app/shared/interceptors/loading.interceptor";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatDialogModule } from "@angular/material/dialog";
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(APP_ROUTES),
-    importProvidersFrom(BrowserAnimationsModule),
+    importProvidersFrom([BrowserAnimationsModule, MatSnackBarModule, MatDialogModule]),
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
-    provideHttpClient(withInterceptorsFromDi())
+    provideHttpClient(withInterceptorsFromDi()),
   ]
 });
 
