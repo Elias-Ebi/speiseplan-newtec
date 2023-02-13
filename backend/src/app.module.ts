@@ -15,7 +15,7 @@ import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
       autoLoadEntities: true,
       synchronize: environment.synchronize,
       migrationsTableName: 'migrations',
-      migrations: ["src/data/migrations/*{.ts,.js}"],
+      migrations: ['src/data/migrations/*{.ts,.js}'],
       migrationsRun: environment.migrationsRun,
       ssl: true
     }),
@@ -25,12 +25,13 @@ import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: JwtAuthGuard
     },
     {
       provide: APP_GUARD,
-      useClass: AdminOnlyGuard,
-    },
-  ],
+      useClass: AdminOnlyGuard
+    }
+  ]
 })
-export class AppModule {}
+export class AppModule {
+}

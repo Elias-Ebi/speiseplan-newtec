@@ -22,7 +22,7 @@
 
     <div class="grid">
       <app-order-card
-        (click)="orderOrDeleteMeal(menu.id, menu.orderId, menu.ordered)"
+        (click)="handleOrder(menu.id, menu.orderId, menu.ordered)"
         *ngFor="let menu of quickOrderMeals"
         [amount]="menu.orderCount"
         [description]="menu.description"
@@ -91,7 +91,7 @@
             <!-- Meal -->
             <div class="span-4 icon-with-text">
               <mat-icon>restaurant</mat-icon>
-              <p>{{orderDay.mealNames.join(", ")}}</p>
+              <p>{{orderDay.mealNames.join(", ") || "Nichts"}}</p>
             </div>
 
             <!-- Guests -->
@@ -102,7 +102,7 @@
 
             <div *ngIf="!orderDay.guestCount" class="span-4"></div>
 
-            <button (click)="deleteOrdersOn(orderDay.date)" class="span-1 justify-self-end" mat-icon-button>
+            <button (click)="deleteOrdersOn(orderDay.date)" class="span-1 justify-self-end icon-button" mat-icon-button>
               <mat-icon>no_food</mat-icon>
             </button>
           </div>

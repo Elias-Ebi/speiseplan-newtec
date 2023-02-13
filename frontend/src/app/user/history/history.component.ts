@@ -11,8 +11,7 @@ import { ApiService } from "../../shared/services/api.service";
 import { OrderMonth } from "../../shared/models/order-month";
 import { Temporal } from "@js-temporal/polyfill";
 import { Order } from "../../shared/models/order";
-import { sortByDate } from "../shared/utils";
-import * as _ from "lodash";
+import { groupBy, sortByDate } from "../shared/utils";
 import PlainDate = Temporal.PlainDate;
 
 
@@ -45,13 +44,19 @@ export class HistoryComponent implements OnInit {
   }
 
   private transformOrderDays(orders: Order[]): HistoryOrderDay[] {
-    const grouped = _.groupBy(orders, 'date');
-    return Object.entries<Order[]>(grouped).map(([date, orders]) => {
+    const groupedOrders = groupBy<Order>(orders, 'date');
+    const groupedOrdersArray = Array.from(groupedOrders.entries());
+
+    return groupedOrdersArray.map(([date, dayOrders]) => {
+      const mealCount = dayOrders.length;
+      const mealNames = dayOrders.map(order => order.meal.name);
+      const total = dayOrders.map(order => order.meal.total).reduce((acc, val) => acc + val, 0);
+
       return {
         date: PlainDate.from(date),
-        mealCount: orders.length,
-        mealNames: orders.map((order) => order.meal.name),
-        total: orders.map((order) => order.meal.total).reduce((acc, val) => acc + val, 0)
+        mealCount,
+        mealNames,
+        total
       };
     }).sort((a, b) => sortByDate(a.date, b.date)).reverse();
   }
