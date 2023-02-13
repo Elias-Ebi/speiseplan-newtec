@@ -23,7 +23,7 @@ export class Order {
   @Index()
   meal: Meal;
 
-  @Column()
+  @Column({ nullable: true })
   guestName: string;
 
   @Column({ default: false })

@@ -27,7 +27,7 @@ export class ApiService {
   }
 
   async getSaldo(): Promise<number> {
-    const response = this.httpClient.get<number>(`${environment.apiUrl}/orders/current-balance`);
+    const response = this.httpClient.get<number>(`${environment.apiUrl}/order-month/current-balance`);
     return lastValueFrom(response);
   }
 

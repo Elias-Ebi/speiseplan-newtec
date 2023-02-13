@@ -6,7 +6,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
 import { OrderCardComponent } from "../../shared/components/order-card/order-card.component";
 import { ApiService } from "../../../shared/services/api.service";
-import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatInputModule } from "@angular/material/input";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { GuestOrderDialogValues, OrderDay } from "../order.models";
@@ -14,25 +14,28 @@ import { GuestOrderDialogValues, OrderDay } from "../order.models";
 @Component({
   selector: 'app-guest-order-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, FullDatePipe, OrderCardComponent, MatSnackBarModule, MatInputModule, ReactiveFormsModule, MatDialogModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, FullDatePipe, OrderCardComponent, MatInputModule, ReactiveFormsModule, MatDialogModule],
   templateUrl: './guest-order-dialog.component.html',
   styleUrls: ['./guest-order-dialog.component.scss']
 })
 export class GuestOrderDialogComponent {
   form = this.initializeForm();
-  selectedIds: string[] = [];
+  selectedIds = new Set<string>();
 
-  constructor(@Inject(MAT_DIALOG_DATA)
-              public orderDay: OrderDay,
-              private dialogRef: MatDialogRef<GuestOrderDialogComponent>,
-              private apiService: ApiService,
-              private snackBar: MatSnackBar,
-              private fb: FormBuilder
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public orderDay: OrderDay,
+    private dialogRef: MatDialogRef<GuestOrderDialogComponent>,
+    private apiService: ApiService,
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder
   ) {
   }
 
   get values(): GuestOrderDialogValues {
-    return {guestName: this.form.value.guestName, mealIds: this.selectedIds};
+    const guestName = this.form.value.guestName;
+    const mealIds = Array.from(this.selectedIds);
+
+    return {guestName, mealIds};
   }
 
   initializeForm(): FormGroup {
@@ -47,12 +50,9 @@ export class GuestOrderDialogComponent {
 
   updateOrdered(index: number) {
     const orderMeal = this.orderDay.orderMeals[index];
+    const id = orderMeal.id;
 
-    if (!orderMeal.ordered) {
-      this.selectedIds.push(orderMeal.id);
-    } else {
-      this.selectedIds = this.selectedIds.filter((id) => id != orderMeal.id);
-    }
+    orderMeal.ordered ? this.selectedIds.delete(id) : this.selectedIds.add(id);
 
     orderMeal.ordered = !orderMeal.ordered;
   }
