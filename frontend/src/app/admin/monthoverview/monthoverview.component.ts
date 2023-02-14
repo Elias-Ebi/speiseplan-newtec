@@ -1,10 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatIconModule} from "@angular/material/icon";
 import {EuroPipe} from "../../shared/pipes/euro.pipe";
 import {Temporal} from "@js-temporal/polyfill";
 import {WeekdayNamePipe} from "../../shared/pipes/weekday-name.pipe";
-import {MatTabGroup, MatTabsModule} from "@angular/material/tabs";
 import {MonthNamePipe} from "../../shared/pipes/month-name.pipe";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
@@ -14,12 +13,11 @@ import {ApiService} from "../../shared/services/api.service";
 import {DateService} from "../../shared/services/date.service";
 import PlainDate = Temporal.PlainDate;
 import {OrderMonth} from "../../shared/models/order-month";
-import {ChangeDetectorRef} from "@angular/core";
 
 @Component({
   selector: 'app-monthoverview',
   standalone: true,
-  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MatTabsModule, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule],
+  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule],
   templateUrl: './monthoverview.component.html',
   styleUrls: ['./monthoverview.component.scss']
 })
@@ -31,8 +29,7 @@ export class MonthoverviewComponent implements OnInit {
 
   constructor(
     private apiService: ApiService,
-    private dateService: DateService,
-    private changeDetector: ChangeDetectorRef
+    private dateService: DateService
   ) {
   }
 
