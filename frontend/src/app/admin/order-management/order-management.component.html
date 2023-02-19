@@ -60,24 +60,39 @@
         Datumsspanne
       </mat-slide-toggle>
 
-      <mat-form-field *ngIf="!useDateInterval">
-        <mat-label>Datum auswählen</mat-label>
-        <input (dateChange)="filterOrdersByDate($event)" [matDatepicker]="datepicker" matInput>
-        <mat-hint>TT/MM/JJJJ</mat-hint>
-        <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
-        <mat-datepicker #datepicker></mat-datepicker>
-      </mat-form-field>
+      <!--
 
-      <mat-form-field *ngIf="useDateInterval">
-        <mat-label>Datumsspanne auswählen</mat-label>
-        <mat-date-range-input [rangePicker]="rangePicker">
-          <input matStartDate placeholder="Startdatum">
-          <input matEndDate placeholder="Enddatum">
-        </mat-date-range-input>
-        <mat-hint>TT/MM/JJJJ – TT/MM/JJJJ</mat-hint>
-        <mat-datepicker-toggle [for]="rangePicker" matIconSuffix></mat-datepicker-toggle>
-        <mat-date-range-picker #rangePicker></mat-date-range-picker>
-      </mat-form-field>
+        <mat-form-field *ngIf="!useDateInterval">
+          <mat-label>Datum auswählen</mat-label>
+          <input (dateChange)="filterOrdersByDate($event)" [matDatepicker]="datepicker" matInput (click)="datepicker.open()">
+          <mat-hint>TT/MM/JJJJ</mat-hint>
+          <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
+          <mat-datepicker #datepicker></mat-datepicker>
+        </mat-form-field>
+        
+        <mat-form-field *ngIf="useDateInterval">
+          <mat-label>Datumsspanne auswählen</mat-label>
+          <mat-date-range-input [rangePicker]="rangePicker" (click)="rangePicker.open()">
+            <input matStartDate placeholder="Startdatum" >
+            <input matEndDate placeholder="Enddatum">
+          </mat-date-range-input>
+          <mat-hint>TT/MM/JJJJ – TT/MM/JJJJ</mat-hint>
+          <mat-datepicker-toggle [for]="rangePicker" matIconSuffix></mat-datepicker-toggle>
+          <mat-date-range-picker #rangePicker></mat-date-range-picker>
+        </mat-form-field>
+      -->
+        
+      
+      <mat-calendar  *ngIf="!useDateInterval" [selected]="selectedDate" (selectedChange)="filterOrdersByDate($event)"> </mat-calendar>
+      <mat-calendar  *ngIf="useDateInterval" 
+      [selected]="selectedRangeValue"
+      (selectedChange)="selectedChange($event)"> 
+    </mat-calendar>
+    <div *ngIf="filter.dateFilter.startDate" (click)="removeFilterDate()" class="icon-with-text filter-button">
+      <mat-icon>close</mat-icon>
+      <p>Datumsfilter entfernen</p>
+    </div>
+    
     </div>
   </mat-drawer>
 
@@ -97,12 +112,12 @@
             color="primary"
             labelPosition="before"
           >
-            Mehrere Bearbeiten
+            Mehrere Stornieren
           </mat-slide-toggle>
 
-          <button *ngIf="editMultipleOrders" (click)="openMultipleEditDialog()" [disabled]="checkedOrders.length === 0" [@fadeInOut] color="primary" mat-flat-button>
+          <button *ngIf="editMultipleOrders" (click)="openCancelMultipleDialog()" [disabled]="checkedOrders.length === 0" [@fadeInOut] color="primary" mat-flat-button>
             <mat-icon>edit</mat-icon>
-            Markierte bearbeiten
+            Markierte stornieren
           </button>
         </div>
       </div>
@@ -153,13 +168,6 @@
           </th>
           <td *matCellDef="let element" mat-cell>
             <div class="action-buttons">
-              <button
-                (click)="openEditDialog(element)"
-                class="icon-button-outlined"
-                mat-icon-button
-              >
-                <mat-icon>edit</mat-icon>
-              </button>
 
               <button (click)="openCancelDialog(element)" mat-icon-button>
                 <mat-icon>no_food</mat-icon>

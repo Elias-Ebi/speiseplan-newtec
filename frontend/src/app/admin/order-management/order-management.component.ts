@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
 import { EuroPipe } from "../../shared/pipes/euro.pipe";
@@ -16,18 +16,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { DateRange, MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { EditOrderDialogComponent } from './edit-order-dialog/edit-order-dialog.component';
 import { CancelOrderDialogComponent } from './cancel-order-dialog/cancel-order-dialog.component';
 import * as _ from "lodash";
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Order } from 'src/app/shared/models/order';
 import { FullDatePipe } from "../../shared/pipes/full-date.pipe";
 import { Temporal } from '@js-temporal/polyfill';
-import { EditMultipleOrdersDialogComponent } from './edit-multiple-orders-dialog/edit-multiple-orders-dialog.component';
+import { CancelMultipleOrdersDialogComponent } from './cancel-mulitiple-orders-dialog/cancel-mulitiple-orders-dialog.component';
 
 @Component({
   selector: 'app-order-management',
@@ -74,6 +73,8 @@ import { EditMultipleOrdersDialogComponent } from './edit-multiple-orders-dialog
 export class OrderManagementComponent implements AfterViewInit {
   @ViewChild('drawer') drawer!: MatDrawer;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @Input() selectedRangeValue: DateRange<Date> | undefined;
+  @Output() selectedRangeValueChange = new EventEmitter<DateRange<Date>>();
   temporal = Temporal
   orders: Order[] = []
   editMultipleOrders = false;
@@ -93,13 +94,29 @@ export class OrderManagementComponent implements AfterViewInit {
     buyerFilter: '',
     guestFilter: '',
     mealFilter: '',
+    dateFilter: {
+      startDate: '',
+      endDate: ''
+    }
   }
 
+  selectedDate: any
+  range = {
+    start: '',
+    end: ''
+  }
+
+  
+
+
+
+
+  /*
   range = new FormGroup({
     start: new FormControl<Date | null>(null),
     end: new FormControl<Date | null>(null),
   });
-
+*/
 
   constructor(
     private apiService: ApiService, 
@@ -118,33 +135,8 @@ export class OrderManagementComponent implements AfterViewInit {
   async ngOnInit(): Promise<void> {
     this.orders = await this.apiService.getOpenOrdersAdmin();
 
-    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.updateTable();
     //this.orders = openOrders;
-  }
-
-  openEditDialog(element: any) {
-    let orderToEdit = _.cloneDeep(element)
-    orderToEdit.date = orderToEdit.date.toString();
-    let dialogRef = this.dialog.open(EditOrderDialogComponent, {
-      data: orderToEdit
-    });
-    dialogRef.afterClosed().subscribe(async result => {
-      this.orders = await this.apiService.getOpenOrdersAdmin();
-      this.dataSource = new MatTableDataSource<any>(this.orders);
-    }
-    )
-  }
-
-  openMultipleEditDialog(){
-    let dialogRef = this.dialog.open(EditMultipleOrdersDialogComponent, {
-      data: this.checkedOrders
-    });
-    dialogRef.afterClosed().subscribe(async result => {
-      this.checkedOrders = [];
-      this.orders = await this.apiService.getOpenOrdersAdmin();
-      this.dataSource = new MatTableDataSource<any>(this.orders);
-    }
-    )
   }
 
   openCancelDialog(element: any) {
@@ -153,7 +145,19 @@ export class OrderManagementComponent implements AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(async result => {
       this.orders = await this.apiService.getOpenOrdersAdmin();
-      this.dataSource = new MatTableDataSource<any>(this.orders);
+      this.updateTable();
+    }
+    )
+  }
+
+  openCancelMultipleDialog() {
+    let dialogRef = this.dialog.open(CancelMultipleOrdersDialogComponent, {
+      data: this.checkedOrders
+    });
+    dialogRef.afterClosed().subscribe(async result => {
+      this.orders = await this.apiService.getOpenOrdersAdmin();
+      this.updateTable();
+      this.checkedOrders = [];
     }
     )
   }
@@ -182,14 +186,14 @@ export class OrderManagementComponent implements AfterViewInit {
     this.filter.mealFilter = filterValue;
     let filteredOrders = await this.apiService.applyFilter(this.filter);
     this.orders = filteredOrders;
-    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.updateTable();
   }
 
   async removeFilterMenu(){
     this.filter.mealFilter = '';
     let filteredOrders = await this.apiService.applyFilter(this.filter);
     this.orders = filteredOrders;
-    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.updateTable();
   }
   
   async filterOrdersByBuyer(event: Event) {
@@ -197,14 +201,77 @@ export class OrderManagementComponent implements AfterViewInit {
     this.filter.buyerFilter = filterValue;
     let filteredOrders = await this.apiService.applyFilter(this.filter);
     this.orders = filteredOrders;
-    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.updateTable();
   }
+
+
+
+
+
+  async selectedChange(m: any) {
+    if (!this.selectedRangeValue?.start || this.selectedRangeValue?.end) {
+        this.selectedRangeValue = new DateRange<Date>(m, null);
+    } else {
+        const start = this.selectedRangeValue.start;
+        const end = m;
+        if (end < start) {
+            this.selectedRangeValue = new DateRange<Date>(end, start);
+        } else {
+            this.selectedRangeValue = new DateRange<Date>(start, end);
+        }
+    }
+    if( this.selectedRangeValue.start && this.selectedRangeValue.end) {
+      
+      /*
+      this.filter.buyerFilter = filterValue;
+      let filteredOrders = await this.apiService.applyFilter(this.filter);
+      this.orders = filteredOrders;
+      */
+      this.filter.dateFilter.startDate = this.setDateFormat(this.selectedRangeValue.start);
+      this.filter.dateFilter.endDate = this.setDateFormat(this.selectedRangeValue.end);
+      this.orders = await this.apiService.applyFilter(this.filter);
+
+
+      this.updateTable();
+      this.selectedRangeValueChange.emit(this.selectedRangeValue);
+    }
+}
+
+setDateFormat(date: Date): string {
+      let month = (date.getMonth()+1).toString().padStart(2, '0');
+      let day = date.getDate().toString().padStart(2, '0');
+      return date.getFullYear() + '-' + month + '-' + day
+}
+
+
+
+
+  async filterOrdersByDate(event: MatDatepickerInputEvent<any, any>) {
+    this.selectedDate = event
+    this.filter.dateFilter.startDate = this.setDateFormat(this.selectedDate);
+
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.updateTable();
+
+  }
+
+  async removeFilterDate() {
+    this.filter.dateFilter.startDate = '';
+    this.filter.dateFilter.endDate = '';
+    this.selectedDate = null;
+    this.selectedRangeValue = undefined
+    let filteredOrders = await this.apiService.applyFilter(this.filter);
+    this.orders = filteredOrders;
+    this.updateTable();
+  }
+
 
   async removeFilterBuyer(){
     this.filter.buyerFilter = '';
     let filteredOrders = await this.apiService.applyFilter(this.filter);
     this.orders = filteredOrders;
-    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.updateTable();
   }
 
   async filterOrdersByGuest(event: Event) {
@@ -212,19 +279,25 @@ export class OrderManagementComponent implements AfterViewInit {
     this.filter.guestFilter = filterValue;
     let filteredOrders = await this.apiService.applyFilter(this.filter);
     this.orders = filteredOrders;
-    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.updateTable();
   }
 
   async removeFilterGuest(){
     this.filter.guestFilter = '';
     let filteredOrders = await this.apiService.applyFilter(this.filter);
     this.orders = filteredOrders;
-    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.updateTable();
   }
 
-  filterOrdersByDate(event: any) {}
+
+  updateTable() {
+    this.dataSource = new MatTableDataSource<any>(this.orders);
+    this.dataSource.paginator = this.paginator;
+  }
+
 
   /*
+  // frontend-filter, not working correctly yet
   filterOrdersByMenu(event: Event) {
     this.dataSource.filterPredicate =
       (data: any, filter: string) => data.meals.indexOf(filter) != -1;
@@ -269,6 +342,5 @@ export class OrderManagementComponent implements AfterViewInit {
       this.checkedOrders.splice(idx, 1)
     }
 
-    console.log('currently checked: ', this.checkedOrders)
   }
 }

@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, LessThan, Like, MoreThan, Repository } from 'typeorm';
+import { Between, FindManyOptions, FindOneOptions, ILike, LessThan, Like, MoreThan, Repository } from 'typeorm';
 import { Order } from '../../data/entitites/order.entity';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Meal } from '../../data/entitites/meal.entity';
@@ -120,17 +120,16 @@ export class OrderService {
   }
 
   async applyFilter(filter): Promise<Order[]> {
-
+    if(!filter.dateFilter.startDate) {
       const options: FindOneOptions<Order> = {
         where: {
           profile: {
-            name: Like(('%' + filter.buyerFilter + '%'))
+            name: ILike(('%' + filter.buyerFilter + '%'))
           },
           meal: {
-            name: Like(('%' + filter.mealFilter + '%')),
+            name: ILike(('%' + filter.mealFilter + '%')),
           },
-          guestName: Like(('%' + filter.guestFilter + '%')),
-          //TODO: date 
+          guestName: ILike(('%' + filter.guestFilter + '%')),
         },
         relations: {
           profile: true,
@@ -139,6 +138,48 @@ export class OrderService {
       };
 
     return this.orderRepository.find(options);
+    }
+
+    else if(!filter.dateFilter.endDate) {
+      const options: FindOneOptions<Order> = {
+        where: {
+          profile: {
+            name: ILike(('%' + filter.buyerFilter + '%'))
+          },
+          meal: {
+            name: ILike(('%' + filter.mealFilter + '%')),
+          },
+          guestName: ILike(('%' + filter.guestFilter + '%')),
+          date: filter.dateFilter.startDate
+        },
+        relations: {
+          profile: true,
+          meal: true
+        }
+      };
+
+    return this.orderRepository.find(options);
+    } else {
+
+      const options: FindOneOptions<Order> = {
+        where: {
+          profile: {
+            name: ILike(('%' + filter.buyerFilter + '%'))
+          },
+          meal: {
+            name: ILike(('%' + filter.mealFilter + '%')),
+          },
+          guestName: ILike(('%' + filter.guestFilter + '%')),
+          date: Between(filter.dateFilter.startDate, filter.dateFilter.endDate)
+        },
+        relations: {
+          profile: true,
+          meal: true
+        }
+      };
+      
+      return this.orderRepository.find(options);
+    }
   }
 
   async get(orderId: string): Promise<Order> {
@@ -208,40 +249,6 @@ export class OrderService {
     return order;
   }
 
-
-  async updateOrder(orderId: string, updatedOrder: Order){
-    try {
-      const order = await this.get(orderId);
-      this.orderRepository.save(updatedOrder)
-      return true
-    } catch (error) {
-      return false
-    }
-  }
-
-  async updateMultipleOrders(orders: Order[], changes: any){
-    try {
-      for (const order of orders) {
-        if (changes.overwriteName !== null && changes.overwriteName !== undefined) {
-          order.profile.name = changes.overwriteName
-        }
-        if (changes.overwriteGuestName !== null && changes.overwriteGuestName !== undefined) {
-          order.guestName = changes.overwriteGuestName
-        }
-        if (changes.overwriteMeal !== null && changes.overwriteMeal !== undefined) {
-          order.meal = changes.overwriteMeal
-        }
-        if (changes.overwriteDate !== null && changes.overwriteMeal !== undefined) {
-          order.date = changes.overwriteDate
-
-        }
-        await this.updateOrder(order.id, order)
-      }
-      return true
-    } catch (error) {
-      return false
-    }
-  }
 
   async deleteOrderByAdmin(orderId: string) {
     const order = await this.get(orderId);

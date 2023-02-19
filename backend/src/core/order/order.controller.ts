@@ -72,18 +72,6 @@ export class OrderController {
   }
 
 
-  @Post('admin/:orderId')
-  @AdminOnly()
-  async updateOrder(@Param('orderId') orderId: string, @Request() req): Promise<boolean> {
-    return this.orderService.updateOrder(orderId, req.body.order);
-  }
-  
-  @Post('/multiple-orders/admin')
-  @AdminOnly()
-  async updateMultipleOrders(@Request() req): Promise<boolean> {
-    return this.orderService.updateMultipleOrders(req.body.orders as Order[], req.body.changes);
-  }
-
   @Delete('admin/:id')
   @AdminOnly()
   async deleteOrderAdmin(@Param('id') id: string, @Request() req): Promise<Order> {

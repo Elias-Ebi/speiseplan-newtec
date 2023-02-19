@@ -111,7 +111,7 @@ export class ApiService {
 
   async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
     const body = { orders: orders }
-    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/admin/`, body)
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delet/admin/`, body)
     return lastValueFrom(response);
   }
 
