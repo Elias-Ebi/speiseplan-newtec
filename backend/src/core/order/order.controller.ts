@@ -25,12 +25,6 @@ export class OrderController {
     return this.orderService.offerAsBanditplate(time, id, user);
   }
 
-  @Get('current-balance')
-  async currentBalance(@Request() req): Promise<number> {
-    const user = req.user as AuthUser;
-    return this.orderService.getCurrentBalance(user.email);
-  }
-
   @Get('unchangeable')
   async unchangeableOrders(@Request() req): Promise<Order[]> {
     const user = req.user as AuthUser;

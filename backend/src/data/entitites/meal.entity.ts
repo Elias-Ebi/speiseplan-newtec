@@ -31,7 +31,7 @@ export class Meal {
   description: string;
 
   @Column({ type: 'decimal', precision: 5, scale: 2, transformer: new DecimalTransformer() })
-  @Min(0, {message: 'Total must not be negative.'})
+  @Min(0, { message: 'Total must not be negative.' })
   total: number;
 
   @Column()

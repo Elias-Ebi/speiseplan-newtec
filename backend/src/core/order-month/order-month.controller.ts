@@ -8,6 +8,12 @@ export class OrderMonthController {
   constructor(private orderMonthService: OrderMonthService) {
   }
 
+  @Get('current-balance')
+  async currentBalance(@Request() req): Promise<number> {
+    const user = req.user as AuthUser;
+    return this.orderMonthService.getBalance(user.email);
+  }
+
   @Get('history')
   async order(@Request() req): Promise<OrderMonth[]> {
     const user = req.user as AuthUser;

@@ -24,7 +24,7 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: environment.synchronize,
       migrationsTableName: 'migrations',
-      migrations: ["src/data/migrations/*{.ts,.js}"],
+      migrations: ['src/data/migrations/*{.ts,.js}'],
       migrationsRun: environment.migrationsRun,
       ssl: false,*/
       type: 'postgres',
@@ -46,12 +46,13 @@ dotenv.config();
   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: JwtAuthGuard
     },
     {
       provide: APP_GUARD,
-      useClass: AdminOnlyGuard,
-    },
-  ],
+      useClass: AdminOnlyGuard
+    }
+  ]
 })
-export class AppModule {}
+export class AppModule {
+}
