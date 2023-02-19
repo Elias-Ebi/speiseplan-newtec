@@ -14,19 +14,18 @@ dotenv.config();
 @Module({
   imports: [
     TypeOrmModule.forRoot({
-      /*type: 'postgres',
+      // neon cloud db
+      type: 'postgres',
       url: environment.dbUrl,
-      host: 'localhost',
-      port: 5432,
-      database: 'postgres',
-      username: 'root',
-      password: 'root',
       autoLoadEntities: true,
       synchronize: environment.synchronize,
       migrationsTableName: 'migrations',
       migrations: ['src/data/migrations/*{.ts,.js}'],
       migrationsRun: environment.migrationsRun,
-      ssl: false,*/
+      ssl: true
+
+      // local docker + pgAdmin
+      /*
       type: 'postgres',
       host: process.env.POSTGRES_HOST,
       port: parseInt(<string>process.env.POSTGRES_PORT),
@@ -39,6 +38,7 @@ dotenv.config();
       migrations: ["src/data/migrations/*{.ts,.js}"],
       migrationsRun: false,
       ssl: false,
+      */
     }),
     AuthModule,
     CoreModule
