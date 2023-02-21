@@ -3,6 +3,7 @@ import { OrderMonth } from '../../data/entitites/order-month.entity';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../../auth/auth.service';
+import { Temporal } from '@js-temporal/polyfill';
 
 @Injectable()
 export class OrderMonthService {
@@ -28,6 +29,9 @@ export class OrderMonthService {
   }
 
   async getHistory(email: string): Promise<OrderMonth[]> {
+    const currentDate = Temporal.Now.plainDateISO();
+    const fromDate = currentDate.add({ months: -5 });
+
     const options: FindOptionsWhere<OrderMonth> = {
       profile: { email }
     };
@@ -38,6 +42,10 @@ export class OrderMonthService {
       .innerJoinAndSelect('order.meal', 'meal')
       .where(options)
       .andWhere('order.guestName IS NULL')
+      .andWhere('orderMonth.year > :year OR (orderMonth.year = :year AND orderMonth.month >= :month)', {
+        year: fromDate.year,
+        month: fromDate.month
+      })
       .getMany();
   }
 
