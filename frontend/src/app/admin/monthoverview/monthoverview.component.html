@@ -1,4 +1,4 @@
-<mat-tab-group class="main-content">
+<mat-tab-group (selectedIndexChange)="setDataSource($event)" class="main-content">
   <mat-tab *ngFor="let month of lastSixMonths" [label]="month | monthName ">
     <section class="section">
       <div class="section-headline-container">
@@ -19,8 +19,8 @@
         <input matInput placeholder="Geben sie einen Namen ein" [(ngModel)]="searchTerm" (keyup)="search(month)">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
-      <!-- xxxx -->
-      <table [dataSource]="dataMap.get(month)!" mat-table>
+
+      <table [dataSource]="dataSource" mat-table>
         <ng-container matColumnDef="customer">
           <th *matHeaderCellDef mat-header-cell>
             <h2>Besteller</h2>
@@ -44,7 +44,7 @@
             <h2>Betrag</h2>
           </th>
           <td *matCellDef="let element" mat-cell>
-            <p>{{element.total}}</p>
+            <p>{{element.total | euro}}</p>
           </td>
         </ng-container>
 
@@ -57,6 +57,7 @@
               <mat-icon class="clr-success">check</mat-icon>
               <p>bezahlt</p>
             </div>
+
             <div *ngIf="!element.paid" class="icon-with-text">
               <mat-icon class="clr-error">close</mat-icon>
               <p>nicht bezahlt</p>
@@ -68,18 +69,9 @@
           <th *matHeaderCellDef mat-header-cell></th>
           <td *matCellDef="let element" class="paid-button-cell" mat-cell>
             <button
-              (click)="changePaymentStatus(element, month)"
-              *ngIf="!element.paid"
-              class="icon-button"
-              color="primary"
-              mat-icon-button
-            >
-              <mat-icon>euro</mat-icon>
-            </button>
-            <button
-              (click)="changePaymentStatus(element, month)"
-              *ngIf="element.paid"
-              class="icon-button-outlined"
+              (click)="setPaymentStatus(element)"
+              [class.icon-button-outlined]="element.paid"
+              [class.icon-button]="!element.paid"
               color="primary"
               mat-icon-button
             >

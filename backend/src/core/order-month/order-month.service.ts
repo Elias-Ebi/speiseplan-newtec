@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderMonth } from '../../data/entitites/order-month.entity';
 import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -41,12 +41,9 @@ export class OrderMonthService {
       .getMany();
   }
 
-  async getMonthOrders(month: number, year: number): Promise<OrderMonth[]> {
+  async getOrderMonths(month: number, year: number): Promise<OrderMonth[]> {
     const options: FindOneOptions<OrderMonth> = {
-      where: {
-        month: month,
-        year: year
-      },
+      where: { month, year },
       relations: {
         profile: true,
         orders: true
@@ -81,7 +78,9 @@ export class OrderMonthService {
     return orderMonth;
   }
 
-  async update(orderMonth: OrderMonth): Promise<OrderMonth> {
+  async setPaymentStatus(id: string) {
+    const orderMonth = await this.getById(id);
+    orderMonth.paid = !orderMonth.paid;
     return this.orderMonthRepository.save(orderMonth);
   }
 

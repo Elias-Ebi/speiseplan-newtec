@@ -36,18 +36,13 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getOrdersFromMonth(date: PlainDate): Promise<Order[]>{
-    const response= this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/${date.month.toString()}`)
+  async getOderMonthsFrom(date: PlainDate): Promise<OrderMonth[]> {
+    const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/${date.month}/${date.year}`);
     return lastValueFrom(response);
   }
 
-  async getOrderMonthFromMonth(date: PlainDate): Promise<OrderMonth[]> {
-    const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/month/${date.month}/${date.year}`);
-    return lastValueFrom(response);
-  }
-
-  async updatePaymentStatus(order: OrderMonth): Promise<OrderMonth> {
-    const response = this.httpClient.put<OrderMonth>(`${environment.apiUrl}/order-month/change-payment-status`, order);
+  async changePaymentStatus(id: string): Promise<OrderMonth> {
+    const response = this.httpClient.put<OrderMonth>(`${environment.apiUrl}/order-month/payment-status/${id}`, {});
     return lastValueFrom(response);
   }
 
@@ -67,12 +62,7 @@ export class ApiService {
   }
 
   async getAllOrdersOnDate(date: PlainDate): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/all-orders/${date.toString()}`);
-    return lastValueFrom(response);
-  }
-
-  async getOrdersOn(date: PlainDate): Promise<Order[]> {
-    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/today`);
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/${date.toString()}/all`);
     return lastValueFrom(response);
   }
 
