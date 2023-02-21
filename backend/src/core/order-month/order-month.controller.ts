@@ -15,10 +15,10 @@ export class OrderMonthController {
     return this.orderMonthService.getBalance(user.email);
   }
 
-  @Get(':month/:year')
+  @Get('month-overview')
   @AdminOnly()
-  async orderMonths(@Param('month') month: number, @Param('year') year: number): Promise<OrderMonth[]> {
-    return await this.orderMonthService.getOrderMonths(month, year);
+  async orderMonths(): Promise<OrderMonth[]> {
+    return await this.orderMonthService.monthOverview();
   }
 
   @Get('history')
