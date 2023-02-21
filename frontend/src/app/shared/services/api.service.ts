@@ -36,6 +36,16 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getOderMonthsFrom(date: PlainDate): Promise<OrderMonth[]> {
+    const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/${date.month}/${date.year}`);
+    return lastValueFrom(response);
+  }
+
+  async changePaymentStatus(id: string): Promise<OrderMonth> {
+    const response = this.httpClient.put<OrderMonth>(`${environment.apiUrl}/order-month/payment-status/${id}`, {});
+    return lastValueFrom(response);
+  }
+
   async getNextOrderableMeals(): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/next-orderable`);
     return lastValueFrom(response);
@@ -48,6 +58,11 @@ export class ApiService {
 
   async getOrdersDate(date: PlainDate): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/${date.toString()}`);
+    return lastValueFrom(response);
+  }
+
+  async getAllOrdersOnDate(date: PlainDate): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/date/${date.toString()}/all`);
     return lastValueFrom(response);
   }
 
