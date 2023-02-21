@@ -15,12 +15,10 @@ import { MatDialogModule } from "@angular/material/dialog";
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(APP_ROUTES),
-    importProvidersFrom(BrowserAnimationsModule),
+    importProvidersFrom([BrowserAnimationsModule, MatSnackBarModule, MatDialogModule]),
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
     provideHttpClient(withInterceptorsFromDi()),
-    importProvidersFrom(MatSnackBarModule),
-    importProvidersFrom(MatDialogModule)
   ]
 });
 
