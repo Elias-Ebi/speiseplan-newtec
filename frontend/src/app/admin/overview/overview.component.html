@@ -1,9 +1,9 @@
 <mat-tab-group class="main-content">
-  <mat-tab *ngFor="let days of dayData" [label]="days.date | weekdayName">
+  <mat-tab *ngFor="let day of weekdays" [label]="day | weekdayName">
     <section class="section">
       <div class="section-headline-container">
-        <h2>Tagesbestellungen - {{days.date | weekdayName}} {{days.date.toLocaleString()}}</h2>
-        <button color="primary" mat-flat-button>
+        <h2>Tagesbestellungen - {{day | weekdayName}} </h2>
+        <button (click)="downloadDayAsCsv(day)" color="primary" mat-flat-button>
           <mat-icon>picture_as_pdf</mat-icon>
           Exportieren
         </button>
@@ -12,26 +12,26 @@
       <hr class="bg-neutral"/>
 
       <mat-accordion displayMode="flat" multi="true">
-        <mat-expansion-panel *ngFor="let meal of days.orders">
+        <mat-expansion-panel *ngFor="let order of dataMap.get(day)">
           <mat-expansion-panel-header>
             <mat-panel-title class="panel-header">
               <div class="icon-with-text">
                 <mat-icon>restaurant</mat-icon>
-                <p>{{meal.meals}}</p>
+                <p>{{order.meal.name}}</p>
               </div>
 
-              <p>{{meal.total}}</p>
+              <p>{{order.total}}</p>
 
-              <button color="primary" mat-flat-button>
+              <button (click)="$event.stopPropagation()" color="primary" mat-flat-button>
                 <mat-icon>no_meals</mat-icon>
                 Absagen
               </button>
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <div *ngFor="let user of meal.users" class="icon-with-text">
+          <div *ngFor="let user of order.users" class="icon-with-text">
             <mat-icon>person</mat-icon>
-            <p>{{user.user}}</p>
+            <p>{{user.name}}</p>
           </div>
         </mat-expansion-panel>
       </mat-accordion>

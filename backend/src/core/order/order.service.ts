@@ -178,6 +178,20 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
+  async getAllOn(date: PlainDate): Promise<Order[]> {
+    const options: FindOneOptions<Order> = {
+      where: {
+        date: date.toString()
+      },
+      relations: {
+        profile: true,
+        meal: true
+      }
+    };
+    return this.orderRepository.find(options);
+  }
+
+
   async order(time: PlainDateTime, mealId: string, email: string, guestName?: string, options?: OrderOptions): Promise<Order> {
     const meal = await this.mealService.get(mealId);
 

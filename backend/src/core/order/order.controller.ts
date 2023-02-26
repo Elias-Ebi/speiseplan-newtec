@@ -3,6 +3,7 @@ import { OrderService } from './order.service';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Order } from '../../data/entitites/order.entity';
 import { Temporal } from '@js-temporal/polyfill';
+import { AdminOnly } from '../../auth/decorators/admin-only.decorator';
 import PlainDate = Temporal.PlainDate;
 import { AdminOnly } from 'src/auth/decorators/admin-only.decorator';
 
@@ -52,6 +53,13 @@ export class OrderController {
     const user = req.user as AuthUser;
     const requestedDate = PlainDate.from(date);
     return await this.orderService.getOn(requestedDate, user.email);
+  }
+
+  @Get('date/:date/all')
+  @AdminOnly()
+  async getAllOrdersOn(@Param('date') date: string): Promise<Order[]> {
+    const requestedDate = PlainDate.from(date);
+    return this.orderService.getAllOn(requestedDate);
   }
 
   @Post(':mealId')
