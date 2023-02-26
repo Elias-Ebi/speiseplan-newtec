@@ -39,16 +39,12 @@ export class OrderController {
     return this.orderService.getChangeable(time, user.email);
   }
 
-  @Get('admin')
-  @AdminOnly()
-  async openOrdersAdmin(@Request() req): Promise<Order[]> {
-    return this.orderService.getAllOrders();
-  }
+
   @Post('filter')
   @AdminOnly()
   async filterOrders(@Request() req): Promise<Order[]> {
     const filter = req.body.filter;
-    return this.orderService.applyFilter(filter);
+    return this.orderService.getFilteredOrders(filter);
   }
 
   @Get('date/:date')
@@ -64,19 +60,13 @@ export class OrderController {
     const time = Temporal.Now.plainDateTimeISO();
     return this.orderService.order(time, mealId, user.email, guestName);
   }
-
-
-  @Delete('admin/:id')
-  @AdminOnly()
-  async deleteOrderAdmin(@Param('id') id: string, @Request() req): Promise<Order> {
-    return this.orderService.deleteOrderByAdmin(id);
-  }
   
-   // http client cannot add body, so post is used instead
-  @Post('/multiple-orders/delet/admin')
+  // http client get cannot add body, so post is used instead
+  @Post('/multiple-orders/delete/admin')
   @AdminOnly()
   async deleteMultipleOrdersAdmin( @Request() req): Promise<boolean> {
-    return this.orderService.deleteMultipleOrdersByAdmin(req.body.orders as Order[]);
+    const user = req.user as AuthUser;
+    return this.orderService.deleteMultipleOrdersByAdmin(req.body.orders as Order[], user);
   }
 
   @Delete(':id')

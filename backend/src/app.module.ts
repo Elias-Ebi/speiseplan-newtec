@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreModule } from './core/core.module';
 import { environment } from './environment';
 import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
-// import { SharedModule } from './shared/shared.module';
 import * as dotenv from 'dotenv'
 
 dotenv.config();

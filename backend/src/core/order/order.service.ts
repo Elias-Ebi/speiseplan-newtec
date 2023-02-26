@@ -103,9 +103,37 @@ export class OrderService {
   }
 
 
-  async getAllOrders(): Promise<Order[]> {
+  async getFilteredOrders(filter): Promise<Order[]> {
+    const time = Temporal.Now.plainDateTimeISO();
+    let whereObj;
+    if (JSON.stringify(filter) === '{}') {
+      whereObj = {
+        meal: { 
+          orderable: MoreThan(time.toString())
+        }
+      }
+    } else {
+      whereObj = {
+        profile: {
+          name: ILike(('%' + filter.buyerFilter + '%'))
+        },
+        meal: {
+          name: ILike(('%' + filter.mealFilter + '%')),
+          orderable: MoreThan(time.toString())
+        },
+        guestName: ILike(('%' + filter.guestFilter + '%')),
+        date: null,
+      };
+
+      if(filter.dateFilter.startDate && !filter.dateFilter.endDate) {
+        whereObj.date =  filter.dateFilter.startDate
+      } else if (filter.dateFilter.startDate && filter.dateFilter.endDate) {
+        whereObj.date = Between(filter.dateFilter.startDate, filter.dateFilter.endDate)
+      }
+    }
+    
     const options: FindOneOptions<Order> = {
-      where: {},
+      where: whereObj,
       relations: {
         profile: true,
         meal: true
@@ -113,69 +141,6 @@ export class OrderService {
     };
 
     return this.orderRepository.find(options);
-  }
-
-  async applyFilter(filter): Promise<Order[]> {
-    if(!filter.dateFilter.startDate) {
-      const options: FindOneOptions<Order> = {
-        where: {
-          profile: {
-            name: ILike(('%' + filter.buyerFilter + '%'))
-          },
-          meal: {
-            name: ILike(('%' + filter.mealFilter + '%')),
-          },
-          guestName: ILike(('%' + filter.guestFilter + '%')),
-        },
-        relations: {
-          profile: true,
-          meal: true
-        }
-      };
-
-    return this.orderRepository.find(options);
-    }
-
-    else if(!filter.dateFilter.endDate) {
-      const options: FindOneOptions<Order> = {
-        where: {
-          profile: {
-            name: ILike(('%' + filter.buyerFilter + '%'))
-          },
-          meal: {
-            name: ILike(('%' + filter.mealFilter + '%')),
-          },
-          guestName: ILike(('%' + filter.guestFilter + '%')),
-          date: filter.dateFilter.startDate
-        },
-        relations: {
-          profile: true,
-          meal: true
-        }
-      };
-
-    return this.orderRepository.find(options);
-    } else {
-
-      const options: FindOneOptions<Order> = {
-        where: {
-          profile: {
-            name: ILike(('%' + filter.buyerFilter + '%'))
-          },
-          meal: {
-            name: ILike(('%' + filter.mealFilter + '%')),
-          },
-          guestName: ILike(('%' + filter.guestFilter + '%')),
-          date: Between(filter.dateFilter.startDate, filter.dateFilter.endDate)
-        },
-        relations: {
-          profile: true,
-          meal: true
-        }
-      };
-      
-      return this.orderRepository.find(options);
-    }
   }
 
   async get(orderId: string): Promise<Order> {
@@ -244,16 +209,11 @@ export class OrderService {
     return order;
   }
 
-
-  async deleteOrderByAdmin(orderId: string) {
-    const order = await this.get(orderId);
-    return this.orderRepository.remove(order);
-  }
-
-  async deleteMultipleOrdersByAdmin(orders: Order[]) {
+  async deleteMultipleOrdersByAdmin(orders: Order[], user: AuthUser) {
     try {
+      const time = Temporal.Now.plainDateTimeISO();
       for (const order of orders) {
-        await this.deleteOrderByAdmin(order.id)
+        await this.delete(time, order.id, user)
       }
       return true;
     } catch(erros) {

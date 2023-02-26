@@ -29,7 +29,7 @@ export class CancelOrderDialogComponent {
   async closeDialog(isCancelingOrderConfirmed: boolean) {
     if (isCancelingOrderConfirmed) {
       try {
-        const res = await this.apiService.deleteOrderAdmin(this.order.id);
+        const res = await this.apiService.deleteOrder(this.order.id);
       } catch (e) {
         console.error(e);
       }
