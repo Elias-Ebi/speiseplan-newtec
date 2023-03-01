@@ -113,17 +113,30 @@ export class OrderService {
         }
       }
     } else {
-      whereObj = {
-        profile: {
-          name: ILike(('%' + filter.buyerFilter + '%'))
-        },
-        meal: {
-          name: ILike(('%' + filter.mealFilter + '%')),
-          orderable: MoreThan(time.toString())
-        },
-        guestName: ILike(('%' + filter.guestFilter + '%')),
-        date: null,
-      };
+      if (!filter.guestFilter) {
+        whereObj = {
+          profile: {
+            name: ILike(('%' + filter.buyerFilter + '%'))
+          },
+          meal: {
+            name: ILike(('%' + filter.mealFilter + '%')),
+            orderable: MoreThan(time.toString())
+          },
+          date: null,
+        };
+      } else {
+        whereObj = {
+          profile: {
+            name: ILike(('%' + filter.buyerFilter + '%'))
+          },
+          meal: {
+            name: ILike(('%' + filter.mealFilter + '%')),
+            orderable: MoreThan(time.toString())
+          },
+          guestName: ILike(('%' + filter.guestFilter + '%')),
+          date: null,
+        };
+      }
 
       if(filter.dateFilter.startDate && !filter.dateFilter.endDate) {
         whereObj.date =  filter.dateFilter.startDate
