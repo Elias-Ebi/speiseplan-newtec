@@ -205,7 +205,9 @@ export class OrderService {
       const additionalText = guestName ? ` for ${guestName}.` : '.';
       throw new BadRequestException(`User already ordered this meal${additionalText}`);
     }
-
+    if (!guestName) {
+      guestName = ''
+    }
     const order = await this.create(email, meal, guestName);
 
     const promises = [];
