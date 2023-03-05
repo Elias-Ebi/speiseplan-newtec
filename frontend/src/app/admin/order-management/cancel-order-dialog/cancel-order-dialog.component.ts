@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from '@angular/material/input';
-import { Temporal } from '@js-temporal/polyfill';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Order } from 'src/app/shared/models/order';
@@ -22,18 +21,14 @@ export class CancelOrderDialogComponent {
     public order: Order,
     private dialogRef: MatDialogRef<CancelOrderDialogComponent>,
     private snackBar: MatSnackBar,
-    private apiService: ApiService,
+    private apiService: ApiService
   ) {
   }
 
   async closeDialog(isCancelingOrderConfirmed: boolean) {
     if (isCancelingOrderConfirmed) {
-      try {
-        const res = await this.apiService.deleteOrder(this.order.id);
-      } catch (e) {
-        console.error(e);
-      }
-      
+      await this.apiService.deleteOrder(this.order.id);
+
       this.snackBar.open("Bestellung erfolgreich storniert!", "OK", {
         duration: 3000,
         panelClass: 'success-snackbar'

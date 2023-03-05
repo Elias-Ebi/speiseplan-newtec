@@ -101,19 +101,6 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async updateOrder(order: Order): Promise<any> {
-    const orderId = order.id
-    const body = { order: order }
-    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/admin/${orderId}`, body)
-    return lastValueFrom(response);
-  }
-
-  async updateMultipleOrders(orders: Order[], changes: any): Promise<any> {
-    const body = { orders: orders, changes: changes }
-    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/admin`, body)
-    return lastValueFrom(response);
-  }
-
   async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
     const body = { orders: orders }
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delete/admin/`, body)

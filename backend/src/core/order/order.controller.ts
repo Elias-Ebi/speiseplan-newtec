@@ -39,7 +39,6 @@ export class OrderController {
     return this.orderService.getChangeable(time, user.email);
   }
 
-
   @Post('filter')
   @AdminOnly()
   async filterOrders(@Request() req): Promise<Order[]> {
@@ -67,8 +66,7 @@ export class OrderController {
     const time = Temporal.Now.plainDateTimeISO();
     return this.orderService.order(time, mealId, user.email, guestName);
   }
-  
-  // http client get cannot add body, so post is used instead
+
   @Post('/multiple-orders/delete/admin')
   @AdminOnly()
   async deleteMultipleOrdersAdmin( @Request() req): Promise<boolean> {
