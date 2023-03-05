@@ -12,6 +12,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { MealTemplate } from 'src/app/shared/models/mealtemplate';
+import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
+import { Temporal } from '@js-temporal/polyfill';
+import * as _ from "lodash";
 
 interface Category {
   value: string;
@@ -29,12 +33,16 @@ interface Category {
     MatSelectModule,
     MatInputModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './dg-add-dish.component.html',
   styleUrls: ['./dg-add-dish.component.scss'],
 })
 export class DgAddDishComponent {
   MAX_LENGTH: number = 70;
+  orderableDate;
+  time;
 
   categories: Category[] = [
     { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
@@ -45,10 +53,18 @@ export class DgAddDishComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    readonly data: { name: string; description: string; categoryId: string },
+    public data: { name: string; description: string; categoryId: string, deliveryDate: Date},
     private matDialogRef: MatDialogRef<DgAddDishComponent>,
-    private api: ApiService
-  ) {}
+    private api: ApiService,
+    private dateAdapter: DateAdapter<any>
+  ) {
+    this.dateAdapter.setLocale('de');
+    this.orderableDate = _.cloneDeep(this.data.deliveryDate);
+    this.orderableDate.setDate(this.orderableDate.getDate() - 1);
+    console.log(this.orderableDate);
+
+    this.time = '13:00';
+  }
 
   getCategoryView(val: string): string | any {
     let result: string = '';
@@ -84,5 +100,9 @@ export class DgAddDishComponent {
     };
     this.api.putMealTemplate(mealTemplate);
     this.matDialogRef.close(this.data);
+  }
+
+  checkDate(event: MatDatepickerInputEvent<any>){
+    // Todo: check if valid date
   }
 }

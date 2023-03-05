@@ -17,6 +17,31 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Lieferdatum</mat-label>
+    <input [matDatepicker]="datepicker" [value]="data.deliveryDate" matInput>
+    <mat-hint>MM/TT/JJJJ</mat-hint>
+    <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
+    <mat-datepicker #datepicker></mat-datepicker>
+  </mat-form-field>
+
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Datum auswählen</mat-label>
+      <input [matDatepicker]="orderable" [value]="orderableDate" matInput>
+      <mat-hint>MM/TT/JJJJ</mat-hint>
+      <mat-datepicker-toggle [for]="orderable" matIconSuffix></mat-datepicker-toggle>
+      <mat-datepicker #orderable></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Bestellungsfrist</mat-label>
+      <input matInput [value]="time" type="time" placeholder="start date">
+      <mat-hint>HH:MM</mat-hint>
+    </mat-form-field>
+  </div>
+
   <form class="button-group">
     <button mat-stroked-button color="primary" (click)="onClickCancel()">ABBRECHEN</button>
     <button mat-raised-button color="primary" (click)="onClickCreate()">ERSTELLEN</button>

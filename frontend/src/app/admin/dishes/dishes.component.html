@@ -1,8 +1,12 @@
 <div class="dishes--main-container">
   <div class="dishes--date-container">
-    <mat-icon class="arrow-back" color="primary">arrow_back</mat-icon>
-    <h1 class="fs-title clr-primary">{{getDateString()}}</h1>
-    <mat-icon class="arrow-forward">arrow_forward</mat-icon>
+    <button mat-icon-button class="arrow-button" >
+      <mat-icon class="arrow-back" color="primary">arrow_back</mat-icon>
+    </button>
+    <h1 class="fs-title clr-primary">{{currentlyDisplayedWeek.span}}</h1>
+    <button mat-icon-button class="arrow-button" >
+      <mat-icon class="arrow-forward" color="primary">arrow_forward</mat-icon>
+    </button>
   </div>
   <div class="dishes--week-tabs-container">
     <mat-tab-group (selectedTabChange)="onTabChange($event)" animationDuration="0ms">
@@ -35,10 +39,122 @@
 
         <button mat-raised-button color="primary" class="button-add" (click)="onClickChooseDish()">GERICHT HINZUFÜGEN</button>
       </mat-tab>
-      <mat-tab label="Dienstag">Content 2</mat-tab>
-      <mat-tab label="Mittwoch">Content 3</mat-tab>
-      <mat-tab label="Donnerstag">Content 3</mat-tab>
-      <mat-tab label="Freitag">Content 3</mat-tab>
+      <mat-tab label="Dienstag">
+        <button mat-raised-button color="primary" class="button-publish">VERÖFFENTLICHEN</button>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td style="padding-top: 1rem; padding-left: 1rem; padding-bottom: 1rem;" class="mat-cell" colspan="4">{{"Es sind keine Daten vorhanden."}}</td>
+          </tr>
+        </table>
+
+        <button mat-raised-button color="primary" class="button-add" (click)="onClickChooseDish()">GERICHT HINZUFÜGEN</button>
+      </mat-tab>
+      <mat-tab label="Mittwoch">
+        <button mat-raised-button color="primary" class="button-publish">VERÖFFENTLICHEN</button>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td style="padding-top: 1rem; padding-left: 1rem; padding-bottom: 1rem;" class="mat-cell" colspan="4">{{"Es sind keine Daten vorhanden."}}</td>
+          </tr>
+        </table>
+
+        <button mat-raised-button color="primary" class="button-add" (click)="onClickChooseDish()">GERICHT HINZUFÜGEN</button>
+      </mat-tab>
+      <mat-tab label="Donnerstag">
+        <button mat-raised-button color="primary" class="button-publish">VERÖFFENTLICHEN</button>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td style="padding-top: 1rem; padding-left: 1rem; padding-bottom: 1rem;" class="mat-cell" colspan="4">{{"Es sind keine Daten vorhanden."}}</td>
+          </tr>
+        </table>
+
+        <button mat-raised-button color="primary" class="button-add" (click)="onClickChooseDish()">GERICHT HINZUFÜGEN</button>
+      </mat-tab>
+      <mat-tab label="Freitag">
+        <button mat-raised-button color="primary" class="button-publish">VERÖFFENTLICHEN</button>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+          <ng-container matColumnDef="title">
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <tr class="mat-row" *matNoDataRow>
+            <td style="padding-top: 1rem; padding-left: 1rem; padding-bottom: 1rem;" class="mat-cell" colspan="4">{{"Es sind keine Daten vorhanden."}}</td>
+          </tr>
+        </table>
+
+        <button mat-raised-button color="primary" class="button-add" (click)="onClickChooseDish()">GERICHT HINZUFÜGEN</button>
+      </mat-tab>
     </mat-tab-group>
   </div>
 </div>

@@ -23,7 +23,7 @@ dotenv.config();
       migrationsTableName: 'migrations',
       migrations: ['src/data/migrations/*{.ts,.js}'],
       migrationsRun: false,
-      ssl: true
+      ssl: false
     }),
     AuthModule,
     CoreModule

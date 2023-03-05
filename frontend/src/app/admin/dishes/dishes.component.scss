@@ -14,23 +14,7 @@
     border: solid 1px var(--clrLine);
     border-radius: 0.35rem;
 
-    .arrow-back {
-      color: var(--clrNeutral);
-      cursor: pointer;
-    }
-
-    .arrow-back:hover {
-      color: var(--clrPrimary);
-    }
-
-    .arrow-forward {
-      color: var(--clrNeutral);
-      cursor: pointer;
-    }
-
-    .arrow-forward:hover {
-      color: var(--clrPrimary);
-    }
+    align-items: center;
   }
 
   .dish-table {

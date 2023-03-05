@@ -14,6 +14,10 @@ import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { MealTemplate } from 'src/app/shared/models/mealtemplate';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Meal } from 'src/app/shared/models/meal';
+import { CalendarWeek, CalendarWeekDay } from 'src/app/shared/models/calendar-week';
+import { DgAddDishComponent } from '../components/dialogs/dishes-dialogs/dg-add-dish/dg-add-dish.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 interface Category {
   value: string;
@@ -36,6 +40,8 @@ interface Category {
     MatTooltipModule,
     FormsModule,
     ReactiveFormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   styleUrls: ['./dishes.component.scss'],
 })
@@ -43,7 +49,8 @@ export class DishesComponent implements OnInit {
   displayedColumns: string[] = ['title', 'description', 'category'];
   dishes: Meal[];
   dataSource: MatTableDataSource<Meal>;
-
+  currentlyDisplayedWeek: CalendarWeek;
+  currentTab: number = 0;
   categories: Category[] = [
     { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
     { value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch' },
@@ -52,6 +59,7 @@ export class DishesComponent implements OnInit {
   ];
 
   constructor(public dialog: MatDialog, private api: ApiService) {
+    this.currentlyDisplayedWeek = this.getCalenderWeek(Temporal.Now.plainDateISO());
     this.dishes = [];
     this.dataSource = new MatTableDataSource();
   }
@@ -60,41 +68,6 @@ export class DishesComponent implements OnInit {
     this.dishes = await this.api.getOrderableMeals();
   }
 
-  currentTab: number = 0;
-
-  date = Temporal.Now.plainDateISO();
-  weekOfYear = this.date.calendar.weekOfYear(this.date);
-  firstDayOfWeek = this.date.toPlainMonthDay().day - (this.date.dayOfWeek - 1);
-  fifthDayOfWeek = this.date.toPlainMonthDay().day - (this.date.dayOfWeek - 5);
-  month = this.date.month;
-  year = this.date.year;
-
-  currentMonday: string =
-    this.firstDayOfWeek.toString().length === 1
-      ? '0' + this.firstDayOfWeek
-      : '' + this.firstDayOfWeek;
-  currentTuesday: string =
-    (this.firstDayOfWeek + 1).toString().length === 1
-      ? '0' + (this.firstDayOfWeek + 1)
-      : '' + (this.firstDayOfWeek + 1);
-  currentWednesday: string =
-    (this.firstDayOfWeek + 2).toString().length === 1
-      ? '0' + (this.firstDayOfWeek + 2)
-      : '' + (this.firstDayOfWeek + 2);
-  currentThursday: string =
-    (this.firstDayOfWeek + 3).toString().length === 1
-      ? '0' + (this.firstDayOfWeek + 3)
-      : '' + (this.firstDayOfWeek + 3);
-  currentFriday: string =
-    (this.firstDayOfWeek + 4).toString().length === 1
-      ? '0' + (this.firstDayOfWeek + 4)
-      : '' + (this.firstDayOfWeek + 4);
-
-  currentMondayDate: string = this.year + '-' + (this.month.toString().length === 1 ? '0' + this.month : '' + this.month) + '-' + this.currentMonday;
-  currentTuesdayDate: string = this.year + '-' + (this.month.toString().length === 1 ? '0' + this.month : '' + this.month) + '-' + this.currentTuesday;
-  currentWednesdayDate: string = this.year + '-' + (this.month.toString().length === 1 ? '0' + this.month : '' + this.month) + '-' + this.currentWednesday;
-  currentThursdayDate: string = this.year + '-' + (this.month.toString().length === 1 ? '0' + this.month : '' + this.month) + '-' + this.currentThursday;
-  currentFridayDate: string = this.year + '-' + (this.month.toString().length === 1 ? '0' + this.month : '' + this.month) + '-' + this.currentFriday;
 
   getCategoryView(val: string): string | any {
     let result: string = '';
@@ -119,8 +92,22 @@ export class DishesComponent implements OnInit {
   }
 
   onClickChooseDish() {
-    const dialogRef = this.dialog.open(DgChooseDishComponent, {
-      data: {},
+
+    let currentDay = this.currentlyDisplayedWeek.monday.date.toString();
+    if(this.currentTab == 0) {
+      currentDay = this.currentlyDisplayedWeek.monday.date.toString();
+    } else if(this.currentTab == 1) {
+      currentDay = this.currentlyDisplayedWeek.tuesday.date.toString();
+    } else if(this.currentTab == 2) {
+      currentDay = this.currentlyDisplayedWeek.wednesday.date.toString();
+    } else if(this.currentTab == 3) {
+      currentDay = this.currentlyDisplayedWeek.thursday.date.toString();
+    } else if(this.currentTab == 4) {
+      currentDay = this.currentlyDisplayedWeek.friday.date.toString();
+    }
+
+    const dialogRef = this.dialog.open(DgAddDishComponent, {
+      data: {deliveryDate: new Date(currentDay)},
       width: '60%',
       height: '80%',
     });
@@ -130,9 +117,9 @@ export class DishesComponent implements OnInit {
       // Gesucht: date, delivery, orderable, total, ordercount
       switch(this.currentTab) {
         case 0 /* Montag */ :
-          const date: string = this.currentMondayDate;
-          const delivery: string = this.currentMondayDate+'T12:00:00';
-          const orderable: string = this.year+'-'+this.month+'-'+(this.firstDayOfWeek-3)+'T13:00:00';
+          const date: string = "" //this.currentMondayDate;
+          const delivery: string = "" //this.currentMondayDate+'T12:00:00';
+          const orderable: string = "" //this.year+'-'+this.month+'-'+(this.firstDayOfWeek-3)+'T13:00:00';
           const total: number = 3.6;
           const ordercount: number = 0;
 
@@ -157,7 +144,7 @@ export class DishesComponent implements OnInit {
     this.currentTab = index;
   }
 
-  getDateString(): string {
-    return `KW ${this.weekOfYear} — ${this.firstDayOfWeek}.${this.month}.${this.year} - ${this.fifthDayOfWeek}.${this.month}.${this.year}`;
+  getCalenderWeek(date: Temporal.PlainDate): CalendarWeek {
+    return new CalendarWeek(date)
   }
 }
