@@ -2,16 +2,16 @@
 <div class="dg-content">
   <mat-form-field appearance="fill" class="dish">
     <mat-label>Gericht</mat-label>
-    <input matInput [(ngModel)]="data.name" (change)="validate()">
+    <input matInput [(ngModel)]="name" (change)="validate()">
   </mat-form-field>
   <mat-form-field appearance="fill" class="description">
     <mat-label>Beschreibung</mat-label>
-    <input matInput #message maxlength="70" [(ngModel)]="data.description" (change)="validate()">
+    <input matInput #message maxlength="70" [(ngModel)]="description" (change)="validate()">
     <mat-hint style="color: var(--clrPrimary)" align="end">{{message.value.length}} / {{MAX_LENGTH}}</mat-hint>
   </mat-form-field>
   <mat-form-field appearance="fill" color="primary" class="category">
     <mat-label>Kategorie</mat-label>
-    <mat-select placeholder="Kategorie wählen" [(ngModel)]="data.categoryId" (selectionChange)="validate()">
+    <mat-select placeholder="Kategorie wählen" [(ngModel)]="categoryId" (selectionChange)="validate()">
       <mat-option *ngFor="let category of categories" [value]="category.value">
         {{category.view}}
       </mat-option>
@@ -20,7 +20,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Lieferdatum</mat-label>
-    <input [matDatepicker]="datepicker" [value]="data.deliveryDate" matInput>
+    <input [matDatepicker]="datepicker" [(ngModel)]="deliveryDate" [value]="deliveryDate" matInput>
     <mat-hint>MM/TT/JJJJ</mat-hint>
     <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
     <mat-datepicker #datepicker></mat-datepicker>
@@ -44,6 +44,6 @@
 
   <form class="button-group">
     <button mat-stroked-button color="primary" (click)="onClickCancel()">ABBRECHEN</button>
-    <button mat-raised-button color="primary" (click)="onClickTest()" [disabled]="!isFormValid">ERSTELLEN</button>
+    <button mat-raised-button color="primary" (click)="onClickCreate()" [disabled]="!isFormValid">ERSTELLEN</button>
   </form>
 </div>

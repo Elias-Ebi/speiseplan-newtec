@@ -8,6 +8,7 @@ export class CalendarWeek {
     wednesday: CalendarWeekDay;
     thursday: CalendarWeekDay;
     friday: CalendarWeekDay;
+    [key: string]: any; // erlaubt den Zugriff auf alle Schlüssel vom Typ string
 
 
 
