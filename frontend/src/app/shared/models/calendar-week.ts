@@ -1,13 +1,13 @@
 import { Temporal } from '@js-temporal/polyfill';
 
 export class CalendarWeek {
-    weekNumber: number
-    span: string
+    weekNumber: number;
+    span: string;
     monday: CalendarWeekDay;
-    tuesday: CalendarWeekDay
-    wednesday: CalendarWeekDay
-    thursday: CalendarWeekDay
-    friday: CalendarWeekDay
+    tuesday: CalendarWeekDay;
+    wednesday: CalendarWeekDay;
+    thursday: CalendarWeekDay;
+    friday: CalendarWeekDay;
 
 
 

@@ -24,6 +24,7 @@ interface Category {
   view: string;
 }
 
+
 @Component({
   selector: 'app-dishes',
   standalone: true,
@@ -46,11 +47,14 @@ interface Category {
   styleUrls: ['./dishes.component.scss'],
 })
 export class DishesComponent implements OnInit {
+  MAX_FOLLOWING_WEEKS = 2;
+
   displayedColumns: string[] = ['title', 'description', 'category'];
   dishes: Meal[];
   dataSource: MatTableDataSource<Meal>;
   currentlyDisplayedWeek: CalendarWeek;
   currentTab: number = 0;
+  calendarWeekIndex = 0;
   categories: Category[] = [
     { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
     { value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch' },
@@ -112,29 +116,37 @@ export class DishesComponent implements OnInit {
       height: '80%',
     });
 
-    dialogRef.afterClosed().subscribe(async (result: MealTemplate) => {
+    dialogRef.afterClosed().subscribe(async (mealToAdd: Meal) => {
+      if(JSON.stringify(mealToAdd) !== '{}') {
       // categoryId, name, description, id => Meal
       // Gesucht: date, delivery, orderable, total, ordercount
-      switch(this.currentTab) {
-        case 0 /* Montag */ :
-          const date: string = "" //this.currentMondayDate;
-          const delivery: string = "" //this.currentMondayDate+'T12:00:00';
-          const orderable: string = "" //this.year+'-'+this.month+'-'+(this.firstDayOfWeek-3)+'T13:00:00';
-          const total: number = 3.6;
-          const ordercount: number = 0;
+        switch(this.currentTab) {
+          case 0 /* Montag */ :
+            const date: string = "" //this.currentMondayDate;
+            const delivery: string = "" //this.currentMondayDate+'T12:00:00';
+            const orderable: string = "" //this.year+'-'+this.month+'-'+(this.firstDayOfWeek-3)+'T13:00:00';
+            const total: number = 3.6;
+            const ordercount: number = 0;
 
-          const meal: any = {date: date, delivery: delivery, orderable: orderable, total: total, orderCount: ordercount, categoryId: result.categoryId, description: result.description, name: result.name};
-          this.dishes.push(meal);
-          this.dataSource = new MatTableDataSource(this.dishes);
-          break;
-        case 1 /* Dienstag */ :
-          break;
-        case 2 /* Mittwoch */ :
-          break;
-        case 3 /* Donnerstag */ :
-          break;
-        case 4 /* Freitag */ :
-          break;
+            const meal: any = {
+              date: date, delivery: delivery,
+              orderable: orderable, total: total,
+              orderCount: ordercount,
+              categoryId: mealToAdd.categoryId,
+              description: mealToAdd.description,
+              name: mealToAdd.name};
+            this.dishes.push(meal);
+            this.dataSource = new MatTableDataSource(this.dishes);
+            break;
+          case 1 /* Dienstag */ :
+            break;
+          case 2 /* Mittwoch */ :
+            break;
+          case 3 /* Donnerstag */ :
+            break;
+          case 4 /* Freitag */ :
+            break;
+        }
       }
     });
   }
@@ -142,6 +154,22 @@ export class DishesComponent implements OnInit {
   onTabChange(event: any) {
     let index: number = Number.parseInt(event.index);
     this.currentTab = index;
+  }
+
+  getNextCalendarWeek() {
+    if(this.calendarWeekIndex < this.MAX_FOLLOWING_WEEKS) {
+      let followingWeekDate = this.currentlyDisplayedWeek.friday.date.add({days: 7});
+      this.currentlyDisplayedWeek = this.getCalenderWeek(followingWeekDate);
+      this.calendarWeekIndex++;
+    }
+  }
+
+  getPreviousCalendarWeek() {
+    if(this.calendarWeekIndex > 0) {
+      let precedingWeekDate = this.currentlyDisplayedWeek.friday.date.subtract({days: 7});
+      this.currentlyDisplayedWeek = this.getCalenderWeek(precedingWeekDate);
+      this.calendarWeekIndex--;
+    }
   }
 
   getCalenderWeek(date: Temporal.PlainDate): CalendarWeek {

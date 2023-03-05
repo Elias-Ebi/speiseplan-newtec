@@ -16,6 +16,7 @@ import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { Temporal } from '@js-temporal/polyfill';
 import * as _ from "lodash";
+import { Meal } from 'src/app/shared/models/meal';
 
 interface Category {
   value: string;
@@ -43,6 +44,7 @@ export class DgAddDishComponent {
   MAX_LENGTH: number = 70;
   orderableDate;
   time;
+  isFormValid = false;
 
   categories: Category[] = [
     { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
@@ -61,7 +63,6 @@ export class DgAddDishComponent {
     this.dateAdapter.setLocale('de');
     this.orderableDate = _.cloneDeep(this.data.deliveryDate);
     this.orderableDate.setDate(this.orderableDate.getDate() - 1);
-    console.log(this.orderableDate);
 
     this.time = '13:00';
   }
@@ -89,17 +90,33 @@ export class DgAddDishComponent {
   }
 
   onClickCancel() {
-    this.matDialogRef.close();
+    this.matDialogRef.close({});
   }
 
   onClickCreate() {
-    let mealTemplate: MealTemplate = {
+    let meal: Meal = {
+      id: '',
       name: this.data.name,
       description: this.data.description,
       categoryId: this.data.categoryId,
+      date: '',
+      delivery: '',
+      orderable: '',
+      total: 0,
+      orderCount: 0,
     };
-    this.api.putMealTemplate(mealTemplate);
+    //this.api.putMealTemplate(mealTemplate);
     this.matDialogRef.close(this.data);
+  }
+
+  onClickTest() {
+    if(this.isFormValid) {
+      console.log([this.data.name, this.data.description, this.getCategoryView(this.data.categoryId)]);
+    }
+  }
+
+  validate() {
+    this.isFormValid = (this.data.name != undefined) && (this.data.description != undefined) && (this.data.categoryId != undefined);
   }
 
   checkDate(event: MatDatepickerInputEvent<any>){

@@ -1,10 +1,10 @@
 <div class="dishes--main-container">
   <div class="dishes--date-container">
-    <button mat-icon-button class="arrow-button" >
+    <button mat-icon-button class="arrow-button" (click)="getPreviousCalendarWeek()" [disabled]="this.calendarWeekIndex == 0">
       <mat-icon class="arrow-back" color="primary">arrow_back</mat-icon>
     </button>
     <h1 class="fs-title clr-primary">{{currentlyDisplayedWeek.span}}</h1>
-    <button mat-icon-button class="arrow-button" >
+    <button mat-icon-button class="arrow-button" (click)="getNextCalendarWeek()" [disabled]="this.calendarWeekIndex == MAX_FOLLOWING_WEEKS">
       <mat-icon class="arrow-forward" color="primary">arrow_forward</mat-icon>
     </button>
   </div>
