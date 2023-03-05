@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository } from 'typeorm';
+import { Between, FindManyOptions, FindOneOptions, ILike, LessThan, Like, MoreThan, Repository } from 'typeorm';
 import { Order } from '../../data/entitites/order.entity';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Meal } from '../../data/entitites/meal.entity';
@@ -102,6 +102,60 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
+
+  async getFilteredOrders(filter): Promise<Order[]> {
+    const time = Temporal.Now.plainDateTimeISO();
+    let whereObj;
+    if (JSON.stringify(filter) === '{}') {
+      whereObj = {
+        meal: { 
+          orderable: MoreThan(time.toString())
+        }
+      }
+    } else {
+      if (!filter.guestFilter) {
+        whereObj = {
+          profile: {
+            name: ILike(('%' + filter.buyerFilter + '%'))
+          },
+          meal: {
+            name: ILike(('%' + filter.mealFilter + '%')),
+            orderable: MoreThan(time.toString())
+          },
+          date: null,
+        };
+      } else {
+        whereObj = {
+          profile: {
+            name: ILike(('%' + filter.buyerFilter + '%'))
+          },
+          meal: {
+            name: ILike(('%' + filter.mealFilter + '%')),
+            orderable: MoreThan(time.toString())
+          },
+          guestName: ILike(('%' + filter.guestFilter + '%')),
+          date: null,
+        };
+      }
+
+      if(filter.dateFilter.startDate && !filter.dateFilter.endDate) {
+        whereObj.date =  filter.dateFilter.startDate
+      } else if (filter.dateFilter.startDate && filter.dateFilter.endDate) {
+        whereObj.date = Between(filter.dateFilter.startDate, filter.dateFilter.endDate)
+      }
+    }
+    
+    const options: FindOneOptions<Order> = {
+      where: whereObj,
+      relations: {
+        profile: true,
+        meal: true
+      }
+    };
+
+    return this.orderRepository.find(options);
+  }
+
   async get(orderId: string): Promise<Order> {
     const options: FindOneOptions<Order> = {
       where: { id: orderId },
@@ -164,7 +218,6 @@ export class OrderService {
       const additionalText = guestName ? ` for ${guestName}.` : '.';
       throw new BadRequestException(`User already ordered this meal${additionalText}`);
     }
-
     const order = await this.create(email, meal, guestName);
 
     const promises = [];
@@ -180,6 +233,18 @@ export class OrderService {
 
     await Promise.all(promises);
     return order;
+  }
+
+  async deleteMultipleOrdersByAdmin(orders: Order[], user: AuthUser) {
+    try {
+      const time = Temporal.Now.plainDateTimeISO();
+      for (const order of orders) {
+        await this.delete(time, order.id, user)
+      }
+      return true;
+    } catch(erros) {
+      return false;
+    }
   }
 
   async create(email: string, meal: Meal, guestName: string): Promise<Order> {
