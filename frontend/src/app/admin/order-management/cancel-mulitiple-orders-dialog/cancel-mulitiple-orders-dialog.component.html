@@ -1,0 +1,16 @@
+<div class="dialog-container">
+  <section class="section">
+    <h2>Alle Markierten Bestellungen Stornieren? ({{orders.length}})</h2>
+
+    <p>Durch das Stornieren der Bestellungen werden sie vollständig aus der
+      Anwendung entfernt.
+    </p>
+    <strong>Möchten Sie diese Aktion dennoch durchführen?</strong>
+
+    <div class="dialog-btn-container">
+      <button (click)="closeDialog(false)" class="secondary-btn" color="primary" mat-flat-button> ABBRECHEN</button>
+      <button (click)="closeDialog(true)" color="primary" mat-flat-button> STORNIEREN</button>
+    </div>
+
+  </section>
+</div>
