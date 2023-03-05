@@ -5,7 +5,7 @@ import { AuthService } from "./shared/services/auth.service";
 import {
   LoadingSpinnerDialogComponent
 } from "./shared/components/loading-spinner-dialog/loading-spinner-dialog.component";
-import { MatDialog, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { LoadingService } from "./shared/services/loading.service";
 
 @Component({
@@ -14,8 +14,7 @@ import { LoadingService } from "./shared/services/loading.service";
   templateUrl: './app.component.html',
   imports: [
     UserNavigationComponent,
-    RouterOutlet,
-    MatDialogModule
+    RouterOutlet
   ],
   styleUrls: ['./app.component.scss'],
 

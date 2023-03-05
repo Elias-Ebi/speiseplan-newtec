@@ -1,4 +1,4 @@
-<mat-tab-group class="main-content">
+<mat-tab-group *ngIf="orderDays.length; else noOrdersAvailable" class="main-content">
   <mat-tab *ngFor="let day of orderDays" [label]="day.date | fullDate">
     <div class="content">
       <!-- Meine Bestellung -->
@@ -8,7 +8,7 @@
 
         <div class="grid">
           <app-order-card
-            (click)="orderOrDelete(orderMeal.id, orderMeal.orderId, day.date, orderMeal.ordered)"
+            (click)="handleOrder(orderMeal.id, orderMeal.orderId, day.date, orderMeal.ordered)"
             *ngFor="let orderMeal of day.orderMeals"
             [amount]="orderMeal.orderCount"
             [description]="orderMeal.description"
@@ -41,19 +41,21 @@
           <ng-container *ngFor="let guestOrder of day.guestOrders; let last = last">
             <div class="grid align-center">
               <!-- Name -->
-              <p class="span-3">
-                {{guestOrder.guestName}}
-              </p>
+              <div class="span-4 icon-with-text">
+                <mat-icon>person</mat-icon>
+                <p>{{guestOrder.guestName}}</p>
+              </div>
 
               <!-- MealName -->
-              <p class="span-8">
-                {{guestOrder.meal.name}}
-              </p>
+              <div class="span-7 icon-with-text">
+                <mat-icon>restaurant</mat-icon>
+                <p>{{guestOrder.meal.name}}</p>
+              </div>
 
 
               <button
-                (click)="deleteOrder(guestOrder.id, day.date)"
-                class="span-1 justify-self-end"
+                (click)="handleOrder(guestOrder.meal.id, guestOrder.id, day.date, true)"
+                class="span-1 justify-self-end icon-button"
                 mat-icon-button
               >
                 <mat-icon>no_food</mat-icon>
@@ -69,3 +71,9 @@
     </div>
   </mat-tab>
 </mat-tab-group>
+
+
+<!-- Keine Bestellungen verfügbar -->
+<ng-template #noOrdersAvailable>
+  <p class="main-content">Zur Zeit gibt es keine Mahlzeiten zu bestellen.</p>
+</ng-template>

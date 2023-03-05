@@ -14,12 +14,13 @@ import { Profile } from '../data/entitites/profile.entity';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: environment.jwtSecretKey,
+      secret: environment.jwtSecretKey
     }),
-    TypeOrmModule.forFeature([User, Profile]),
+    TypeOrmModule.forFeature([User, Profile])
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
+  exports: [AuthService]
 })
-export class AuthModule {}
+export class AuthModule {
+}

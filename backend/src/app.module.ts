@@ -21,9 +21,9 @@ dotenv.config();
       autoLoadEntities: true,
       synchronize: true,
       migrationsTableName: 'migrations',
-      migrations: ["src/data/migrations/*{.ts,.js}"],
+      migrations: ['src/data/migrations/*{.ts,.js}'],
       migrationsRun: false,
-      ssl: false
+      ssl: true
     }),
     AuthModule,
     CoreModule
@@ -31,12 +31,13 @@ dotenv.config();
   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: JwtAuthGuard
     },
     {
       provide: APP_GUARD,
-      useClass: AdminOnlyGuard,
-    },
-  ],
+      useClass: AdminOnlyGuard
+    }
+  ]
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -67,4 +67,26 @@ export class DateService {
 
     return startDate.add({days: daysToAdd});
   }
+
+  public getLastSixMonths(){
+    const currentMonth = Temporal.Now.plainDateISO();
+    const lastSixMonths = [];
+    for (let i = 0; i < 6; i++) {
+      const monthName = currentMonth.subtract({months: i})
+      lastSixMonths.push(monthName);
+    }
+    return lastSixMonths;
+  }
+
+  public getNextFiveWeekDays(){
+    let currentDate = Temporal.Now.plainDateISO();
+    const weekdays = [];
+    while (weekdays.length < 5) {
+      if (currentDate.dayOfWeek >= 1 && currentDate.dayOfWeek <= 5) {
+        weekdays.push(new PlainDate(currentDate.year, currentDate.month, currentDate.day));
+      }
+      currentDate = currentDate.add({days:1})
+    }
+    return weekdays;
+  }
 }

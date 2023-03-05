@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { OrderMonth } from '../../data/entitites/order-month.entity';
-import { FindManyOptions, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthService } from '../../auth/auth.service';
 
@@ -16,7 +16,6 @@ export class OrderMonthService {
         email
       },
       paid: false
-
     };
 
     const { sum } = await this.orderMonthRepository.createQueryBuilder('orderMonth')
@@ -29,21 +28,28 @@ export class OrderMonthService {
   }
 
   async getHistory(email: string): Promise<OrderMonth[]> {
-    const options: FindManyOptions<OrderMonth> = {
-      where: { profile: { email } },
-      relations: {
-        orders: {
-          meal: true
-        }
-      }
+    const options: FindOptionsWhere<OrderMonth> = {
+      profile: { email }
     };
 
-    const orderMonths = await this.orderMonthRepository.find(options);
-    orderMonths.forEach((orderMonth) => {
-      orderMonth.orders = orderMonth.orders.filter((order) => !order.guestName);
-    });
+    return this.orderMonthRepository
+      .createQueryBuilder('orderMonth')
+      .innerJoinAndSelect('orderMonth.orders', 'order')
+      .innerJoinAndSelect('order.meal', 'meal')
+      .where(options)
+      .andWhere('order.guestName IS NULL')
+      .getMany();
+  }
 
-    return orderMonths;
+  async getOrderMonths(month: number, year: number): Promise<OrderMonth[]> {
+    const options: FindOneOptions<OrderMonth> = {
+      where: { month, year },
+      relations: {
+        profile: true,
+        orders: true
+      }
+    };
+    return this.orderMonthRepository.find(options);
   }
 
   async get(month: number, year: number, email: string): Promise<OrderMonth> {
@@ -60,7 +66,21 @@ export class OrderMonthService {
     return orderMonth;
   }
 
-  async update(orderMonth: OrderMonth): Promise<OrderMonth> {
+  async getById(id: string): Promise<OrderMonth> {
+    const options: FindOneOptions<OrderMonth> = { where: { id } };
+
+    const orderMonth = await this.orderMonthRepository.findOne(options);
+
+    if (!orderMonth) {
+      throw new NotFoundException();
+    }
+
+    return orderMonth;
+  }
+
+  async setPaymentStatus(id: string) {
+    const orderMonth = await this.getById(id);
+    orderMonth.paid = !orderMonth.paid;
     return this.orderMonthRepository.save(orderMonth);
   }
 
