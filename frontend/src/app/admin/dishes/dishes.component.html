@@ -11,19 +11,21 @@
   <div class="dishes--week-tabs-container">
     <mat-tab-group (selectedTabChange)="onTabChange($event)" animationDuration="0ms">
       <mat-tab label="Montag">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+        <table mat-table [dataSource]="dataSource" class="bg-background">
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 20%">
+              <h2>Gericht</h2>
+            </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" > <h2>Beschreibung</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.description}} </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" > <h2>Kategorie</h2> </th>
             <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
           </ng-container>
 
@@ -39,19 +41,19 @@
       </mat-tab>
       <mat-tab label="Dienstag" >
 
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> <h2>Gericht</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> <h2>Beschreibung</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.description}} </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> <h2>Kategorie</h2> </th>
             <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
           </ng-container>
 
@@ -67,19 +69,19 @@
       </mat-tab>
       <mat-tab label="Mittwoch">
 
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> <h2>Gericht</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> <h2>Beschreibung</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.description}} </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> <h2>Kategorie</h2> </th>
             <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
           </ng-container>
 
@@ -95,19 +97,19 @@
       </mat-tab>
       <mat-tab label="Donnerstag">
 
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> <h2>Gericht</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> <h2>Beschreibung</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.description}} </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> <h2>Kategorie</h2> </th>
             <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
           </ng-container>
 
@@ -122,19 +124,19 @@
         <button mat-raised-button color="primary" class="button-add" (click)="onClickChooseDish()">GERICHT HINZUFÜGEN</button>
       </mat-tab>
       <mat-tab label="Freitag">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 dish-table">
+        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> Gericht </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold"> <h2>Gericht</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> Beschreibung </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold"> <h2>Beschreibung</h2> </th>
             <td mat-cell *matCellDef="let element"> {{element.description}} </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> Kategorie </th>
+            <th mat-header-cell *matHeaderCellDef style="width: 15%" class="clr-primary fs-body-bold"> <h2>Kategorie</h2> </th>
             <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}} </td>
           </ng-container>
 

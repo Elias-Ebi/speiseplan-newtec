@@ -26,13 +26,21 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="fill" class="delivery" (click)="datepicker.open()">
-    <mat-label>Lieferdatum</mat-label>
-    <input [matDatepicker]="datepicker" (dateChange)="validate()" [(ngModel)]="deliveryDate" [value]="deliveryDate" matInput>
-    <mat-hint>MM/TT/JJJJ</mat-hint>
-    <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
-    <mat-datepicker #datepicker></mat-datepicker>
-  </mat-form-field>
+  <div class="delivery">
+    <mat-form-field appearance="fill" class="delivery-1" (click)="datepicker.open()">
+      <mat-label>Lieferdatum</mat-label>
+      <input disabled [matDatepicker]="datepicker" (dateChange)="validate()" [(ngModel)]="deliveryDate" [value]="deliveryDate" matInput>
+      <mat-hint>MM/TT/JJJJ</mat-hint>
+      <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
+      <mat-datepicker #datepicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="delivery-2">
+      <mat-label>Lieferdatum Uhrzeit</mat-label>
+      <input matInput [value]="deliveryTime" type="time" placeholder="start date">
+      <mat-hint>HH:MM</mat-hint>
+    </mat-form-field>
+  </div>
 
   <div class="order">
     <mat-form-field appearance="fill" class="order-1" (click)="orderable.open()">

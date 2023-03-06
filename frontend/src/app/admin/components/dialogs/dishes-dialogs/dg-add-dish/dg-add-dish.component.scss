@@ -21,8 +21,18 @@
   }
 
   .delivery {
+    display: flex;
     width: 60%;
+    gap: 0.65rem;
     align-self: center;
+
+    .delivery-1 {
+      width: 65%;
+    }
+
+    .delivery-2 {
+      width: 35%;
+    }
   }
 
   .order {

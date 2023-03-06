@@ -51,6 +51,7 @@ interface Category {
 export class DgAddDishComponent {
   MAX_LENGTH: number = 70;
   time: string;
+  deliveryTime: string;
   isFormValid: boolean = false;
   areDatesValid = true;
   validationHint = '';
@@ -94,6 +95,7 @@ export class DgAddDishComponent {
     this.orderableDate = _.cloneDeep(data.deliveryDate);
     this.orderableDate = this.setOrderableDate();
     this.time = '13:00';
+    this.deliveryTime = '12:00';
   }
 
   setOrderableDate() {
