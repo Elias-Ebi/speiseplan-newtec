@@ -104,21 +104,22 @@ export class DishesComponent implements OnInit {
       this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
 
     const dialogRef = this.dialog.open(DgAddDishComponent, {
-      data: { deliveryDate: new Date(currentDay), selectedMealTemplate },
+      data: { weekday: this.weekdayProperty, deliveryDate: new Date(currentDay), selectedMealTemplate },
       width: '40%',
       height: '80%',
+      autoFocus: false,
     });
 
     dialogRef
       .afterClosed()
       .subscribe(async (mealData: { mealToAdd: any; useTemplate: boolean }) => {
-        console.log('mealToAdd: ', mealData);
-        if (JSON.stringify(mealData.mealToAdd) !== '{}') {
+        if (JSON.stringify(mealData) !== '{}') {
           if (mealData.useTemplate) {
             const dialogRef = this.dialog.open(DgChooseDishComponent, {
               data: {},
               width: '70%',
               height: '80%',
+              autoFocus: false,
             });
 
             dialogRef

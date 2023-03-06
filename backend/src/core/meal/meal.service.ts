@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meal } from '../../data/entitites/meal.entity';
 import { FindManyOptions, FindOneOptions, FindOptionsWhere, MoreThan, Repository } from 'typeorm';
@@ -100,6 +100,19 @@ export class MealService {
   }
 
   async createTemplate(mealTemplate: MealTemplate): Promise<MealTemplate> {
+    //check if this meal template already exists
+    const options: FindOneOptions<MealTemplate> = {
+      where: {
+        name: mealTemplate.name,
+        description: mealTemplate.description,
+        categoryId: mealTemplate.categoryId
+      },
+    };
+
+    const savedTemplate = await this.mealTemplateRepository.findOne(options);
+    if (savedTemplate) {
+      throw new ConflictException;
+    }
     return this.mealTemplateRepository.save(mealTemplate);
   }
 

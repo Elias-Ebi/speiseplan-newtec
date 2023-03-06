@@ -82,6 +82,7 @@ export class DgChooseDishComponent implements AfterViewInit, OnInit {
   async ngOnInit() {
     this.dishes = await this.api.getMealTemplate();
     this.dataSource = new MatTableDataSource(this.dishes);
+    this.dataSource.paginator = this.paginator;
   }
 
   getCategoryView(val: string): string | any {
@@ -122,6 +123,10 @@ export class DgChooseDishComponent implements AfterViewInit, OnInit {
 
   applyFilter(event: any) {
     const filterValue = event.value;
+
+    if(!event.value) {
+      this.dataSource.filter = '';
+    }
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
     if (this.dataSource.paginator) {

@@ -26,18 +26,18 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="fill" class="delivery">
+  <mat-form-field appearance="fill" class="delivery" (click)="datepicker.open()">
     <mat-label>Lieferdatum</mat-label>
-    <input [matDatepicker]="datepicker" [(ngModel)]="deliveryDate" [value]="deliveryDate" matInput>
+    <input [matDatepicker]="datepicker" (dateChange)="validate()" [(ngModel)]="deliveryDate" [value]="deliveryDate" matInput>
     <mat-hint>MM/TT/JJJJ</mat-hint>
     <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
     <mat-datepicker #datepicker></mat-datepicker>
   </mat-form-field>
 
   <div class="order">
-    <mat-form-field appearance="fill" class="order-1">
+    <mat-form-field appearance="fill" class="order-1" (click)="orderable.open()">
       <mat-label>Bestellfrist Datum</mat-label>
-      <input [matDatepicker]="orderable" [value]="orderableDate" matInput>
+      <input [matDatepicker]="orderable" [value]="orderableDate" [(ngModel)]="orderableDate" matInput (dateChange)="validate()">
       <mat-hint>MM/TT/JJJJ</mat-hint>
       <mat-datepicker-toggle [for]="orderable" matIconSuffix></mat-datepicker-toggle>
       <mat-datepicker #orderable></mat-datepicker>
@@ -48,6 +48,11 @@
       <input matInput [value]="time" type="time" placeholder="start date">
       <mat-hint>HH:MM</mat-hint>
     </mat-form-field>
+  </div>
+
+  <div class="hint" *ngIf="!areDatesValid">
+    <mat-icon class="warning">warning_amber</mat-icon>
+    {{validationHint}}
   </div>
 
   <form class="button-group">

@@ -52,6 +52,8 @@ export class DgAddDishComponent {
   MAX_LENGTH: number = 70;
   time: string;
   isFormValid: boolean = false;
+  areDatesValid = true;
+  validationHint = '';
   isTemplateValid: boolean = false;
   name: string;
   description: string;
@@ -70,7 +72,7 @@ export class DgAddDishComponent {
   constructor(
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    public data: {deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined},
+    public data: {weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined},
     private matDialogRef: MatDialogRef<DgAddDishComponent>,
     private api: ApiService,
     private dateAdapter: DateAdapter<any>,
@@ -90,9 +92,18 @@ export class DgAddDishComponent {
     this.validateTemplate();
     this.deliveryDate = data.deliveryDate;
     this.orderableDate = _.cloneDeep(data.deliveryDate);
-    this.orderableDate.setDate(data.deliveryDate.getDate() - 1);
+    this.orderableDate = this.setOrderableDate();
     this.time = '13:00';
-    console.log('mealtemplate? ', data.selectedMealTemplate)
+  }
+
+  setOrderableDate() {
+    let date = new Date();
+    if (this.data.weekday === 'monday') {
+      date.setDate(this.deliveryDate.getDate() - 3);
+    } else {
+      date.setDate(this.deliveryDate.getDate() - 1);
+    }
+    return date;
   }
 
   getCategoryView(val: string): string | any {
@@ -204,13 +215,31 @@ export class DgAddDishComponent {
     // TODO:check dates & time
     this.isFormValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
     this.validateTemplate();
+    this.validateDate();
   }
 
   validateTemplate() {
     this.isTemplateValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
   }
 
-  checkDate(event: MatDatepickerInputEvent<any>){
-    // Todo: check if valid date
+  validateDate(){
+    // check if orderable date is later than delivery date
+    if (this.orderableDate > this.deliveryDate) {
+      this.isFormValid = false;
+      this.areDatesValid = false;
+      this.validationHint = 'Das Bestelldatum darf nicht hinter dem Lieferdatum liegen.';
+    // check if delivery date or orderable date is on a weekend
+    } else if (this.deliveryDate.getDay() == 6 || this.deliveryDate.getDay() == 0) {
+      this.isFormValid = false;
+      this.areDatesValid = false;
+      this.validationHint = 'Das Lieferdatum darf nicht auf einem Wochenendtag liegen.';
+    } else if (this.orderableDate.getDay() == 6 || this.orderableDate.getDay() == 0) {
+      this.isFormValid = false;
+      this.areDatesValid = false;
+      this.validationHint = 'Das Bestelldatum darf nicht auf einem Wochenendtag liegen.';
+    } else {
+      this.validationHint = ''
+      this.areDatesValid = true;
+    }
   }
 }
