@@ -125,7 +125,6 @@ export class DishesComponent implements OnInit {
             dialogRef
               .afterClosed()
               .subscribe(async (selectedMealTemplate: any) => {
-                console.log('selectedMealTemplate: ', selectedMealTemplate);
                 if (JSON.stringify(selectedMealTemplate) !== '{}') {
                   this.onClickChooseDish(selectedMealTemplate);
                 }
