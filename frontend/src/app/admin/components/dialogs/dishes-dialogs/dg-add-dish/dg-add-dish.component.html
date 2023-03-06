@@ -1,11 +1,13 @@
 <h1 mat-dialog-title style="color: #00629F">Neues Gericht erstellen</h1>
 <div class="dg-content">
   <div class="button-group">
-    <button class="button" mat-icon-button color="primary" matTooltip="Als Vorlage speichern" [disabled]="!isTemplateValid" (click)="saveAsTemplate()">
+    <button class="button" mat-raised-button color="primary" matTooltip="Als Vorlage speichern" [disabled]="!isTemplateValid" (click)="saveAsTemplate()">
       <mat-icon>save</mat-icon>
+      SPEICHERN
     </button>
-    <button class="button" mat-icon-button color="primary" matTooltip="Vorlage auswählen" (click)="openTemplateDialog()">
+    <button class="button" mat-raised-button color="primary" matTooltip="Vorlage auswählen" (click)="openTemplateDialog()">
       <mat-icon>menu_book</mat-icon>
+      VORLAGEN
     </button>
   </div>
   <mat-form-field appearance="fill" class="dish">
