@@ -1,5 +1,13 @@
 <h1 mat-dialog-title style="color: #00629F">Neues Gericht erstellen</h1>
 <div class="dg-content">
+  <div class="button-group">
+    <button class="button" mat-icon-button color="primary" matTooltip="Als Vorlage speichern" [disabled]="!isTemplateValid" (click)="saveAsTemplate()">
+      <mat-icon>save</mat-icon>
+    </button>
+    <button class="button" mat-icon-button color="primary" matTooltip="Vorlage auswählen" (click)="openTemplateDialog()">
+      <mat-icon>menu_book</mat-icon>
+    </button>
+  </div>
   <mat-form-field appearance="fill" class="dish">
     <mat-label>Gericht</mat-label>
     <input matInput [(ngModel)]="name" (change)="validate()">
@@ -18,7 +26,7 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="delivery">
     <mat-label>Lieferdatum</mat-label>
     <input [matDatepicker]="datepicker" [(ngModel)]="deliveryDate" [value]="deliveryDate" matInput>
     <mat-hint>MM/TT/JJJJ</mat-hint>
@@ -26,8 +34,8 @@
     <mat-datepicker #datepicker></mat-datepicker>
   </mat-form-field>
 
-  <div>
-    <mat-form-field appearance="fill">
+  <div class="order">
+    <mat-form-field appearance="fill" class="order-1">
       <mat-label>Bestellfrist Datum</mat-label>
       <input [matDatepicker]="orderable" [value]="orderableDate" matInput>
       <mat-hint>MM/TT/JJJJ</mat-hint>
@@ -35,7 +43,7 @@
       <mat-datepicker #orderable></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field appearance="fill" class="order-2">
       <mat-label>Bestellungsfrist Uhrzeit</mat-label>
       <input matInput [value]="time" type="time" placeholder="start date">
       <mat-hint>HH:MM</mat-hint>

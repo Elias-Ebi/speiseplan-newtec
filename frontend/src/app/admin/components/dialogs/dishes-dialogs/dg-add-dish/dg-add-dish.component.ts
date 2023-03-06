@@ -4,6 +4,7 @@ import {
   MatDialogModule,
   MAT_DIALOG_DATA,
   MatDialogRef,
+  MatDialog
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -17,6 +18,10 @@ import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { Temporal } from '@js-temporal/polyfill';
 import * as _ from "lodash";
 import { Meal } from 'src/app/shared/models/meal';
+import { MatIconModule } from '@angular/material/icon';
+import { DgChooseDishComponent } from '../dg-choose-dish/dg-choose-dish.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 
 interface Category {
   value: string;
@@ -36,6 +41,9 @@ interface Category {
     MatButtonModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   templateUrl: './dg-add-dish.component.html',
   styleUrls: ['./dg-add-dish.component.scss'],
@@ -44,6 +52,7 @@ export class DgAddDishComponent {
   MAX_LENGTH: number = 70;
   time: string;
   isFormValid: boolean = false;
+  isTemplateValid: boolean = false;
   name: string;
   description: string;
   categoryId: string;
@@ -59,20 +68,31 @@ export class DgAddDishComponent {
 
 
   constructor(
+    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    public data: {deliveryDate: Date},
+    public data: {deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined},
     private matDialogRef: MatDialogRef<DgAddDishComponent>,
     private api: ApiService,
-    private dateAdapter: DateAdapter<any>
+    private dateAdapter: DateAdapter<any>,
+    private snackBar: MatSnackBar
   ) {
     this.dateAdapter.setLocale('de');
-    this.name = '';
-    this.description = '';
-    this.categoryId = '';
-    this.deliveryDate = this.data.deliveryDate;
-    this.orderableDate = _.cloneDeep(this.data.deliveryDate);
-    this.orderableDate.setDate(this.deliveryDate.getDate() - 1);
+    if (data.selectedMealTemplate) {
+      this.name = data.selectedMealTemplate.name;
+      this.description = data.selectedMealTemplate.description;
+      this.categoryId = data.selectedMealTemplate.categoryId;
+      this.validate();
+    } else {
+      this.name = '';
+      this.description = '';
+      this.categoryId = '';
+    }
+    this.validateTemplate();
+    this.deliveryDate = data.deliveryDate;
+    this.orderableDate = _.cloneDeep(data.deliveryDate);
+    this.orderableDate.setDate(data.deliveryDate.getDate() - 1);
     this.time = '13:00';
+    console.log('mealtemplate? ', data.selectedMealTemplate)
   }
 
   getCategoryView(val: string): string | any {
@@ -108,27 +128,46 @@ export class DgAddDishComponent {
     var deliveryDateString = this.formatDate(this.deliveryDate);
 
 
-    let meal: Meal = {
-      id: '',
+    let meal: any = {
       name: this.name,
       description: this.description,
       categoryId: this.categoryId,
       date: deliveryDateString,
       delivery: deliveryDateWithTime,
       orderable: orderableDateWithTime,
-      total: 0,
+      total: 3.6, //TODO:make total variable
       orderCount: 0,
     };
 
-    console.log(meal.delivery, meal.orderable, meal.date);
+    this.matDialogRef.close(
+       {meal: meal, useTemplate: false}
+    );
+  }
 
-    //this.api.putMealTemplate(mealTemplate);
-    this.matDialogRef.close({
+  openTemplateDialog() {
+    this.matDialogRef.close(
+      {meal: {}, useTemplate: true}
+   );
+  }
+
+  async saveAsTemplate() {
+    let mealTemplate: MealTemplate = {
       name: this.name,
       description: this.description,
       categoryId: this.categoryId,
-      deliveryDate: this.deliveryDate
-    });
+    };
+    try  {
+      await this.api.putMealTemplate(mealTemplate);
+      this.snackBar.open("Vorlage gespeichert!", "OK", {
+        duration: 3000,
+        panelClass: 'success-snackbar'
+      });
+    } catch (error) {
+      this.snackBar.open("Vorlage konnte nicht gespeichert werden.", "OK", {
+        duration: 3000,
+        panelClass: 'success-snackbar'
+      });
+    }
   }
 
   onClickTest() {
@@ -162,7 +201,13 @@ export class DgAddDishComponent {
   }
 
   validate() {
-    this.isFormValid = (this.name != undefined) && (this.description != undefined) && (this.categoryId != undefined);
+    // TODO:check dates & time
+    this.isFormValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
+    this.validateTemplate();
+  }
+
+  validateTemplate() {
+    this.isTemplateValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
   }
 
   checkDate(event: MatDatepickerInputEvent<any>){

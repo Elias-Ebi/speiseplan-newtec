@@ -66,8 +66,9 @@
 
     justify-content: right;
 
-    position: relative;
-    top: 1.65rem;
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
 
     .button-cancel {
       width: 20%;

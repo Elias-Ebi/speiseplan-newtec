@@ -129,21 +129,6 @@ export class DgChooseDishComponent implements AfterViewInit, OnInit {
     }
   }
 
-  onClickCreateNewDish() {
-    const dialogRef = this.dialog.open(DgAddDishComponent, {
-      data: {},
-      width: '30%',
-      height: '50%',
-    });
-
-    dialogRef.afterClosed().subscribe(async () => {
-      this.dishes = await this.api.getMealTemplate();
-      this.dataSource = new MatTableDataSource(this.dishes);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
-  }
-
   onClickCancel() {
     this.matDialogRef.close();
   }

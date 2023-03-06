@@ -14,7 +14,10 @@ import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { MealTemplate } from 'src/app/shared/models/mealtemplate';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Meal } from 'src/app/shared/models/meal';
-import { CalendarWeek, CalendarWeekDay } from 'src/app/shared/models/calendar-week';
+import {
+  CalendarWeek,
+  CalendarWeekDay,
+} from 'src/app/shared/models/calendar-week';
 import { DgAddDishComponent } from '../components/dialogs/dishes-dialogs/dg-add-dish/dg-add-dish.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -23,7 +26,6 @@ interface Category {
   value: string;
   view: string;
 }
-
 
 @Component({
   selector: 'app-dishes',
@@ -63,15 +65,16 @@ export class DishesComponent implements OnInit {
   ];
 
   constructor(public dialog: MatDialog, private api: ApiService) {
-    this.currentlyDisplayedWeek = this.getCalenderWeek(Temporal.Now.plainDateISO());
-    this.dataSource = new MatTableDataSource();
+    this.currentlyDisplayedWeek = this.getCalenderWeek(
+      Temporal.Now.plainDateISO()
+    );
     this.weekdayProperty = 'monday';
+    this.dataSource = new MatTableDataSource();
   }
 
-  ngOnInit(): void {
-    //this.dishes = await this.api.getOrderableMeals();
+  async ngOnInit(): Promise<void> {
+    await this.updateTableSource();
   }
-
 
   getCategoryView(val: string): string | any {
     let result: string = '';
@@ -95,81 +98,102 @@ export class DishesComponent implements OnInit {
     return result;
   }
 
-  onClickChooseDish() {
+  onClickChooseDish(selectedMealTemplate?: MealTemplate) {
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-    let currentDay = this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
+    let currentDay =
+      this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
 
     const dialogRef = this.dialog.open(DgAddDishComponent, {
-      data: {deliveryDate: new Date(currentDay)},
-      width: '60%',
+      data: { deliveryDate: new Date(currentDay), selectedMealTemplate },
+      width: '40%',
       height: '80%',
     });
 
-    dialogRef.afterClosed().subscribe(async (mealToAdd: Meal) => {
-      if(JSON.stringify(mealToAdd) !== '{}') {
-        // categoryId, name, description, id => Meal
-        // Gesucht: date, delivery, orderable, total, ordercount
-        const date: string = "" //this.currentMondayDate;
-        const delivery: string = "" //this.currentMondayDate+'T12:00:00';
-        const orderable: string = "" //this.year+'-'+this.month+'-'+(this.firstDayOfWeek-3)+'T13:00:00';
-        const total: number = 3.6;
-        const ordercount: number = 0;
-        const meal: any = {
-          date: date, delivery: delivery,
-          orderable: orderable, total: total,
-          orderCount: ordercount,
-          categoryId: mealToAdd.categoryId,
-          description: mealToAdd.description,
-          name: mealToAdd.name};
-        this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(meal);
-        this.dataSource = new MatTableDataSource(this.currentlyDisplayedWeek[this.weekdayProperty].dishes);
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .subscribe(async (mealData: { mealToAdd: any; useTemplate: boolean }) => {
+        console.log('mealToAdd: ', mealData);
+        if (JSON.stringify(mealData.mealToAdd) !== '{}') {
+          if (mealData.useTemplate) {
+            const dialogRef = this.dialog.open(DgChooseDishComponent, {
+              data: {},
+              width: '70%',
+              height: '80%',
+            });
+
+            dialogRef
+              .afterClosed()
+              .subscribe(async (selectedMealTemplate: any) => {
+                console.log('selectedMealTemplate: ', selectedMealTemplate);
+                if (JSON.stringify(selectedMealTemplate) !== '{}') {
+                  this.onClickChooseDish(selectedMealTemplate);
+                }
+              });
+          } else {
+            this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(
+              mealData.mealToAdd
+            );
+            await this.api.addMeal(mealData.mealToAdd);
+            await this.updateTableSource();
+          }
+        }
+      });
   }
 
-  onTabChange(event: any) {
+  async onTabChange(event: any) {
     let index: number = Number.parseInt(event.index);
     this.currentTab = index;
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-    this.dataSource = new MatTableDataSource(this.currentlyDisplayedWeek[this.weekdayProperty].dishes);
+    await this.updateTableSource();
   }
 
-  getNextCalendarWeek() {
-    if(this.calendarWeekIndex < this.MAX_FOLLOWING_WEEKS) {
-      let followingWeekDate = this.currentlyDisplayedWeek.friday.date.add({days: 7});
+  async getNextCalendarWeek() {
+    if (this.calendarWeekIndex < this.MAX_FOLLOWING_WEEKS) {
+      let followingWeekDate = this.currentlyDisplayedWeek.friday.date.add({
+        days: 7,
+      });
       this.currentlyDisplayedWeek = this.getCalenderWeek(followingWeekDate);
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-      this.dataSource = new MatTableDataSource(this.currentlyDisplayedWeek[this.weekdayProperty].dishes);
+      await this.updateTableSource();
       this.calendarWeekIndex++;
     }
   }
 
-  getPreviousCalendarWeek() {
-    if(this.calendarWeekIndex > 0) {
-      let precedingWeekDate = this.currentlyDisplayedWeek.friday.date.subtract({days: 7});
+  async getPreviousCalendarWeek() {
+    if (this.calendarWeekIndex > 0) {
+      let precedingWeekDate = this.currentlyDisplayedWeek.friday.date.subtract({
+        days: 7,
+      });
       this.currentlyDisplayedWeek = this.getCalenderWeek(precedingWeekDate);
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-      this.dataSource = new MatTableDataSource(this.currentlyDisplayedWeek[this.weekdayProperty].dishes);
+      await this.updateTableSource();
       this.calendarWeekIndex--;
     }
   }
 
   getCalenderWeek(date: Temporal.PlainDate): CalendarWeek {
-    return new CalendarWeek(date)
+    return new CalendarWeek(date);
   }
 
   getWeekdayPropertyFromIndex(index: number): string {
     //TODO:handle else case better
-    if(index == 0) {
+    if (index == 0) {
       return 'monday';
-    } else if(index == 1) {
+    } else if (index == 1) {
       return 'tuesday';
-    } else if(index == 2) {
+    } else if (index == 2) {
       return 'wednesday';
-    } else if(index == 3) {
+    } else if (index == 3) {
       return 'thursday';
     } else {
       return 'friday';
     }
+  }
+
+  async updateTableSource() {
+    const mealsOnDate = await this.api.getMealsOn(
+      this.currentlyDisplayedWeek[this.weekdayProperty].date
+    );
+    this.dataSource = new MatTableDataSource(mealsOnDate);
   }
 }

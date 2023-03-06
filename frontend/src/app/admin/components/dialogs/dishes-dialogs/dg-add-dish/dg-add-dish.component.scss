@@ -1,32 +1,56 @@
 .dg-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  gap: 0.65rem;
 
   position: relative;
-  top: 50%;
-  transform: translateY(-60%);
-
-  gap: 0.65rem;
 
   .dish {
     width: 60%;
+    align-self: center;
   }
 
   .description {
     width: 60%;
+    align-self: center;
   }
 
   .category {
     width: 60%;
+    align-self: center;
+  }
+
+  .delivery {
+    width: 60%;
+    align-self: center;
+  }
+
+  .order {
+    display: flex;
+    width: 60%;
+    gap: 0.65rem;
+    align-self: center;
+
+    .order-1 {
+      width: 65%;
+    }
+
+    .order-2 {
+      width: 35%;
+    }
   }
 
   .button-group {
     display: flex;
+    width: 60%;
     gap: .65rem;
+    justify-content: right;
+
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 
     position: relative;
-    bottom: -3.25rem;
-    left: 25%;
+    right: -50%;
+    transform: translateX(-50%);
   }
 }
