@@ -19,6 +19,7 @@ import { HomeOpenOrderDay, HomeQuickOrderMeal, HomeUnchangeableOrderDay } from "
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { OrderService } from "../shared/services/order.service";
 import PlainDate = Temporal.PlainDate;
+import {lastValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -47,8 +48,14 @@ export class HomeComponent implements OnInit {
   }
 
   openBanditPlateDialog(): void {
-    this.dialog.open(BanditPlateDialogComponent, {
-      data: this.banditPlatesDays
+
+    const dialogRef = this.dialog.open(BanditPlateDialogComponent, {
+      data: this.banditPlatesDays,
+    });
+
+    const dialogClosedP = lastValueFrom(dialogRef.afterClosed());
+    dialogClosedP.then(async () => {
+      await this.loadDashboard();
     });
   }
 

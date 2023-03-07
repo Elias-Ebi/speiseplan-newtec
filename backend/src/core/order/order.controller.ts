@@ -25,6 +25,13 @@ export class OrderController {
     return this.orderService.offerAsBanditplate(time, id, user);
   }
 
+  @Put('banditplates/take/:id')
+  async takeBanditplate(@Param('id') id: string, @Request() req): Promise<Order>{
+    const user = req.user as AuthUser;
+    const time = Temporal.Now.plainDateTimeISO();
+    return this.orderService.takeBanditplate(time, id, user);
+  }
+
   @Get('unchangeable')
   async unchangeableOrders(@Request() req): Promise<Order[]> {
     const user = req.user as AuthUser;
