@@ -26,6 +26,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async takeBanditPlate(orderId: string): Promise<Order> {
+    const response = this.httpClient.put<Order>(`${environment.apiUrl}/orders/banditplates/take/${orderId}`, {});
+    return lastValueFrom(response);
+  }
+
   async getSaldo(): Promise<number> {
     const response = this.httpClient.get<number>(`${environment.apiUrl}/order-month/current-balance`);
     return lastValueFrom(response);

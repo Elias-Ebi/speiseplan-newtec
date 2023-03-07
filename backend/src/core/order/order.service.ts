@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindManyOptions, FindOneOptions, ILike, LessThan, Like, MoreThan, Repository } from 'typeorm';
+import { Between, FindManyOptions, FindOneOptions, ILike, LessThan, MoreThan, Repository } from 'typeorm';
 import { Order } from '../../data/entitites/order.entity';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Meal } from '../../data/entitites/meal.entity';
@@ -61,6 +61,47 @@ export class OrderService {
     }
 
     order.isBanditplate = true;
+
+    return this.orderRepository.save(order);
+  }
+
+  async takeBanditplate(time: PlainDateTime, id: string, user: AuthUser): Promise<Order> {
+    const order = await this.get(id);
+    const orderMonthOld = order.orderMonth;
+    const email = user.email;
+    const meal = order.meal;
+
+    if (!order.isBanditplate) {
+      throw new BadRequestException('Order not Offered as Banditplate.');
+    }
+
+    const orderable = PlainDateTime.from(order.meal.orderable);
+    const delivery = PlainDateTime.from(order.meal.delivery);
+    if (!this.isAfter(time, orderable) && !this.isBefore(time, delivery)) {
+      throw new BadRequestException('Order can not be taken at the moment.');
+    }
+
+    if (order.profile.email === user.email){
+      order.isBanditplate = false;
+      return this.orderRepository.save(order);
+    }
+
+    // Update Order
+    order.profile = await this.authService.getProfile(email);
+    order.isBanditplate = false;
+
+    // updates Totals
+    const month = orderMonthOld.month;
+    const year = orderMonthOld.year;
+
+    const orderMonthNew = await this.orderMonthService.get(month, year, email);
+
+    orderMonthOld.total -= meal.total;
+    orderMonthNew.total += meal.total;
+
+    //Update OrderMonth of Order
+    order.orderMonth = orderMonthNew;
+    await this.orderMonthRepository.save([orderMonthOld, orderMonthNew]);
 
     return this.orderRepository.save(order);
   }
@@ -174,6 +215,7 @@ export class OrderService {
 
     return order;
   }
+
 
   async getOn(date: PlainDate, email: string): Promise<Order[]> {
     const options: FindOneOptions<Order> = {
