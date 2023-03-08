@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres_container_the_remake
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+
+  frontend:
+    container_name: frontend_container_the_remake
+    build: ./frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+
+  backend:
+    container_name: backend_container_the_remake
+    build: ./backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - /backend/.env
+    depends_on:
+      - postgres
+
+#  pgadmin:
+#    container_name: pgadmin_container_the_remake
+#    image: dpage/pgadmin4
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+#      PGADMIN_DEFAULT_PASSWORD: admin
+#    volumes:
+#      - pgadmin:/var/lib/pgadmin
+#    ports:
+#      - "5050:80"
+
+volumes:
+  postgres:
+#  pgadmin:

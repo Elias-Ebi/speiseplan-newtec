@@ -15,8 +15,7 @@ import { Profile } from '../data/entitites/profile.entity';
     PassportModule,
     JwtModule.register({
       secret: environment.jwtSecretKey
-    }),
-    TypeOrmModule.forFeature([User, Profile])
+    }),    TypeOrmModule.forFeature([User, Profile])
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
