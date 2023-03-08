@@ -1,4 +1,8 @@
-<mat-tab-group *ngIf="orderDays.length; else noOrdersAvailable" class="main-content">
+<mat-tab-group
+  *ngIf="orderDays.length; else noOrdersAvailable"
+  [(selectedIndex)]="selectedTabIndex"
+  class="main-content"
+>
   <mat-tab *ngFor="let day of orderDays" [label]="day.date | fullDate">
     <div class="content">
       <!-- Meine Bestellung -->
