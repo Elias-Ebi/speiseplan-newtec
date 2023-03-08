@@ -11,7 +11,7 @@
   <div class="dishes--week-tabs-container">
     <mat-tab-group (selectedTabChange)="onTabChange($event)" animationDuration="0ms">
       <mat-tab label="Montag">
-        <table mat-table [dataSource]="dataSource" class="bg-background">
+        <table id="table-monday" mat-table [dataSource]="dataSource" class="bg-background">
           <ng-container matColumnDef="title">
             <th mat-header-cell *matHeaderCellDef style="width: 20%">
               <h2>Gericht</h2>

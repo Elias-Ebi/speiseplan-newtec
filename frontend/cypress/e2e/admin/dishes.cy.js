@@ -1,48 +1,110 @@
 /// <reference types="cypress" />
 
 describe('visit app', () => {
-  
-  before('log in', () => {
-    cy.visit('http://localhost:4200')
+
+  /* before('log in', () => {
+    cy.visit('http://localhost:4200');
+    // cy.pause();
     cy.get('#login-email-input').type(`test@cypress.de`);
     cy.get('#login-password-input').type(`cypress`);
-    cy.get('button').contains('Login').click()
-  })
+    cy.get('button').contains('Login').click();
+  }) */
 
   beforeEach(() => {
     // Cypress starts out with a blank slate for each test
     // so we must tell it to visit our website with the `cy.visit()` command.
     // Since we want to visit the same URL at the start of all our tests,
     // we include it in our beforeEach function so that it runs before each test
-    cy.visit('http://localhost:4200')
+    cy.visit('http://localhost:4200');
+    // cy.pause();
+    cy.get('#login-email-input').type(`test@cypress.de`);
+    cy.get('#login-password-input').type(`cypress`);
+    cy.get('button').contains('Login').click();
+
   })
 
 
 
-  after('log out', () => {
-    cy.get('p').contains('Logout').click()
+  /*after('log out', () => {
+    cy.wait(1000)
+   cy.get('p').contains('Logout').click()
+  })
+*/
+
+  it('navigate to admin view', () => {
+    cy.wait(1000)
+    cy.get('p').contains('Admin-Bereich').click();
   })
 
 
-  it('navigate to admin view', () => {}) 
+  it('navigate to dish management', () => {
+    cy.visit('http://localhost:4200/admin')
+    cy.wait(1000)
+    cy.get('p').contains('Gerichte').click();
+  })
+
+  it('cannot navigate to passed week', () => {
+    cy.visit('http://localhost:4200/admin/dish-management');
+    cy.wait(1000);
+    cy.get('.arrow-button').first().should('be.disabled');
+  })
+
+  it('can navigate to following week', () => {
+    cy.visit('http://localhost:4200/admin/dish-management');
+    cy.wait(1000);
+    cy.get('.arrow-button').last().should('be.not.disabled');
+  })
+
+  it('add meal', () => {
+    cy.visit('http://localhost:4200/admin/dish-management');
+    cy.wait(1000);
+
+    //navigate to next week, because there it is always possible to add a meal
+    cy.get('.arrow-button').last().click();
+
+    let countOfElements = 0;
+    cy.get('#table-monday').find('tr').then($elements => {
+      console.log('new length: ',  $elements.length);
+      countOfElements = $elements.length;
+    }).then(() => {
+
+      cy.get('button').contains('GERICHT HINZUFÜGEN').click();
+      cy.get('#create').should('be.disabled');
+
+      cy.get('.dish').first().type('Montag-Test');
+      cy.get('#create').should('be.disabled');
+
+      cy.get('.description').first().type('Beschreibung-Test');
+      cy.get('#create').should('be.disabled');
+
+      cy.get('.category').first().click(); // opens the drop down
+
+      // simulate click event on the drop down item (mat-option)
+      cy.get('mat-option').contains('Vegetarisch').click();  // this is jquery click() not cypress click()
+      cy.get('#create').should('be.not.disabled');
+
+      cy.get('#create').click()
+
+      cy.get('#table-monday').find('tr').should('have.length', countOfElements++)
+    }) ;
 
 
-  it('navigate to dish management', () => {}) 
+  })
 
   // ------- to test: --------
   /*  Switching KW:
-        * not possible to go to passed week 
+        * not possible to go to passed week
         * only two weeks into the future
         * tab is not accessible if the day in current week has passed
         * if a meal is generated, it has to be listed in the given kw & tab
-        
+
       Adding dsihes
         * Adding meal correctly
         * adding the same meal twice
         * check if confirmation button is disabled if it shoul be (one input field missing, contradicting date/time )
         * is it possible to input something into the input fields, that should not be possible?
         * canceling the adding process
-    
+
       Adding templates
         * opening the dialog
         * aselecting a template & applying it
@@ -52,23 +114,6 @@ describe('visit app', () => {
         * filter template by category
         * filtering template by searching text
   */
-
-
-  it('displays two todo items by default', () => {
-    // We use the `cy.get()` command to get all elements that match the selector.
-    // Then, we use `should` to assert that there are two matched items,
-    // which are the two default items.
-    
-    //cy.get('.todo-list li').should('have.length', 2)
-
-    // We can go even further and check that the default todos each contain
-    // the correct text. We use the `first` and `last` functions
-    // to get just the first and last matched elements individually,
-    // and then perform an assertion with `should`.
-    
-    // cy.get('.todo-list li').first().should('have.text', 'Pay electric bill')
-    // cy.get('.todo-list li').last().should('have.text', 'Walk the dog')
-  })
 
 
   /*
