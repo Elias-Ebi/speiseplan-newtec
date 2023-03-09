@@ -3,3 +3,17 @@
   gap: 0.5rem;
   justify-content: end;
 }
+
+.orderd-icon {
+  width: max-content;
+  height: max-content;
+  font-size: 1.375rem;
+  color: var(--clrSuccess);
+}
+
+.orderDay-tab {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+

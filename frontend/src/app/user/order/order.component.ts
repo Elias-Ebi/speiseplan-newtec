@@ -58,7 +58,8 @@ export class OrderComponent implements OnInit {
       this.dataMap.set(day, {
         date: Temporal.PlainDate.from(day),
         orderMeals: this.transformOrderCards(meals, userOrders),
-        guestOrders: this.transformGuestOrders(orders)
+        guestOrders: this.transformGuestOrders(orders),
+        anyOrders: !!orders.length,
       });
     })
 
@@ -141,6 +142,8 @@ export class OrderComponent implements OnInit {
 
     orderDay.orderMeals = this.transformOrderCards(meals, userOrders);
     orderDay.guestOrders = this.transformGuestOrders(orders);
+
+    orderDay.anyOrders = !!orders.length;
 
     this.orderDays = this.generateOrderDaysArray();
   }
