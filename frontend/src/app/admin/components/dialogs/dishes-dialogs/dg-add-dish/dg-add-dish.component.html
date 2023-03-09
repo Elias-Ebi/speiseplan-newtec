@@ -39,7 +39,7 @@
 
     <mat-form-field appearance="fill" class="delivery-2">
       <mat-label>Lieferdatum Uhrzeit</mat-label>
-      <input matInput [value]="deliveryTime" type="time" placeholder="start date">
+      <input matInput [(ngModel)]="deliveryTime" type="time" placeholder="start date">
       <mat-hint>HH:MM</mat-hint>
     </mat-form-field>
   </div>
@@ -55,7 +55,7 @@
 
     <mat-form-field appearance="fill" class="order-2">
       <mat-label>Bestellungsfrist Uhrzeit</mat-label>
-      <input matInput [value]="time" type="time" placeholder="start date">
+      <input matInput [(ngModel)]="orderTime" type="time" placeholder="start date">
       <mat-hint>HH:MM</mat-hint>
     </mat-form-field>
   </div>

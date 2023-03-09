@@ -21,6 +21,7 @@ import {
 import { DgAddDishComponent } from '../components/dialogs/dishes-dialogs/dg-add-dish/dg-add-dish.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { DgDeleteDishComponent } from '../components/dialogs/dishes-dialogs/dg-delete-dish/dg-delete-dish.component';
 
 interface Category {
   value: string;
@@ -51,7 +52,7 @@ interface Category {
 export class DishesComponent implements OnInit {
   MAX_FOLLOWING_WEEKS = 2;
 
-  displayedColumns: string[] = ['title', 'description', 'category'];
+  displayedColumns: string[] = ['title', 'description', 'category', 'action'];
   dataSource: MatTableDataSource<Meal>;
   weekdayProperty: string;
   currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(Temporal.Now.plainDateISO());
@@ -139,6 +140,18 @@ export class DishesComponent implements OnInit {
             await this.updateTableSource();
           }
         }
+      });
+  }
+
+  onClickDeleteDish(element: any) {
+    const dialogRef = this.dialog.open(DgDeleteDishComponent, {
+      data: { name: element.name },
+    });
+
+    dialogRef
+      .afterClosed()
+      .subscribe(() => {
+        
       });
   }
 

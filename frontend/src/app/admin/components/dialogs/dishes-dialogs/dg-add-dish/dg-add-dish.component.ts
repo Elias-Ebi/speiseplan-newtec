@@ -50,7 +50,7 @@ interface Category {
 })
 export class DgAddDishComponent {
   MAX_LENGTH: number = 70;
-  time: string;
+  orderTime: string;
   deliveryTime: string;
   isFormValid: boolean = false;
   areDatesValid = true;
@@ -96,7 +96,7 @@ export class DgAddDishComponent {
     this.deliveryDate = data.deliveryDate;
     this.orderableDate = _.cloneDeep(data.deliveryDate);
     this.orderableDate = this.setOrderableDate();
-    this.time = '13:00';
+    this.orderTime = '13:00';
     this.deliveryTime = '12:00';
 
     const currentDay = new Date();
@@ -145,8 +145,8 @@ export class DgAddDishComponent {
 
   onClickCreate() {
     // 2023-01-24T12:00:00
-    var deliveryDateWithTime = this.formatDateWithTime(this.deliveryDate);
-    var orderableDateWithTime = this.formatDateWithTime(this.orderableDate, this.time);
+    var deliveryDateWithTime = this.formatDateWithTime(this.deliveryDate, this.deliveryTime);
+    var orderableDateWithTime = this.formatDateWithTime(this.orderableDate, this.orderTime);
     var deliveryDateString = this.formatDate(this.deliveryDate);
 
 
