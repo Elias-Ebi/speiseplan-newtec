@@ -20,6 +20,14 @@
     align-self: center;
   }
 
+  .price-field {
+    width: 30%;
+
+    position: relative;
+    left: 50%;
+    transform: translateX(-100%);
+  }
+
   .delivery {
     display: flex;
     width: 60%;

@@ -6,6 +6,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from '@angular/material/input';
 import { Temporal } from '@js-temporal/polyfill';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ApiService } from 'src/app/shared/services/api.service';
 
 @Component({
   selector: 'app-dg-delete-dish',
@@ -20,20 +21,17 @@ export class DgDeleteDishComponent {
     public data:
       {
         name: string,
+        id: string,
       }
     ,
     private dialogRef: MatDialogRef<DgDeleteDishComponent>,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private api: ApiService
   ) { }
 
-  closeDialog(isCancelingOrderConfirmed: boolean) {
-    if (isCancelingOrderConfirmed) {
-      //TODO: cancel order
-      this.snackBar.open("Bestellung erfolgreich storniert!", "OK", {
-        duration: 3000,
-        panelClass: 'success-snackbar'
-      })
-    }
-    this.dialogRef.close();
+  closeDialog(isDeletingDishConfirmed: boolean) {
+    this.dialogRef.close(
+      {isDeletingDishConfirmed: isDeletingDishConfirmed}
+    );
   }
 }

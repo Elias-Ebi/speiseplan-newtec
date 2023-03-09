@@ -11,9 +11,10 @@ import { AuthModule } from '../auth/auth.module';
 import { OrderMonthController } from './order-month/order-month.controller';
 import { OrderMonthService } from './order-month/order-month.service';
 import { MealTemplate } from 'src/data/entitites/meal-template.entity';
+import { DefaultValues } from 'src/data/entitites/default-values.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Meal, Order, OrderMonth, MealTemplate]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Meal, Order, OrderMonth, MealTemplate, DefaultValues]), AuthModule],
   controllers: [MealController, OrderController, OrderMonthController],
   providers: [MealService, OrderService, OrderMonthService]
 })

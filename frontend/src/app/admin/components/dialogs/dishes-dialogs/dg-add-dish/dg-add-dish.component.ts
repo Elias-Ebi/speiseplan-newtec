@@ -63,6 +63,7 @@ export class DgAddDishComponent {
   orderableDate: Date;
   minDate: Date;
   maxDate: Date;
+  total: number;
 
   categories: Category[] = [
     { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
@@ -98,6 +99,7 @@ export class DgAddDishComponent {
     this.orderableDate = this.setOrderableDate();
     this.orderTime = '13:00';
     this.deliveryTime = '12:00';
+    this.total = 3.6;
 
     const currentDay = new Date();
 

@@ -8,10 +8,15 @@ import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDateTime = Temporal.PlainDateTime;
 import PlainDate = Temporal.PlainDate;
 import { MealTemplate } from 'src/data/entitites/meal-template.entity';
+import { DefaultValues } from 'src/data/entitites/default-values.entity';
 
 @Injectable()
 export class MealService {
-  constructor(@InjectRepository(Meal) private mealRepository: Repository<Meal>, @InjectRepository(MealTemplate) private mealTemplateRepository: Repository<MealTemplate>) {
+  constructor(
+      @InjectRepository(Meal) private mealRepository: Repository<Meal>, 
+      @InjectRepository(MealTemplate) private mealTemplateRepository: Repository<MealTemplate>,
+      @InjectRepository(DefaultValues) private defaultValuesRepository: Repository<DefaultValues>
+    ) {
   }
 
   async get(id: string): Promise<Meal> {
@@ -83,6 +88,7 @@ export class MealService {
 
   async delete(id: string): Promise<void> {
     const meal = await this.get(id);
+    // Could possibly add to remove relational order
     await this.mealRepository.remove(meal);
   }
 
@@ -135,4 +141,21 @@ export class MealService {
 
     await this.mealTemplateRepository.remove(meal);
   }
+
+  async setDefaultValues(values: DefaultValues): Promise<DefaultValues> {
+    return await this.defaultValuesRepository.save(values);
+  }
+
+  async getDefaultValues(): Promise<DefaultValues> {
+    const options: FindOneOptions<DefaultValues> = {
+      where: {},
+    };
+    const result = await this.defaultValuesRepository.find(options);
+    if (result.length === 0) {
+      return await this.defaultValuesRepository.save(new DefaultValues());
+    } else {
+      return result[0];
+    }
+  }
+
 }

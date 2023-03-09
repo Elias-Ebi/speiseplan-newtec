@@ -8,6 +8,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import PlainDate = Temporal.PlainDate;
 import { MealTemplate } from '../models/mealtemplate';
+import { DefaultValues } from '../models/defaultvalues';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,11 @@ export class ApiService {
 
   async getMealsOn(date: PlainDate): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/date/${date.toString()}`);
+    return lastValueFrom(response);
+  }
+
+  async deleteMeal(id: string): Promise<Meal> {
+    const response = this.httpClient.delete<Meal>(`${environment.apiUrl}/meals/${id}`);
     return lastValueFrom(response);
   }
 
@@ -119,6 +125,11 @@ export class ApiService {
 
   async addMeal(meal: Meal): Promise<Meal> {
     const response = this.httpClient.post<Meal>(`${environment.apiUrl}/meals`, meal);
+    return lastValueFrom(response);
+  }
+
+  async getDefaultValues(): Promise<DefaultValues> {
+    const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);
   }
 }

@@ -22,6 +22,7 @@ import { DgAddDishComponent } from '../components/dialogs/dishes-dialogs/dg-add-
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DgDeleteDishComponent } from '../components/dialogs/dishes-dialogs/dg-delete-dish/dg-delete-dish.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface Category {
   value: string;
@@ -66,7 +67,7 @@ export class DishesComponent implements OnInit {
     { value: '85d77591-0b55-4df4-93b0-03c00bcb14b9', view: 'Salat' },
   ];
 
-  constructor(public dialog: MatDialog, private api: ApiService) {
+  constructor(public dialog: MatDialog, private api: ApiService, private snackBar: MatSnackBar) {
     this.weekdayProperty = 'monday';
     this.dataSource = new MatTableDataSource();
   }
@@ -150,8 +151,23 @@ export class DishesComponent implements OnInit {
 
     dialogRef
       .afterClosed()
-      .subscribe(() => {
-        
+      .subscribe(async (data: {isDeletingDishConfirmed: boolean}) => {
+        if(data.isDeletingDishConfirmed) {
+          try {
+
+            await this.api.deleteMeal(element.id);
+            await this.updateTableSource();
+            this.snackBar.open("Gericht erfolgreich gelöscht!", "OK", {
+              duration: 3000,
+              panelClass: 'success-snackbar'
+            });
+          } catch(error) {
+            this.snackBar.open("Gericht konnte nicht gelöscht werden.", "OK", {
+              duration: 3000,
+              panelClass: 'success-snackbar'
+            });
+          }
+        }
       });
   }
 

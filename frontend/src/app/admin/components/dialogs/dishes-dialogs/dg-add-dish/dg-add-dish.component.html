@@ -28,6 +28,11 @@
     </mat-select>
   </mat-form-field>
 
+  <mat-form-field appearance="fill" class="price-field">
+    <mat-label>Preis</mat-label>
+    <input matInput [(ngModel)]="total" (change)="validate()">
+  </mat-form-field>
+
   <div class="delivery">
     <mat-form-field appearance="fill" class="delivery-1" (click)="datepicker.open()">
       <mat-label>Lieferdatum</mat-label>

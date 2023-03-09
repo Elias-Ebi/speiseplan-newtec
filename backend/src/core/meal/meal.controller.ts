@@ -16,6 +16,7 @@ import { Temporal } from '@js-temporal/polyfill';
 import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDate = Temporal.PlainDate;
 import { MealTemplate } from 'src/data/entitites/meal-template.entity';
+import { DefaultValues } from 'src/data/entitites/default-values.entity';
 
 @Controller('meals')
 export class MealController {
@@ -38,6 +39,19 @@ export class MealController {
   async getMealsOn(@Param('date') date: string): Promise<Meal[]> {
     const requestedDate = PlainDate.from(date);
     return await this.mealService.getMealsOn(requestedDate);
+  }
+
+  @Post('default-values')
+  @AdminOnly()
+  async setDefaultValues(@Body() values: DefaultValues): Promise<DefaultValues> {
+    return await this.mealService.setDefaultValues(values);
+  }
+
+
+  @Get('default-values')
+  @AdminOnly()
+  async getDefaultValues(): Promise<DefaultValues> {
+    return await this.mealService.getDefaultValues();
   }
 
   @Post()
