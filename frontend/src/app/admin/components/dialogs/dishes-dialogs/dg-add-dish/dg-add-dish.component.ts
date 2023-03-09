@@ -61,6 +61,8 @@ export class DgAddDishComponent {
   categoryId: string;
   deliveryDate: Date;
   orderableDate: Date;
+  minDate: Date;
+  maxDate: Date;
 
   categories: Category[] = [
     { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
@@ -96,6 +98,13 @@ export class DgAddDishComponent {
     this.orderableDate = this.setOrderableDate();
     this.time = '13:00';
     this.deliveryTime = '12:00';
+
+    const currentDay = new Date();
+
+    // let yesterday.setDate(new Date() - 1);
+    this.minDate = currentDay;
+    this.maxDate = new Date();
+    this.maxDate.setDate(this.deliveryDate.getDate() - 1);
   }
 
   setOrderableDate() {
@@ -239,5 +248,11 @@ export class DgAddDishComponent {
         this.areDatesValid = true;
       }
     }
-    }
+  }
+
+  dateWeekendFilter(date: Date | null): boolean {
+    //prevent saturdays and sundays from being selected
+    const day = (date || new Date()).getDay();
+    return day !== 0 && day !== 6;
+  }
 }

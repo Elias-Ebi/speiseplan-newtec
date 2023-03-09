@@ -54,9 +54,10 @@ export class DishesComponent implements OnInit {
   displayedColumns: string[] = ['title', 'description', 'category'];
   dataSource: MatTableDataSource<Meal>;
   weekdayProperty: string;
-  currentlyDisplayedWeek: CalendarWeek;
+  currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(Temporal.Now.plainDateISO());
   currentTab: number = 0;
   calendarWeekIndex = 0;
+  maxPossibleTabIndex = 0;
   categories: Category[] = [
     { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
     { value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch' },
@@ -65,14 +66,15 @@ export class DishesComponent implements OnInit {
   ];
 
   constructor(public dialog: MatDialog, private api: ApiService) {
-    this.currentlyDisplayedWeek = this.getCalenderWeek(
-      Temporal.Now.plainDateISO()
-    );
     this.weekdayProperty = 'monday';
     this.dataSource = new MatTableDataSource();
   }
 
   async ngOnInit(): Promise<void> {
+    this.currentlyDisplayedWeek =  await this.getCalenderWeek(
+      Temporal.Now.plainDateISO()
+    );
+
     await this.updateTableSource();
   }
 
@@ -152,7 +154,7 @@ export class DishesComponent implements OnInit {
       let followingWeekDate = this.currentlyDisplayedWeek.friday.date.add({
         days: 7,
       });
-      this.currentlyDisplayedWeek = this.getCalenderWeek(followingWeekDate);
+      this.currentlyDisplayedWeek =  await this.getCalenderWeek(followingWeekDate);
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
       await this.updateTableSource();
       this.calendarWeekIndex++;
@@ -164,14 +166,15 @@ export class DishesComponent implements OnInit {
       let precedingWeekDate = this.currentlyDisplayedWeek.friday.date.subtract({
         days: 7,
       });
-      this.currentlyDisplayedWeek = this.getCalenderWeek(precedingWeekDate);
+      this.currentlyDisplayedWeek = await this.getCalenderWeek(precedingWeekDate);
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
       await this.updateTableSource();
       this.calendarWeekIndex--;
     }
   }
 
-  getCalenderWeek(date: Temporal.PlainDate): CalendarWeek {
+  async getCalenderWeek(date: Temporal.PlainDate): Promise<CalendarWeek> {
+    await this.disableImpossibleTabs();
     return new CalendarWeek(date);
   }
 
@@ -195,5 +198,21 @@ export class DishesComponent implements OnInit {
       this.currentlyDisplayedWeek[this.weekdayProperty].date
     );
     this.dataSource = new MatTableDataSource(mealsOnDate);
+  }
+
+  async disableImpossibleTabs() {
+    if (this.calendarWeekIndex === 0) {
+      // to consider: sunday == 0, mondaytab = 0
+      const currentIndex = this.parseToTabIndex(new Date().getDay());
+      this.currentTab = currentIndex + 1;
+      this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
+
+      this.maxPossibleTabIndex = this.currentTab;
+      await this.updateTableSource();
+    }
+  }
+
+  parseToTabIndex(day: number) {
+    return day - 1;
   }
 }

@@ -85,11 +85,22 @@ describe('visit app', () => {
 
       cy.get('#create').click()
 
-      cy.get('#table-monday').find('tr').should('have.length', countOfElements++)
+      cy.get('#table-monday').find('tr').should('have.length', countOfElements++);
     }) ;
+
+  })
+
+  // Lieferdatum liegt hinter dem Bestellbarkeitsdatum (Bestellungsdatum auf den Montag der vergangenen Woche)
+  // Bestelldatum an einem Wochenende
+  // Lieferdatum muss ungleich bestellbarkeitsdatum sein
+  it('check date requirements', () => {
 
 
   })
+
+
+
+
 
   // ------- to test: --------
   /*  Switching KW:

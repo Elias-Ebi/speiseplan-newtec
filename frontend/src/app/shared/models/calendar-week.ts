@@ -14,7 +14,7 @@ export class CalendarWeek {
 
     constructor(date: Temporal.PlainDate) {
         this.weekNumber = date.calendar.weekOfYear(date);
-        let currentWeekday = this.setCurrentWeekday(date);
+        // let currentWeekday = this.setCurrentWeekday(date);
         this.monday = new CalendarWeekDay(date.subtract({days: (date.dayOfWeek - 1)}));
         this.tuesday = new CalendarWeekDay(date.subtract({days: (date.dayOfWeek - 2)}));
         this.wednesday = new CalendarWeekDay(date.subtract({days: (date.dayOfWeek - 3)}));
@@ -29,9 +29,10 @@ export class CalendarWeek {
             ${this.friday.date.toLocaleString('de', {  year: "numeric", month: "2-digit", day: "2-digit"})}`;
     }
 
+    /*
     setCurrentWeekday(date: Temporal.PlainDate) {
         date.dayOfWeek
-    }
+    }*/
 }
 
 export class CalendarWeekDay {
