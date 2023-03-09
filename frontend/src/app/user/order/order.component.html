@@ -3,7 +3,13 @@
   [(selectedIndex)]="selectedTabIndex"
   class="main-content"
 >
-  <mat-tab *ngFor="let day of orderDays" [label]="day.date | fullDate">
+  <mat-tab *ngFor="let day of orderDays">
+    <ng-template mat-tab-label>
+      <div class="orderDay-tab">
+        {{day.date | fullDate}}
+        <mat-icon *ngIf="day.anyOrders || day.guestOrders.length > 0" class="orderd-icon">task_alt</mat-icon>
+      </div>
+    </ng-template>
     <div class="content">
       <!-- Meine Bestellung -->
       <section class="section">
