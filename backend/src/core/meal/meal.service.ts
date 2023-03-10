@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meal } from '../../data/entitites/meal.entity';
 import { FindManyOptions, FindOneOptions, FindOptionsWhere, MoreThan, Repository } from 'typeorm';
@@ -11,7 +11,6 @@ import { MealTemplate } from 'src/data/entitites/meal-template.entity';
 import { DefaultValues } from 'src/data/entitites/default-values.entity';
 import { Order } from 'src/data/entitites/order.entity';
 import { OrderMonth } from 'src/data/entitites/order-month.entity';
-import { OrderService } from 'src/core/order/order.service'
 import { AuthUser } from 'src/auth/models/AuthUser';
 import { OrderOptions } from '../order/options-models/order.options';
 
