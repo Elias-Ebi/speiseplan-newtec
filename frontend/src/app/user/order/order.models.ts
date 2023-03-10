@@ -5,6 +5,7 @@ export interface OrderDay {
   date: Temporal.PlainDate,
   orderMeals: OrderMeal[],
   guestOrders: Order[],
+  anyOrders: boolean,
 }
 
 export interface OrderMeal {

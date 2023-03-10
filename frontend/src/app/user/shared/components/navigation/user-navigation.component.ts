@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from "@angular/material/icon";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../../../shared/services/auth.service";
 import { Observable } from "rxjs";
+import { StateService } from "../../../../shared/services/state.service";
 
 @Component({
   selector: 'app-user-navigation',
@@ -15,11 +16,16 @@ import { Observable } from "rxjs";
 export class UserNavigationComponent {
   isAdmin$: Observable<boolean>;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router, private stateService: StateService) {
     this.isAdmin$ = this.authService.isAdmin$;
   }
 
   logout() {
     this.authService.logout();
+  }
+
+  navigateToOrderPage() {
+    this.stateService.setSelectedOrderDate(null);
+    this.router.navigateByUrl('/bestellen');
   }
 }

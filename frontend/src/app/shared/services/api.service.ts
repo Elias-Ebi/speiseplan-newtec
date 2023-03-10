@@ -28,6 +28,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async takeBanditPlate(orderId: string): Promise<Order> {
+    const response = this.httpClient.put<Order>(`${environment.apiUrl}/orders/banditplates/take/${orderId}`, {});
+    return lastValueFrom(response);
+  }
+
   async getSaldo(): Promise<number> {
     const response = this.httpClient.get<number>(`${environment.apiUrl}/order-month/current-balance`);
     return lastValueFrom(response);
@@ -135,6 +140,18 @@ export class ApiService {
 
   async setDefaultValues(defaultValues: DefaultValues): Promise<DefaultValues> {
     const response = this.httpClient.post<DefaultValues>(`${environment.apiUrl}/meals/default-values`, defaultValues);
+    return lastValueFrom(response);
+  }
+
+  async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
+    const body = { orders: orders }
+    const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delete/admin/`, body)
+    return lastValueFrom(response);
+  }
+
+  async getFilteredOrders(filter: any): Promise<Order[]> {
+    const body = {filter: filter}
+    const response = this.httpClient.post<Order[]>(`${environment.apiUrl}/orders/filter`, body)
     return lastValueFrom(response);
   }
 }

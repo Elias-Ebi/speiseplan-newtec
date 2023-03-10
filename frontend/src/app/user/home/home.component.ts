@@ -7,7 +7,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { MatIconModule } from "@angular/material/icon";
 import { MatDialog } from "@angular/material/dialog";
 import { BanditPlateDialogComponent } from "./bandit-plate-dialog/bandit-plate-dialog.component";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { ApiService } from "../../shared/services/api.service";
 import { Order } from "../../shared/models/order";
 import { FullDatePipe } from "../../shared/pipes/full-date.pipe";
@@ -18,6 +18,8 @@ import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils
 import { HomeOpenOrderDay, HomeQuickOrderMeal, HomeUnchangeableOrderDay } from "./home.models";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { OrderService } from "../shared/services/order.service";
+import { lastValueFrom } from "rxjs";
+import { StateService } from "../../shared/services/state.service";
 import PlainDate = Temporal.PlainDate;
 
 @Component({
@@ -42,18 +44,30 @@ export class HomeComponent implements OnInit {
     private dateService: DateService,
     private categoryService: CategoryService,
     private snackbarService: SnackbarService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private router: Router,
+    private stateService: StateService
   ) {
   }
 
   openBanditPlateDialog(): void {
-    this.dialog.open(BanditPlateDialogComponent, {
-      data: this.banditPlatesDays
+    const dialogRef = this.dialog.open(BanditPlateDialogComponent, {
+      data: this.banditPlatesDays,
+    });
+
+    const dialogClosedP = lastValueFrom(dialogRef.afterClosed());
+    dialogClosedP.then(async () => {
+      await this.loadDashboard();
     });
   }
 
   async ngOnInit(): Promise<void> {
     await this.loadDashboard();
+  }
+
+  navigateToOrderPage(date: PlainDate) {
+    this.stateService.setSelectedOrderDate(date.toString());
+    this.router.navigateByUrl('/bestellen');
   }
 
   async handleOrder(mealId: string, orderId: string, ordered: boolean) {

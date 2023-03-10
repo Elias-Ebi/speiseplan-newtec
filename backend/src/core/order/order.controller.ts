@@ -25,6 +25,13 @@ export class OrderController {
     return this.orderService.offerAsBanditplate(time, id, user);
   }
 
+  @Put('banditplates/take/:id')
+  async takeBanditplate(@Param('id') id: string, @Request() req): Promise<Order>{
+    const user = req.user as AuthUser;
+    const time = Temporal.Now.plainDateTimeISO();
+    return this.orderService.takeBanditplate(time, id, user);
+  }
+
   @Get('unchangeable')
   async unchangeableOrders(@Request() req): Promise<Order[]> {
     const user = req.user as AuthUser;
@@ -37,6 +44,13 @@ export class OrderController {
     const user = req.user as AuthUser;
     const time = Temporal.Now.plainDateTimeISO();
     return this.orderService.getChangeable(time, user.email);
+  }
+
+  @Post('filter')
+  @AdminOnly()
+  async filterOrders(@Request() req): Promise<Order[]> {
+    const filter = req.body.filter;
+    return this.orderService.getFilteredOrders(filter);
   }
 
   @Get('date/:date')
@@ -58,6 +72,13 @@ export class OrderController {
     const user = req.user as AuthUser;
     const time = Temporal.Now.plainDateTimeISO();
     return this.orderService.order(time, mealId, user.email, guestName);
+  }
+
+  @Post('/multiple-orders/delete/admin')
+  @AdminOnly()
+  async deleteMultipleOrdersAdmin( @Request() req): Promise<boolean> {
+    const user = req.user as AuthUser;
+    return this.orderService.deleteMultipleOrdersByAdmin(req.body.orders as Order[], user);
   }
 
   @Delete(':id')
