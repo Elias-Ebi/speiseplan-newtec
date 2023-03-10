@@ -97,9 +97,9 @@ export class DgAddDishComponent {
     this.deliveryDate = data.deliveryDate;
     this.orderableDate = _.cloneDeep(data.deliveryDate);
     this.orderableDate = this.setOrderableDate();
-    this.orderTime = '13:00';
-    this.deliveryTime = '12:00';
-    this.total = 3.6;
+    this.orderTime = '00:00';
+    this.deliveryTime = '00:00';
+    this.total = 0.0;
 
     const currentDay = new Date();
 
@@ -107,6 +107,13 @@ export class DgAddDishComponent {
     this.minDate = currentDay;
     this.maxDate = new Date();
     this.maxDate.setDate(this.deliveryDate.getDate() - 1);
+  }
+
+  async ngOnInit() {
+    const defaultValues = await this.api.getDefaultValues();
+    this.total = defaultValues.total;
+    this.deliveryTime = defaultValues.deliveryTime;
+    this.orderTime = defaultValues.orderableTime;
   }
 
   setOrderableDate() {
@@ -159,7 +166,7 @@ export class DgAddDishComponent {
       date: deliveryDateString,
       delivery: deliveryDateWithTime,
       orderable: orderableDateWithTime,
-      total: 3.6, //TODO:make total variable
+      total: this.total,
       orderCount: 0,
     };
 

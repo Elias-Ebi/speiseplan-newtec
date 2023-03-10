@@ -56,7 +56,9 @@ export class DishesComponent implements OnInit {
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
   dataSource: MatTableDataSource<Meal>;
   weekdayProperty: string;
-  currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(Temporal.Now.plainDateISO());
+  currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(
+    Temporal.Now.plainDateISO()
+  );
   currentTab: number = 0;
   calendarWeekIndex = 0;
   maxPossibleTabIndex = 0;
@@ -67,15 +69,32 @@ export class DishesComponent implements OnInit {
     { value: '85d77591-0b55-4df4-93b0-03c00bcb14b9', view: 'Salat' },
   ];
 
-  constructor(public dialog: MatDialog, private api: ApiService, private snackBar: MatSnackBar) {
+  constructor(
+    public dialog: MatDialog,
+    private api: ApiService,
+    private snackBar: MatSnackBar
+  ) {
     this.weekdayProperty = 'monday';
     this.dataSource = new MatTableDataSource();
   }
 
   async ngOnInit(): Promise<void> {
-    this.currentlyDisplayedWeek =  await this.getCalenderWeek(
-      Temporal.Now.plainDateISO()
-    );
+    // if it is friday, saturday or sunday, the firstcalendar week needs to be
+    // the following week, as changes to the current calendar week ar impossible
+    let checkDate = new Date();
+    if (
+      checkDate.getDay() === 0 ||
+      checkDate.getDay() === 5 ||
+      checkDate.getDay() === 6
+    ) {
+      this.currentlyDisplayedWeek = await this.getCalenderWeek(
+        Temporal.Now.plainDateISO().add({ days: 7 })
+      );
+    } else {
+      this.currentlyDisplayedWeek = await this.getCalenderWeek(
+        Temporal.Now.plainDateISO()
+      );
+    }
 
     await this.updateTableSource();
   }
@@ -108,7 +127,11 @@ export class DishesComponent implements OnInit {
       this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
 
     const dialogRef = this.dialog.open(DgAddDishComponent, {
-      data: { weekday: this.weekdayProperty, deliveryDate: new Date(currentDay), selectedMealTemplate },
+      data: {
+        weekday: this.weekdayProperty,
+        deliveryDate: new Date(currentDay),
+        selectedMealTemplate,
+      },
       width: '40%',
       height: '80%',
       autoFocus: false,
@@ -151,20 +174,19 @@ export class DishesComponent implements OnInit {
 
     dialogRef
       .afterClosed()
-      .subscribe(async (data: {isDeletingDishConfirmed: boolean}) => {
-        if(data.isDeletingDishConfirmed) {
+      .subscribe(async (data: { isDeletingDishConfirmed: boolean }) => {
+        if (data.isDeletingDishConfirmed) {
           try {
-
             await this.api.deleteMeal(element.id);
             await this.updateTableSource();
-            this.snackBar.open("Gericht erfolgreich gelöscht!", "OK", {
+            this.snackBar.open('Gericht erfolgreich gelöscht!', 'OK', {
               duration: 3000,
-              panelClass: 'success-snackbar'
+              panelClass: 'success-snackbar',
             });
-          } catch(error) {
-            this.snackBar.open("Gericht konnte nicht gelöscht werden.", "OK", {
+          } catch (error) {
+            this.snackBar.open('Gericht konnte nicht gelöscht werden.', 'OK', {
               duration: 3000,
-              panelClass: 'success-snackbar'
+              panelClass: 'success-snackbar',
             });
           }
         }
@@ -183,7 +205,9 @@ export class DishesComponent implements OnInit {
       let followingWeekDate = this.currentlyDisplayedWeek.friday.date.add({
         days: 7,
       });
-      this.currentlyDisplayedWeek =  await this.getCalenderWeek(followingWeekDate);
+      this.currentlyDisplayedWeek = await this.getCalenderWeek(
+        followingWeekDate
+      );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
       await this.updateTableSource();
       this.calendarWeekIndex++;
@@ -195,7 +219,9 @@ export class DishesComponent implements OnInit {
       let precedingWeekDate = this.currentlyDisplayedWeek.friday.date.subtract({
         days: 7,
       });
-      this.currentlyDisplayedWeek = await this.getCalenderWeek(precedingWeekDate);
+      this.currentlyDisplayedWeek = await this.getCalenderWeek(
+        precedingWeekDate
+      );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
       await this.updateTableSource();
       this.calendarWeekIndex--;
@@ -231,17 +257,51 @@ export class DishesComponent implements OnInit {
 
   async disableImpossibleTabs() {
     if (this.calendarWeekIndex === 0) {
+      let currentDate = Temporal.Now.plainDateISO();
+      const tmp = Temporal.PlainDate.compare(
+        currentDate,
+        this.currentlyDisplayedWeek.monday.date
+      );
       // to consider: sunday == 0, mondaytab = 0
       const currentIndex = this.parseToTabIndex(new Date().getDay());
-      this.currentTab = currentIndex + 1;
-      this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
+      if (currentIndex < 4) {
+        // this.currentTab = currentIndex + 1;
+      }
+      // dates are the same
+      if (tmp === 0) {
+        this.weekdayProperty = this.getWeekdayPropertyFromIndex(
+          this.currentTab
+        );
 
-      this.maxPossibleTabIndex = this.currentTab;
-      await this.updateTableSource();
+        this.maxPossibleTabIndex = this.currentTab;
+        console.log('maxpossible tab: ', this.maxPossibleTabIndex);
+        this.getNextEnabledTab();
+        await this.updateTableSource();
+        // the monday is in the past
+      } else if (tmp === 1) {
+        this.weekdayProperty = this.getWeekdayPropertyFromIndex(
+          this.currentTab
+        );
+
+        this.maxPossibleTabIndex = this.currentTab;
+        console.log('maxpossible tab: ', this.maxPossibleTabIndex);
+        this.getNextEnabledTab();
+        await this.updateTableSource();
+        // this monday is in the furure
+      } else {
+        // this.maxPossibleTabIndex = 0;
+      }
     }
   }
 
   parseToTabIndex(day: number) {
     return day - 1;
+  }
+
+  // when going back to the first week, this can cause a bug:
+  //2nd week on thursday tab -> go to 1st week -> thursday tab is still open even if deactivated
+  getNextEnabledTab() {
+    if (this.calendarWeekIndex === 0) {
+    }
   }
 }

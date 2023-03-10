@@ -1,5 +1,86 @@
-<h2>Admin Einstellungen</h2>
-<mat-form-field appearance="fill">
-  <mat-label>Preis</mat-label>
-  <input matInput (blur)="transform($event)">
-</mat-form-field>
+<div class="admin-settings-container">
+  <h2>Admin Einstellungen</h2>
+  <div class="form-container">
+    <p>Standardwerte</p>
+    <div class="price-container">
+      <mat-form-field appearance="fill" class="price">
+        <mat-label>Standardpreis</mat-label>
+        <input
+          matInput
+          (blur)="transform($event)"
+          [(ngModel)]="currentDefaultValues.total"
+          (change)="checkForChanges()"
+        />
+        <mat-icon
+          matSuffix
+          *ngIf="startDefaultValues.total !== currentDefaultValues.total"
+          style="scale: 0.5; color: var(--clrPrimary)"
+          >circle</mat-icon
+        >
+      </mat-form-field>
+    </div>
+    <div class="deliveryTime-container">
+      <mat-form-field appearance="fill" class="deliveryTime">
+        <mat-label>Liefer-Uhrzeit</mat-label>
+        <input
+          matInput
+          type="time"
+          [(ngModel)]="currentDefaultValues.deliveryTime"
+          (change)="checkForChanges()"
+        />
+        <mat-hint>HH:MM</mat-hint>
+        <mat-icon
+          matSuffix
+          *ngIf="
+            startDefaultValues.deliveryTime !==
+            currentDefaultValues.deliveryTime
+          "
+          style="scale: 0.5; color: var(--clrPrimary)"
+          >circle</mat-icon
+        >
+      </mat-form-field>
+    </div>
+    <div class="orderableTime-container">
+      <mat-form-field appearance="fill" class="orderableTime">
+        <mat-label>Bestellfrist-Uhrzeit</mat-label>
+        <input
+          matInput
+          type="time"
+          [(ngModel)]="currentDefaultValues.orderableTime"
+          (change)="checkForChanges()"
+        />
+        <mat-hint>HH:MM</mat-hint>
+        <mat-icon
+          matSuffix
+          *ngIf="
+            startDefaultValues.orderableTime !==
+            currentDefaultValues.orderableTime
+          "
+          style="scale: 0.5; color: var(--clrPrimary)"
+          >circle</mat-icon
+        >
+      </mat-form-field>
+    </div>
+    <div class="button-group">
+      <button
+        mat-stroked-button
+        color="primary"
+        class="set-button"
+        (click)="reset()"
+        [disabled]="!changesExist"
+      >
+        ZURÜCKSETZEN
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        class="set-button"
+        (click)="openConfirmationDialog()"
+        [disabled]="!changesExist"
+      >
+        ALS STANDARD SETZEN
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+</div>

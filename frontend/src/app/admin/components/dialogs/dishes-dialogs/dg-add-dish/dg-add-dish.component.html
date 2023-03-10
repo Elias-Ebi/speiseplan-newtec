@@ -43,7 +43,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="delivery-2">
-      <mat-label>Lieferdatum Uhrzeit</mat-label>
+      <mat-label>Liefer-Uhrzeit</mat-label>
       <input matInput [(ngModel)]="deliveryTime" type="time" placeholder="start date">
       <mat-hint>HH:MM</mat-hint>
     </mat-form-field>
@@ -51,7 +51,7 @@
 
   <div class="order">
     <mat-form-field appearance="fill" class="order-1" (click)="orderable.open()">
-      <mat-label>Bestellfrist Datum</mat-label>
+      <mat-label>Bestellfrist-Datum</mat-label>
       <input [matDatepicker]="orderable" [min]="minDate" [max]="maxDate" [matDatepickerFilter]="dateWeekendFilter" [value]="orderableDate" [(ngModel)]="orderableDate" matInput (dateChange)="validate()">
       <mat-hint>MM/TT/JJJJ</mat-hint>
       <mat-datepicker-toggle [for]="orderable" matIconSuffix></mat-datepicker-toggle>
@@ -59,7 +59,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="order-2">
-      <mat-label>Bestellungsfrist Uhrzeit</mat-label>
+      <mat-label>Bestellfrist-Uhrzeit</mat-label>
       <input matInput [(ngModel)]="orderTime" type="time" placeholder="start date">
       <mat-hint>HH:MM</mat-hint>
     </mat-form-field>

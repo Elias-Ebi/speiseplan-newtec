@@ -132,4 +132,9 @@ export class ApiService {
     const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);
   }
+
+  async setDefaultValues(defaultValues: DefaultValues): Promise<DefaultValues> {
+    const response = this.httpClient.post<DefaultValues>(`${environment.apiUrl}/meals/default-values`, defaultValues);
+    return lastValueFrom(response);
+  }
 }

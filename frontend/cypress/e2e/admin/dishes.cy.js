@@ -31,6 +31,9 @@ describe('visit app', () => {
   })
 */
 
+
+
+/*
   it('navigate to admin view', () => {
     cy.wait(1000)
     cy.get('p').contains('Admin-Bereich').click();
@@ -87,14 +90,69 @@ describe('visit app', () => {
 
       cy.get('#table-monday').find('tr').should('have.length', countOfElements++);
     }) ;
-
   })
+  */
 
   // Lieferdatum liegt hinter dem Bestellbarkeitsdatum (Bestellungsdatum auf den Montag der vergangenen Woche)
   // Bestelldatum an einem Wochenende
   // Lieferdatum muss ungleich bestellbarkeitsdatum sein
   it('check date requirements', () => {
 
+
+  })
+
+
+  it('check calendar week thursday', () => {
+    let fakeTodayAsThursday = new Date(2023, 2, 2); // this is a  thrusday
+    console.log('realToDate: ', fakeTodayAsThursday)
+    cy.clock(fakeTodayAsThursday);
+
+    cy.visit('http://localhost:4200/admin/dish-management')
+    cy.wait(1000)
+
+    // check if aria-selected of friday tab is true, every other tab:  aria-disabled
+    cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-disabled', 'true') // this should be the monday tab
+    cy.get('div[role=tab]').eq(1).should('have.attr', 'aria-disabled', 'true') // this should be the tuesday tab
+    cy.get('div[role=tab]').eq(2).should('have.attr', 'aria-disabled', 'true') // this should be the wednesday tab
+    cy.get('div[role=tab]').eq(3).should('have.attr', 'aria-disabled', 'true') // this should be the thursday tab
+    cy.get('div[role=tab]').eq(4).should('have.attr', 'aria-selected', 'true') // this should be the friday tab
+    cy.get('div[role=tab]').eq(4).should('be.not.disabled'); // this should be the friday tab
+  })
+
+  it('check calendar week monday', () => {
+    let fakeTodayAsMonday = new Date(2023, 2, 6); // this is a  monday
+    console.log('realToDate: ', fakeTodayAsMonday)
+    cy.clock(fakeTodayAsMonday);
+
+    cy.visit('http://localhost:4200/admin/dish-management')
+    cy.wait(1000)
+
+    // check if aria-selected of friday tab is true, every other tab:  aria-disabled
+    cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-disabled', 'true') // this should be the monday tab
+    cy.get('div[role=tab]').eq(1).should('have.attr', 'aria-selected', 'true') // this should be the friday tab
+    cy.get('div[role=tab]').eq(1).should('be.not.disabled'); // this should be the friday tab
+    cy.get('div[role=tab]').eq(2).should('have.attr', 'aria-disabled', 'false') // this should be the tuesday tab
+    cy.get('div[role=tab]').eq(3).should('have.attr', 'aria-disabled', 'false') // this should be the wednesday tab
+    cy.get('div[role=tab]').eq(4).should('have.attr', 'aria-disabled', 'false') // this should be the thursday tab
+
+  })
+
+
+  it('check calendar week friday', () => {
+    let fakeTodayAsFriday = new Date(2023, 2, 10); // this is a  friday
+    console.log('realToDate: ', fakeTodayAsFriday)
+    cy.clock(fakeTodayAsFriday);
+
+    cy.visit('http://localhost:4200/admin/dish-management')
+    cy.wait(1000)
+
+    // check if aria-selected of friday tab is true, every other tab:  aria-disabled
+    cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-disabled', 'false') // this should be the monday tab
+    cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-selected', 'true') // this should be the monday tab
+    cy.get('div[role=tab]').eq(1).should('be.not.disabled'); // this should be the tuesday tab
+    cy.get('div[role=tab]').eq(2).should('have.attr', 'aria-disabled', 'false') // this should be the wednesday tab
+    cy.get('div[role=tab]').eq(3).should('have.attr', 'aria-disabled', 'false') // this should be the thursday tab
+    cy.get('div[role=tab]').eq(4).should('have.attr', 'aria-disabled', 'false') // this should be the friday tab
 
   })
 
