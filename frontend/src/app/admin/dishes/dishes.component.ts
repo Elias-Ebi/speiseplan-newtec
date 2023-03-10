@@ -226,8 +226,8 @@ export class DishesComponent implements OnInit {
       this.currentlyDisplayedWeek = await this.getCalenderWeek(
         precedingWeekDate
       );
-      console.log('this tab will be opended: ', this.currentTab)
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
+      this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
       await this.updateTableSource();
     }
   }
@@ -261,7 +261,6 @@ export class DishesComponent implements OnInit {
 
   async disableImpossibleTabs() {
 
-    console.log('-------------disable impossible ----------- wewekindex: ' , this.calendarWeekIndex);
     if (this.calendarWeekIndex === 0) {
       let currentDate = Temporal.Now.plainDateISO();
       /*
@@ -284,39 +283,20 @@ export class DishesComponent implements OnInit {
         this.weekdayProperty = this.getWeekdayPropertyFromIndex(
           this.currentTab
         );
-
         this.maxPossibleTabIndex = this.currentTab;
-        console.log('maxpossible tab: ', this.maxPossibleTabIndex);
-        this.getNextEnabledTab();
         await this.updateTableSource();
         // the monday is in the past, disable every tab before the current tab
       } else if (isMondayInThePast === 1) {
         this.weekdayProperty = this.getWeekdayPropertyFromIndex(
           this.currentTab
         );
-
         this.maxPossibleTabIndex = this.currentTab;
-        console.log('maxpossible tab: ', this.maxPossibleTabIndex);
-        this.getNextEnabledTab();
         await this.updateTableSource();
       }
-    } else {
-      // s.maxPossibleTabIndex = 0;
     }
   }
 
   parseToTabIndex(day: number) {
     return day - 1;
-  }
-
-  // when going back to the first week, this can cause a bug:
-  //2nd week on thursday tab -> go to 1st week -> thursday tab is still open even if deactivated
-  getNextEnabledTab() {
-    if (this.calendarWeekIndex === 0) {
-      console.log('the current tab should be: ', this.maxPossibleTabIndex);
-      this.currentTab = this.maxPossibleTabIndex;
-      this.tabGroup.selectedIndex = this.currentTab;
-      console.log('selected-index', this.tabGroup.selectedIndex);
-    }
   }
 }
