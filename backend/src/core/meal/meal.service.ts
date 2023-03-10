@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meal } from '../../data/entitites/meal.entity';
 import { FindManyOptions, FindOneOptions, FindOptionsWhere, MoreThan, Repository } from 'typeorm';
@@ -9,13 +9,20 @@ import PlainDateTime = Temporal.PlainDateTime;
 import PlainDate = Temporal.PlainDate;
 import { MealTemplate } from 'src/data/entitites/meal-template.entity';
 import { DefaultValues } from 'src/data/entitites/default-values.entity';
+import { Order } from 'src/data/entitites/order.entity';
+import { OrderMonth } from 'src/data/entitites/order-month.entity';
+import { OrderService } from 'src/core/order/order.service'
+import { AuthUser } from 'src/auth/models/AuthUser';
+import { OrderOptions } from '../order/options-models/order.options';
 
 @Injectable()
 export class MealService {
   constructor(
       @InjectRepository(Meal) private mealRepository: Repository<Meal>, 
       @InjectRepository(MealTemplate) private mealTemplateRepository: Repository<MealTemplate>,
-      @InjectRepository(DefaultValues) private defaultValuesRepository: Repository<DefaultValues>
+      @InjectRepository(DefaultValues) private defaultValuesRepository: Repository<DefaultValues>,
+      @InjectRepository(Order) private orderRepository: Repository<Order>,
+      @InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>
     ) {
   }
 
@@ -86,11 +93,52 @@ export class MealService {
     return this.mealRepository.save(meal);
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(id: string, user: AuthUser): Promise<void> {
     const meal = await this.get(id);
-    // Could possibly add to remove relational order
+    // Get all orders with this mealId
+    const options: FindOneOptions<Order> = {
+      where: {
+        meal: {
+          id: id
+        }
+      },
+      relations: {
+        profile: true,
+        orderMonth: true,
+        meal: true,
+      }
+    };
+    const relevantOrders = await this.orderRepository.find(options);
+
+    const time = Temporal.Now.plainDateTimeISO();
+    for (const order of relevantOrders) {
+      await this.deleteOrder(time, order, user)
+    }
+
+    console.log('found relevant orders: ', relevantOrders);
+    // await this.orderRepository.remove(relevantOrders)
     await this.mealRepository.remove(meal);
   }
+
+
+  // TODO: find a better way to implement this
+  async deleteOrder(time: PlainDateTime, order: Order, user: AuthUser, options?: OrderOptions): Promise<Order> {
+    const orderMonth = order.orderMonth;
+    const meal = order.meal;
+
+    // only decrease total if order is not for guest
+    if (!order.guestName) {
+      orderMonth.total -= meal.total;
+    }
+
+    meal.orderCount -= 1;
+
+    const promises = [this.orderMonthRepository.save(orderMonth), this.mealRepository.save(meal)];
+    await Promise.all(promises);
+
+    return this.orderRepository.remove(order);
+  }
+  
 
   private async getMinDateFrom(time: PlainDateTime): Promise<string> {
     const options: FindOptionsWhere<Meal> = {
