@@ -9,7 +9,7 @@
     </button>
   </div>
   <div class="dishes--week-tabs-container">
-    <mat-tab-group (selectedTabChange)="onTabChange($event)" animationDuration="0ms" [selectedIndex]="currentTab">
+    <mat-tab-group #tabs (selectedTabChange)="onTabChange($event)" animationDuration="0ms" [selectedIndex]="currentTab">
       <mat-tab label="Montag" [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex &gt; 0">
         <table id="table-monday" mat-table [dataSource]="dataSource" class="bg-background">
           <ng-container matColumnDef="title">

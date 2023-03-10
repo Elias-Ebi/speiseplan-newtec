@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Temporal } from '@js-temporal/polyfill';
 import { MonthNamePipe } from '../../shared/pipes/month-name.pipe';
 import { JsonPipe } from '@angular/common';
 import { WeekdayNamePipe } from '../../shared/pipes/weekday-name.pipe';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabsModule, MatTabGroup } from '@angular/material/tabs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -51,8 +51,9 @@ interface Category {
   styleUrls: ['./dishes.component.scss'],
 })
 export class DishesComponent implements OnInit {
-  MAX_FOLLOWING_WEEKS = 2;
+  @ViewChild('tabs', {static: false}) tabGroup!: MatTabGroup;
 
+  MAX_FOLLOWING_WEEKS = 2;
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
   dataSource: MatTableDataSource<Meal>;
   weekdayProperty: string;
@@ -194,9 +195,11 @@ export class DishesComponent implements OnInit {
   }
 
   async onTabChange(event: any) {
-    let index: number = Number.parseInt(event.index);
-    this.currentTab = index;
+    console.log('ON TAB CHANGE (before): ', this.currentTab)
+    let eventIndex: number = Number.parseInt(event.index);
+    this.currentTab = eventIndex;
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
+    console.log('ON TAB CHANGE (after): ', this.currentTab)
     await this.updateTableSource();
   }
 
@@ -205,12 +208,12 @@ export class DishesComponent implements OnInit {
       let followingWeekDate = this.currentlyDisplayedWeek.friday.date.add({
         days: 7,
       });
+      this.calendarWeekIndex++;
       this.currentlyDisplayedWeek = await this.getCalenderWeek(
         followingWeekDate
       );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
       await this.updateTableSource();
-      this.calendarWeekIndex++;
     }
   }
 
@@ -219,12 +222,13 @@ export class DishesComponent implements OnInit {
       let precedingWeekDate = this.currentlyDisplayedWeek.friday.date.subtract({
         days: 7,
       });
+      this.calendarWeekIndex--;
       this.currentlyDisplayedWeek = await this.getCalenderWeek(
         precedingWeekDate
       );
+      console.log('this tab will be opended: ', this.currentTab)
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
       await this.updateTableSource();
-      this.calendarWeekIndex--;
     }
   }
 
@@ -256,19 +260,27 @@ export class DishesComponent implements OnInit {
   }
 
   async disableImpossibleTabs() {
+
+    console.log('-------------disable impossible ----------- wewekindex: ' , this.calendarWeekIndex);
     if (this.calendarWeekIndex === 0) {
       let currentDate = Temporal.Now.plainDateISO();
-      const tmp = Temporal.PlainDate.compare(
+      /*
+      compare(one, two)
+        −1 if one comes before two (this can never be the case here)
+        0 if one and two are the same date when projected into the ISO 8601 calendar
+        1 if one comes after two
+      */
+      const isMondayInThePast = Temporal.PlainDate.compare(
         currentDate,
         this.currentlyDisplayedWeek.monday.date
       );
       // to consider: sunday == 0, mondaytab = 0
       const currentIndex = this.parseToTabIndex(new Date().getDay());
       if (currentIndex < 4) {
-        // this.currentTab = currentIndex + 1;
+        this.currentTab = currentIndex + 1;
       }
-      // dates are the same
-      if (tmp === 0) {
+      // dates are the same, it is the current monday. disable monday, as it is not possible to make a new dish here
+      if (isMondayInThePast === 0) {
         this.weekdayProperty = this.getWeekdayPropertyFromIndex(
           this.currentTab
         );
@@ -277,8 +289,8 @@ export class DishesComponent implements OnInit {
         console.log('maxpossible tab: ', this.maxPossibleTabIndex);
         this.getNextEnabledTab();
         await this.updateTableSource();
-        // the monday is in the past
-      } else if (tmp === 1) {
+        // the monday is in the past, disable every tab before the current tab
+      } else if (isMondayInThePast === 1) {
         this.weekdayProperty = this.getWeekdayPropertyFromIndex(
           this.currentTab
         );
@@ -287,10 +299,9 @@ export class DishesComponent implements OnInit {
         console.log('maxpossible tab: ', this.maxPossibleTabIndex);
         this.getNextEnabledTab();
         await this.updateTableSource();
-        // this monday is in the furure
-      } else {
-        // this.maxPossibleTabIndex = 0;
       }
+    } else {
+      // s.maxPossibleTabIndex = 0;
     }
   }
 
@@ -302,6 +313,10 @@ export class DishesComponent implements OnInit {
   //2nd week on thursday tab -> go to 1st week -> thursday tab is still open even if deactivated
   getNextEnabledTab() {
     if (this.calendarWeekIndex === 0) {
+      console.log('the current tab should be: ', this.maxPossibleTabIndex);
+      this.currentTab = this.maxPossibleTabIndex;
+      this.tabGroup.selectedIndex = this.currentTab;
+      console.log('selected-index', this.tabGroup.selectedIndex);
     }
   }
 }
