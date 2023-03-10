@@ -51,7 +51,7 @@ interface Category {
   styleUrls: ['./dishes.component.scss'],
 })
 export class DishesComponent implements OnInit {
-  @ViewChild('tabs', {static: false}) tabGroup!: MatTabGroup;
+  @ViewChild('tabs', { static: false }) tabGroup!: MatTabGroup;
 
   MAX_FOLLOWING_WEEKS = 2;
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
@@ -195,11 +195,9 @@ export class DishesComponent implements OnInit {
   }
 
   async onTabChange(event: any) {
-    console.log('ON TAB CHANGE (before): ', this.currentTab)
     let eventIndex: number = Number.parseInt(event.index);
     this.currentTab = eventIndex;
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-    console.log('ON TAB CHANGE (after): ', this.currentTab)
     await this.updateTableSource();
   }
 
@@ -260,7 +258,6 @@ export class DishesComponent implements OnInit {
   }
 
   async disableImpossibleTabs() {
-
     if (this.calendarWeekIndex === 0) {
       let currentDate = Temporal.Now.plainDateISO();
       /*

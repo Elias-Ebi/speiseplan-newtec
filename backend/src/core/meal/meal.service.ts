@@ -114,9 +114,6 @@ export class MealService {
     for (const order of relevantOrders) {
       await this.deleteOrder(time, order, user)
     }
-
-    console.log('found relevant orders: ', relevantOrders);
-    // await this.orderRepository.remove(relevantOrders)
     await this.mealRepository.remove(meal);
   }
 
