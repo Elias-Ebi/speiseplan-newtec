@@ -112,9 +112,8 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async getFilteredOrders(filter: any): Promise<Order[]> {
-    const body = {filter: filter}
-    const response = this.httpClient.post<Order[]>(`${environment.apiUrl}/orders/filter`, body)
+  async getAllChangeableOrders(): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/admin/changeable`);
     return lastValueFrom(response);
   }
 }

@@ -46,11 +46,11 @@ export class OrderController {
     return this.orderService.getChangeable(time, user.email);
   }
 
-  @Post('filter')
+  @Get('admin/changeable')
   @AdminOnly()
-  async filterOrders(@Request() req): Promise<Order[]> {
-    const filter = req.body.filter;
-    return this.orderService.getFilteredOrders(filter);
+  async getAllChangeableAdmin() {
+    const time = Temporal.Now.plainDateTimeISO();
+    return this.orderService.getAllChangeableAdmin(time);
   }
 
   @Get('date/:date')
