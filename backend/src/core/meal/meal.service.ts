@@ -5,24 +5,24 @@ import { FindManyOptions, FindOneOptions, FindOptionsWhere, MoreThan, Repository
 import { categoryExists } from '../../data/other-models/category.type';
 import { Temporal } from '@js-temporal/polyfill';
 import { UpdateMealOptions } from './options-models/update-meal.options';
-import PlainDateTime = Temporal.PlainDateTime;
-import PlainDate = Temporal.PlainDate;
 import { MealTemplate } from 'src/data/entitites/meal-template.entity';
 import { DefaultValues } from 'src/data/entitites/default-values.entity';
 import { Order } from 'src/data/entitites/order.entity';
 import { OrderMonth } from 'src/data/entitites/order-month.entity';
 import { AuthUser } from 'src/auth/models/AuthUser';
 import { OrderOptions } from '../order/options-models/order.options';
+import PlainDateTime = Temporal.PlainDateTime;
+import PlainDate = Temporal.PlainDate;
 
 @Injectable()
 export class MealService {
   constructor(
-      @InjectRepository(Meal) private mealRepository: Repository<Meal>,
-      @InjectRepository(MealTemplate) private mealTemplateRepository: Repository<MealTemplate>,
-      @InjectRepository(DefaultValues) private defaultValuesRepository: Repository<DefaultValues>,
-      @InjectRepository(Order) private orderRepository: Repository<Order>,
-      @InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>
-    ) {
+    @InjectRepository(Meal) private mealRepository: Repository<Meal>,
+    @InjectRepository(MealTemplate) private mealTemplateRepository: Repository<MealTemplate>,
+    @InjectRepository(DefaultValues) private defaultValuesRepository: Repository<DefaultValues>,
+    @InjectRepository(Order) private orderRepository: Repository<Order>,
+    @InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>
+  ) {
   }
 
   async get(id: string): Promise<Meal> {
@@ -193,14 +193,16 @@ export class MealService {
 
   async getDefaultValues(): Promise<DefaultValues> {
     const options: FindOneOptions<DefaultValues> = {
-      where: {},
+      where: {}
     };
-    const result = await this.defaultValuesRepository.find(options);
-    if (result.length === 0) {
+
+    const result = await this.defaultValuesRepository.findOne(options);
+
+    if (!result) {
       return await this.defaultValuesRepository.save(new DefaultValues());
-    } else {
-      return result[0];
     }
+
+    return result;
   }
 
 }
