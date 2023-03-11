@@ -1,0 +1,78 @@
+<div class="dialog-container list-container-wide choose-dish-container">
+  <h2>Gericht auswählen</h2>
+
+  <div class="textfield-container">
+    <mat-form-field>
+      <mat-label>Suchen</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input (keyup)="applySearch($event)" matInput #searchInput>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Kategoriefilter</mat-label>
+      <mat-select (selectionChange)="applyFilter($event)" placeholder="Kategorie wählen" #test>
+        <mat-option>Kein Filter</mat-option>
+        <mat-option *ngFor="let category of categories" [value]="category.value">
+          {{category.view}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef>
+          <h2>Gericht</h2>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.name}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>
+          <h2>Beschreibung</h2>
+        </th>
+        <td mat-cell *matCellDef="let element">{{element.description}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>
+          <h2>Kategorie</h2></th>
+        <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>
+          <h2>Aktion</h2>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button class="icon-button" (click)="onClickDelete(element)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedData"></tr>
+      <tr
+        (click)="clickedRows.has(row) ? clickedRows.delete(row) : clickedRows.size < 1 ? clickedRows.add(row) : null"
+        [class.is-selected]="clickedRows.has(row)"
+        mat-row *matRowDef="let row; columns: displayedData;">
+      </tr>
+      <tr *matNoDataRow>
+        <td class="no-data">
+          {{searchInput.value.length == 0 && getCategoryView(test.value) == 0 ?
+            "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
+            "Es existiert kein Eintrag mit \""+searchInput.value+"\"" : "Es existiert kein Eintrag mit \""+getCategoryView(test.value)+"\""
+          }}
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[7]"></mat-paginator>
+  </div>
+
+  <div class="button-group">
+    <button mat-stroked-button color="primary" (click)="onClickCancel()">Abbrechen</button>
+    <button mat-flat-button color="primary" (click)="onClickApply(clickedRows)">Bestätigen</button>
+  </div>
+</div>
