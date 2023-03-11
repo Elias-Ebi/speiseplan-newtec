@@ -20,10 +20,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   DateRange,
   MatDatepickerInputEvent,
@@ -137,7 +134,7 @@ export class OrderManagementComponent {
 
   openCancelDialog(element: any) {
     let dialogRef = this.dialog.open(CancelOrderDialogComponent, {
-      data: element,
+      data: element, autoFocus: false
     });
     dialogRef.afterClosed().subscribe(async (result) => {
       await this.updateTable({});
@@ -146,7 +143,7 @@ export class OrderManagementComponent {
 
   openCancelMultipleDialog() {
     let dialogRef = this.dialog.open(CancelMultipleOrdersDialogComponent, {
-      data: this.checkedOrders,
+      data: this.checkedOrders, autoFocus: false
     });
     dialogRef.afterClosed().subscribe(async (result) => {
       await this.updateTable({});
@@ -263,9 +260,43 @@ export class OrderManagementComponent {
   }
 
   async updateTable(filter: any) {
-    this.orders = await this.apiService.getFilteredOrders(filter);
-    this.dataSource = new MatTableDataSource<any>(this.orders);
-    this.dataSource.paginator = this.paginator;
+    if (JSON.stringify(filter) === '{}') {
+      this.orders = await this.apiService.getFilteredOrders(filter);
+      this.dataSource = new MatTableDataSource<any>(this.orders);
+      this.dataSource.paginator = this.paginator;
+    } else if (filter) {
+      this.dataSource.filterPredicate = (data: any, filter: string) =>{
+        const dataStrBuyer = data.profile.name.toLowerCase();
+        const dataStrGuestname = data.guestName? data.guestName.toLowerCase(): '';
+        const dataStrMeal = data.meal.name.toLowerCase();
+        const dataStrDate = data.date;
+        const filterArray = filter.split('|');
+        const transformedFilterBuyer = filterArray[0].trim().toLowerCase();
+        const transformedFilterGuestName = filterArray[1].trim().toLowerCase()
+        const transformedFilterMeal = filterArray[2].trim().toLowerCase()
+        const transformedFilterDateStart = filterArray[3];
+        const transformedFilterDateEnd = filterArray[4];
+
+        let dateFilter = true;
+        if(transformedFilterDateStart && !transformedFilterDateEnd) {
+          dateFilter = dataStrDate === transformedFilterDateStart
+        } else if (transformedFilterDateStart && transformedFilterDateEnd) {
+          dateFilter = new Date(dataStrDate) > new Date(transformedFilterDateStart) && new Date(dataStrDate) < new Date(transformedFilterDateEnd)
+        }
+
+        const textFilter = dataStrBuyer.indexOf(transformedFilterBuyer) != -1 
+        && dataStrGuestname.indexOf(transformedFilterGuestName) != -1
+        && dataStrMeal.indexOf(transformedFilterMeal) != -1;
+
+        return textFilter && dateFilter;
+      }
+
+      this.dataSource.filter = this.buildFilterString(this.filter);
+    } 
+  }
+
+  buildFilterString(filter: any) {
+    return filter.buyerFilter + '|' + filter.guestFilter + '|' + filter.mealFilter + '|' + filter.dateFilter.startDate + '|' + filter.dateFilter.endDate;
   }
 
   checkOrders(checked: boolean, target: Order) {
