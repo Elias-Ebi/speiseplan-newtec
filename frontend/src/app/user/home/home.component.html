@@ -84,7 +84,7 @@
         <ng-container *ngFor="let orderDay of openOrdersDays; let last = last">
           <div class="grid align-center">
             <!-- Date -->
-            <p class="span-3 clr-primary link" routerLink="/bestellen">
+            <p (click)="navigateToOrderPage(orderDay.date)" class="span-3 clr-primary link">
               {{orderDay.date | fullDate}}
             </p>
 

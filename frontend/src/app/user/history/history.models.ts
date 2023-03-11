@@ -5,6 +5,7 @@ export interface HistoryOrderMonth {
   date: PlainDate;
   days: HistoryOrderDay[];
   total: number;
+  paid: boolean;
 }
 
 export interface HistoryOrderDay {

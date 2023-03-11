@@ -15,8 +15,9 @@ import { MatDialog } from "@angular/material/dialog";
 import { GuestOrderDialogComponent } from "./guest-order-dialog/guest-order-dialog.component";
 import * as _ from "lodash";
 import { GuestOrderDialogValues, OrderDay, OrderMeal } from "./order.models";
-import { lastValueFrom } from "rxjs";
+import { firstValueFrom, lastValueFrom } from "rxjs";
 import { OrderService } from "../shared/services/order.service";
+import { StateService } from "../../shared/services/state.service";
 import PlainDate = Temporal.PlainDate;
 
 @Component({
@@ -28,13 +29,15 @@ import PlainDate = Temporal.PlainDate;
 })
 export class OrderComponent implements OnInit {
   orderDays: OrderDay[] = [];
+  selectedTabIndex: number = 0;
   private dataMap = new Map<string, OrderDay>();
 
   constructor(
     private dialog: MatDialog,
     private apiService: ApiService,
     private categoryService: CategoryService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private stateService: StateService
   ) {
   }
 
@@ -55,11 +58,17 @@ export class OrderComponent implements OnInit {
       this.dataMap.set(day, {
         date: Temporal.PlainDate.from(day),
         orderMeals: this.transformOrderCards(meals, userOrders),
-        guestOrders: this.transformGuestOrders(orders)
+        guestOrders: this.transformGuestOrders(orders),
+        anyOrders: !!orders.length,
       });
     })
 
     this.orderDays = this.generateOrderDaysArray();
+
+    const selectedDate = await firstValueFrom(this.stateService.selectedOrderDate);
+    if (selectedDate) {
+      this.selectedTabIndex = this.orderDays.findIndex((val) => val.date.toString() === selectedDate) || 0;
+    }
   }
 
   openGuestOrderDialog(date: PlainDate): void {
@@ -133,6 +142,8 @@ export class OrderComponent implements OnInit {
 
     orderDay.orderMeals = this.transformOrderCards(meals, userOrders);
     orderDay.guestOrders = this.transformGuestOrders(orders);
+
+    orderDay.anyOrders = !!orders.length;
 
     this.orderDays = this.generateOrderDaysArray();
   }
