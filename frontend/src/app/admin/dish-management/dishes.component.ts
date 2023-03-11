@@ -11,7 +11,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChooseDishDialogComponent } from './choose-dish-dialog/choose-dish-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
-import { MealTemplate } from 'src/app/shared/models/mealtemplate';
+import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Meal } from 'src/app/shared/models/meal';
 import {

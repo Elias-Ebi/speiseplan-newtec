@@ -7,8 +7,8 @@ import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import PlainDate = Temporal.PlainDate;
-import { MealTemplate } from '../models/mealtemplate';
-import { DefaultValues } from '../models/defaultvalues';
+import { MealTemplate } from '../models/meal-template';
+import { DefaultValues } from '../models/default-values';
 
 @Injectable({
   providedIn: 'root'

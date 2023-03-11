@@ -12,7 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { MealTemplate } from 'src/app/shared/models/mealtemplate';
+import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { Temporal } from '@js-temporal/polyfill';

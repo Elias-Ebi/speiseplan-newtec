@@ -21,7 +21,7 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MealTemplate } from 'src/app/shared/models/mealtemplate';
+import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
 
 interface Category {
