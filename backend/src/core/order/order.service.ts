@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindManyOptions, FindOneOptions, ILike, LessThan, MoreThan, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository } from 'typeorm';
 import { Order } from '../../data/entitites/order.entity';
 import { AuthUser } from '../../auth/models/AuthUser';
 import { Meal } from '../../data/entitites/meal.entity';
@@ -144,50 +144,13 @@ export class OrderService {
   }
 
 
-  async getFilteredOrders(filter): Promise<Order[]> {
-    const time = Temporal.Now.plainDateTimeISO();
-    let whereObj;
-    if (JSON.stringify(filter) === '{}') {
-      whereObj = {
-        meal: { 
+  async getAllChangeableAdmin(time: PlainDateTime): Promise<Order[]> {
+    const options: FindManyOptions<Order> = {
+      where: {
+        meal: {
           orderable: MoreThan(time.toString())
         }
-      }
-    } else {
-      if (!filter.guestFilter) {
-        whereObj = {
-          profile: {
-            name: ILike(('%' + filter.buyerFilter + '%'))
-          },
-          meal: {
-            name: ILike(('%' + filter.mealFilter + '%')),
-            orderable: MoreThan(time.toString())
-          },
-          date: null,
-        };
-      } else {
-        whereObj = {
-          profile: {
-            name: ILike(('%' + filter.buyerFilter + '%'))
-          },
-          meal: {
-            name: ILike(('%' + filter.mealFilter + '%')),
-            orderable: MoreThan(time.toString())
-          },
-          guestName: ILike(('%' + filter.guestFilter + '%')),
-          date: null,
-        };
-      }
-
-      if(filter.dateFilter.startDate && !filter.dateFilter.endDate) {
-        whereObj.date =  filter.dateFilter.startDate
-      } else if (filter.dateFilter.startDate && filter.dateFilter.endDate) {
-        whereObj.date = Between(filter.dateFilter.startDate, filter.dateFilter.endDate)
-      }
-    }
-    
-    const options: FindOneOptions<Order> = {
-      where: whereObj,
+      },
       relations: {
         profile: true,
         meal: true

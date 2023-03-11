@@ -11,9 +11,9 @@
       <div class="filter-form-fields">
         <mat-form-field>
           <mat-label>Besteller</mat-label>
-          <input (keyup)="filterOrdersByBuyer($event)" [(ngModel)]="filter.buyerFilter" matInput/>
+          <input (keyup)="filterData()" [(ngModel)]="filter.buyerFilter" matInput/>
           <button
-            (click)="removeFilterBuyer()"
+            (click)="removeFilter('buyerFilter')"
             *ngIf="filter.buyerFilter"
             mat-icon-button
             matSuffix
@@ -24,9 +24,9 @@
 
         <mat-form-field>
           <mat-label>Gast</mat-label>
-          <input (keyup)="filterOrdersByGuest($event)" [(ngModel)]="filter.guestFilter" matInput/>
+          <input (keyup)="filterData()" [(ngModel)]="filter.guestFilter" matInput/>
           <button
-            (click)="removeFilterGuest()"
+            (click)="removeFilter('guestFilter')"
             *ngIf="filter.guestFilter"
             mat-icon-button
             matSuffix
@@ -37,9 +37,9 @@
 
         <mat-form-field>
           <mat-label>Menü</mat-label>
-          <input (keyup)="filterOrdersByMenu($event)" [(ngModel)]="filter.mealFilter" matInput/>
+          <input (keyup)="filterData()" [(ngModel)]="filter.mealFilter" matInput/>
           <button
-            (click)="removeFilterMenu()" 
+            (click)="removeFilter('mealFilter')"
             *ngIf="filter.mealFilter"
             mat-icon-button
             matSuffix
@@ -59,17 +59,25 @@
       >
         Datumsspanne
       </mat-slide-toggle>
-        
-      <mat-calendar  *ngIf="!useDateInterval" [selected]="selectedDate" (selectedChange)="filterOrdersByDate($event)"> </mat-calendar>
-      <mat-calendar  *ngIf="useDateInterval" 
-      [selected]="selectedRangeValue"
-      (selectedChange)="selectedChange($event)"> 
-    </mat-calendar>
-    <div *ngIf="filter.dateFilter.startDate" (click)="removeFilterDate()" class="icon-with-text filter-button">
-      <mat-icon>close</mat-icon>
-      <p>Datumsfilter entfernen</p>
-    </div>
-    
+
+      <mat-calendar
+        *ngIf="!useDateInterval" [(selected)]="selectedDate"
+        (selectedChange)="filterOrdersByDate()"
+      >
+      </mat-calendar>
+
+      <mat-calendar
+        *ngIf="useDateInterval"
+        [selected]="selectedDateRange"
+        (selectedChange)="selectedChange($event)"
+      >
+      </mat-calendar>
+
+      <div *ngIf="selectedDate || selectedDateRange" (click)="removeDateFilter()" class="icon-with-text filter-button">
+        <mat-icon>close</mat-icon>
+        <p>Datumsfilter entfernen</p>
+      </div>
+
     </div>
   </mat-drawer>
 
@@ -92,7 +100,8 @@
             Mehrere Stornieren
           </mat-slide-toggle>
 
-          <button *ngIf="editMultipleOrders" (click)="openCancelMultipleDialog()" [disabled]="checkedOrders.length === 0" [@fadeInOut] color="primary" mat-flat-button>
+          <button *ngIf="editMultipleOrders" (click)="openCancelMultipleDialog()"
+                  [disabled]="checkedOrders.length === 0" color="primary" mat-flat-button>
             <mat-icon>edit</mat-icon>
             Markierte stornieren
           </button>
@@ -105,7 +114,7 @@
           <th *matHeaderCellDef mat-header-cell>
             <h2>Datum</h2>
           </th>
-          <td *matCellDef="let element" mat-cell>{{  temporal.PlainDate.from(element.date) | fullDate}}</td>
+          <td *matCellDef="let element" mat-cell>{{temporal.PlainDate.from(element.date) | fullDate}}</td>
         </ng-container>
 
         <!-- Buyer Column -->
