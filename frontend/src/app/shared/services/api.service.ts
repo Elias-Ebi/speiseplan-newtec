@@ -138,20 +138,14 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async setDefaultValues(defaultValues: DefaultValues): Promise<DefaultValues> {
-    const response = this.httpClient.post<DefaultValues>(`${environment.apiUrl}/meals/default-values`, defaultValues);
-    return lastValueFrom(response);
-  }
-
   async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
     const body = { orders: orders }
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delete/admin/`, body)
     return lastValueFrom(response);
   }
 
-  async getFilteredOrders(filter: any): Promise<Order[]> {
-    const body = {filter: filter}
-    const response = this.httpClient.post<Order[]>(`${environment.apiUrl}/orders/filter`, body)
+  async getAllChangeableOrders(): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/admin/changeable`);
     return lastValueFrom(response);
   }
 }

@@ -41,7 +41,7 @@ export class CalendarWeekDay {
 
     constructor(date: Temporal.PlainDate){
         this.date = date;
-        //TODO:loadsaved dishes for this day
+        //TODO:loadsaved dish-management for this day
         this.dishes = [];
     }
 }

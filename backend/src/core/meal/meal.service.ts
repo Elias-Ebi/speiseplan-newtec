@@ -17,7 +17,7 @@ import { OrderOptions } from '../order/options-models/order.options';
 @Injectable()
 export class MealService {
   constructor(
-      @InjectRepository(Meal) private mealRepository: Repository<Meal>, 
+      @InjectRepository(Meal) private mealRepository: Repository<Meal>,
       @InjectRepository(MealTemplate) private mealTemplateRepository: Repository<MealTemplate>,
       @InjectRepository(DefaultValues) private defaultValuesRepository: Repository<DefaultValues>,
       @InjectRepository(Order) private orderRepository: Repository<Order>,
@@ -70,6 +70,7 @@ export class MealService {
         orderable: MoreThan(time.toString())
       }
     };
+
     return this.mealRepository.find(options);
   }
 
@@ -134,7 +135,7 @@ export class MealService {
 
     return this.orderRepository.remove(order);
   }
-  
+
 
   private async getMinDateFrom(time: PlainDateTime): Promise<string> {
     const options: FindOptionsWhere<Meal> = {

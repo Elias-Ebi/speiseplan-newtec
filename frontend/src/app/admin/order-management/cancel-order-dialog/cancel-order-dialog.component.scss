@@ -1,13 +1,6 @@
-.dialog-btn-container {
+.button-container {
   margin-left: auto;
   display: flex;
   column-gap: 10px;
   justify-content: space-between
 }
-
-.secondary-btn {
-  color: var(--clrPrimary) !important;
-  background-color: var(--clrBackground) !important;
-  border: 2px solid var(--clrPrimary) !important;
-}
-
