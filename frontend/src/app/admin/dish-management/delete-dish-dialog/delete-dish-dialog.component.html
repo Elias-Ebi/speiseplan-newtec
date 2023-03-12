@@ -1,0 +1,12 @@
+<div class="dialog-container list-container-wide">
+    <h2>Gericht "{{data.name}}" löschen?</h2>
+
+    <p>
+      Durch das Löschen des Gerichts wird es vollständig mit allen zugehörigen Bestellungen aus der Anwendung entfernt.
+    </p>
+
+    <div class="button-container">
+      <button (click)="closeDialog(false)" color="primary" mat-stroked-button>Abbrechen</button>
+      <button (click)="closeDialog(true)" color="primary" mat-flat-button>Löschen</button>
+    </div>
+</div>
