@@ -15,6 +15,10 @@ import { AdminOnly } from '../../auth/decorators/admin-only.decorator';
 import { Temporal } from '@js-temporal/polyfill';
 import { UpdateMealOptions } from './options-models/update-meal.options';
 import PlainDate = Temporal.PlainDate;
+import { MealTemplate } from 'src/data/entitites/meal-template.entity';
+import { DefaultValues } from 'src/data/entitites/default-values.entity';
+import { AuthUser } from 'src/auth/models/AuthUser';
+import { Request } from '@nestjs/common/decorators';
 
 @Controller('meals')
 export class MealController {
@@ -39,6 +43,19 @@ export class MealController {
     return await this.mealService.getMealsOn(requestedDate);
   }
 
+  @Post('default-values')
+  @AdminOnly()
+  async setDefaultValues(@Body() values: DefaultValues): Promise<DefaultValues> {
+    return await this.mealService.setDefaultValues(values);
+  }
+
+
+  @Get('default-values')
+  @AdminOnly()
+  async getDefaultValues(): Promise<DefaultValues> {
+    return await this.mealService.getDefaultValues();
+  }
+
   @Post()
   @AdminOnly()
   async addMeal(@Body() meal: Meal): Promise<Meal> {
@@ -61,7 +78,25 @@ export class MealController {
 
   @Delete(':id')
   @AdminOnly()
-  async deleteMeal(@Param('id') id: string): Promise<void> {
-    return await this.mealService.delete(id);
+  async deleteMeal(@Param('id') id: string, @Request() req): Promise<void> {
+    const user = req.user as AuthUser;
+    return await this.mealService.delete(id, user);
+  }
+
+  @Put('mealTemplates')
+  @AdminOnly()
+  async addMealTemplate(@Body() mealTemplate: MealTemplate): Promise<MealTemplate>{
+    return await this.mealService.createTemplate(mealTemplate);
+  }
+
+  @Get('mealTemplates')
+  async getMealTemplates(): Promise<MealTemplate[]> {
+    return await this.mealService.getTemplates();
+  }
+
+  @Delete('mealTemplates/remove/:id')
+  @AdminOnly()
+  async deleteMealTemplate(@Param('id') id: string): Promise<void> {
+    return await this.mealService.deleteTemplate(id);
   }
 }

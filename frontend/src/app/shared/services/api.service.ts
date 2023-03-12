@@ -7,6 +7,8 @@ import { Order } from "../models/order";
 import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import PlainDate = Temporal.PlainDate;
+import { MealTemplate } from '../models/meal-template';
+import { DefaultValues } from '../models/default-values';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +40,11 @@ export class ApiService {
 
   async getMealsOn(date: PlainDate): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/date/${date.toString()}`);
+    return lastValueFrom(response);
+  }
+
+  async deleteMeal(id: string): Promise<Meal> {
+    const response = this.httpClient.delete<Meal>(`${environment.apiUrl}/meals/${id}`);
     return lastValueFrom(response);
   }
 
@@ -103,6 +110,31 @@ export class ApiService {
 
   async getHistory(): Promise<OrderMonth[]> {
     const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/history`);
+    return lastValueFrom(response);
+  }
+
+  async getMealTemplate(): Promise<MealTemplate[]> {
+    const response = this.httpClient.get<MealTemplate[]>(`${environment.apiUrl}/meals/mealTemplates`);
+    return lastValueFrom(response);
+  }
+
+  async putMealTemplate(data: any): Promise<MealTemplate> {
+    const response = this.httpClient.put<MealTemplate>(`${environment.apiUrl}/meals/mealTemplates`, data);
+    return lastValueFrom(response);
+  }
+
+  async deleteMealTemplate(id: string): Promise<MealTemplate> {
+    const response = this.httpClient.delete<MealTemplate>(`${environment.apiUrl}/meals/mealTemplates/remove/${id}`);
+    return lastValueFrom(response);
+  }
+
+  async addMeal(meal: Meal): Promise<Meal> {
+    const response = this.httpClient.post<Meal>(`${environment.apiUrl}/meals`, meal);
+    return lastValueFrom(response);
+  }
+
+  async getDefaultValues(): Promise<DefaultValues> {
+    const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);
   }
 

@@ -16,13 +16,13 @@ import { MatTabsModule } from "@angular/material/tabs";
 import PlainDate = Temporal.PlainDate;
 
 @Component({
-  selector: 'app-monthoverview',
+  selector: 'app-month-overview',
   standalone: true,
   imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule, MatTabsModule],
-  templateUrl: './monthoverview.component.html',
-  styleUrls: ['./monthoverview.component.scss']
+  templateUrl: './month-overview.component.html',
+  styleUrls: ['./month-overview.component.scss']
 })
-export class MonthoverviewComponent implements OnInit {
+export class MonthOverviewComponent implements OnInit {
 
   dataMap = new Map<PlainDate, OrderMonth[]>();
   lastSixMonths = this.dateService.getLastSixMonths();
