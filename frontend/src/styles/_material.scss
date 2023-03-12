@@ -20,3 +20,8 @@
   border-radius: 2.5rem;
   padding: 1rem;
 }
+
+.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+  color: white;
+  background-color: var(--clrPrimary);
+}
