@@ -1,5 +1,6 @@
 import { Temporal } from "@js-temporal/polyfill";
 import PlainDate = Temporal.PlainDate;
+import PlainYearMonth = Temporal.PlainYearMonth;
 
 export function groupBy<T>(arr: T[], key: keyof T): Map<string, T[]> {
   const grouped = new Map<string, T[]>();
@@ -24,4 +25,8 @@ export function sortByString(a: string, b: string): number {
 
 export function sortByDate(a: PlainDate, b: PlainDate): number {
   return PlainDate.compare(a, b);
+}
+
+export function sortByYearMonth(a: PlainYearMonth, b: PlainYearMonth): number {
+  return PlainYearMonth.compare(a, b);
 }
