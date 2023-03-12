@@ -39,6 +39,7 @@ export class HistoryComponent implements OnInit {
         date: PlainDate.from({year: orderMonth.year, month: orderMonth.month, day: 1}),
         days: this.transformOrderDays(orderMonth.orders),
         total: orderMonth.total,
+        paid: orderMonth.paid,
       };
     }).sort((a, b) => sortByDate(a.date, b.date)).reverse();
   }

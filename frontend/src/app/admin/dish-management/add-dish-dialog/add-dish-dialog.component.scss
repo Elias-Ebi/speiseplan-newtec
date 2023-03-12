@@ -1,0 +1,31 @@
+.form {
+  display: grid;
+  gap: 0.25rem;
+
+  .date-time-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+.hint {
+  align-self: center;
+}
+
+.warning {
+  vertical-align: middle;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.dialog-buttons-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+

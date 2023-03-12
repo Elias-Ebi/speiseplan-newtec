@@ -65,6 +65,47 @@ export class OrderService {
     return this.orderRepository.save(order);
   }
 
+  async takeBanditplate(time: PlainDateTime, id: string, user: AuthUser): Promise<Order> {
+    const order = await this.get(id);
+    const orderMonthOld = order.orderMonth;
+    const email = user.email;
+    const meal = order.meal;
+
+    if (!order.isBanditplate) {
+      throw new BadRequestException('Order not Offered as Banditplate.');
+    }
+
+    const orderable = PlainDateTime.from(order.meal.orderable);
+    const delivery = PlainDateTime.from(order.meal.delivery);
+    if (!this.isAfter(time, orderable) && !this.isBefore(time, delivery)) {
+      throw new BadRequestException('Order can not be taken at the moment.');
+    }
+
+    if (order.profile.email === user.email){
+      order.isBanditplate = false;
+      return this.orderRepository.save(order);
+    }
+
+    // Update Order
+    order.profile = await this.authService.getProfile(email);
+    order.isBanditplate = false;
+
+    // updates Totals
+    const month = orderMonthOld.month;
+    const year = orderMonthOld.year;
+
+    const orderMonthNew = await this.orderMonthService.get(month, year, email);
+
+    orderMonthOld.total -= meal.total;
+    orderMonthNew.total += meal.total;
+
+    //Update OrderMonth of Order
+    order.orderMonth = orderMonthNew;
+    await this.orderMonthRepository.save([orderMonthOld, orderMonthNew]);
+
+    return this.orderRepository.save(order);
+  }
+
   async getUnchangeable(time: PlainDateTime, email: string): Promise<Order[]> {
     const options: FindManyOptions<Order> = {
       where: {
@@ -102,6 +143,23 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
+
+  async getAllChangeableAdmin(time: PlainDateTime): Promise<Order[]> {
+    const options: FindManyOptions<Order> = {
+      where: {
+        meal: {
+          orderable: MoreThan(time.toString())
+        }
+      },
+      relations: {
+        profile: true,
+        meal: true
+      }
+    };
+
+    return this.orderRepository.find(options);
+  }
+
   async get(orderId: string): Promise<Order> {
     const options: FindOneOptions<Order> = {
       where: { id: orderId },
@@ -120,6 +178,7 @@ export class OrderService {
 
     return order;
   }
+
 
   async getOn(date: PlainDate, email: string): Promise<Order[]> {
     const options: FindOneOptions<Order> = {
@@ -164,7 +223,6 @@ export class OrderService {
       const additionalText = guestName ? ` for ${guestName}.` : '.';
       throw new BadRequestException(`User already ordered this meal${additionalText}`);
     }
-
     const order = await this.create(email, meal, guestName);
 
     const promises = [];
@@ -180,6 +238,18 @@ export class OrderService {
 
     await Promise.all(promises);
     return order;
+  }
+
+  async deleteMultipleOrdersByAdmin(orders: Order[], user: AuthUser) {
+    try {
+      const time = Temporal.Now.plainDateTimeISO();
+      for (const order of orders) {
+        await this.delete(time, order.id, user)
+      }
+      return true;
+    } catch(erros) {
+      return false;
+    }
   }
 
   async create(email: string, meal: Meal, guestName: string): Promise<Order> {

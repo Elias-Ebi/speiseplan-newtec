@@ -6,34 +6,31 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { Order } from 'src/app/shared/models/order';
 
 @Component({
-  selector: 'app-cancel-order-dialog',
+  selector: 'app-delete-dish-dialog',
   standalone: true,
   imports: [CommonModule, MatIconModule, MatButtonModule, MatInputModule, MatSnackBarModule],
-  templateUrl: './cancel-order-dialog.component.html',
-  styleUrls: ['./cancel-order-dialog.component.scss']
+  templateUrl: './delete-dish-dialog.component.html',
+  styleUrls: ['./delete-dish-dialog.component.scss']
 })
-export class CancelOrderDialogComponent {
+export class DeleteDishDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public order: Order,
-    private dialogRef: MatDialogRef<CancelOrderDialogComponent>,
+    public data:
+      {
+        name: string,
+        id: string,
+      }
+    ,
+    private dialogRef: MatDialogRef<DeleteDishDialogComponent>,
     private snackBar: MatSnackBar,
-    private apiService: ApiService
-  ) {
-  }
+    private api: ApiService
+  ) { }
 
-  async closeDialog(isCancelingOrderConfirmed: boolean) {
-    if (isCancelingOrderConfirmed) {
-      await this.apiService.deleteOrder(this.order.id);
-
-      this.snackBar.open("Bestellung erfolgreich storniert!", "OK", {
-        duration: 3000,
-        panelClass: 'success-snackbar'
-      })
-    }
-    this.dialogRef.close();
+  closeDialog(isDeletingDishConfirmed: boolean) {
+    this.dialogRef.close(
+      {isDeletingDishConfirmed: isDeletingDishConfirmed}
+    );
   }
 }

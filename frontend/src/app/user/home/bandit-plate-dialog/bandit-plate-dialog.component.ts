@@ -5,6 +5,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
 import { HomeUnchangeableOrderDay } from "../home.models";
+import {ApiService} from "../../../shared/services/api.service";
+import {SnackbarService} from "../../../shared/services/snackbar.service";
 
 @Component({
   selector: 'app-bandit-plate-dialog',
@@ -15,10 +17,26 @@ import { HomeUnchangeableOrderDay } from "../home.models";
 })
 export class BanditPlateDialogComponent {
 
-  constructor(@Inject(MAT_DIALOG_DATA) public banditPlateDays: HomeUnchangeableOrderDay[], private dialogRef: MatDialogRef<BanditPlateDialogComponent>) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public banditPlateDays: HomeUnchangeableOrderDay[],
+    private dialogRef: MatDialogRef<BanditPlateDialogComponent>,
+    private apiService: ApiService,
+    private snackbarService: SnackbarService,
+) {
   }
 
   closeDialog() {
     this.dialogRef.close();
+  }
+
+  async takeBandit (orderId: string) {
+    this.apiService.takeBanditPlate(orderId).then(async (order) => {
+
+      this.closeDialog();
+      this.snackbarService.success(`${order.meal.name} erfolgreich übernommen.`);
+    })
+      .catch((err) => {
+        this.snackbarService.error(`Der Räuberteller konnte nicht übernommen werden! ${err.message.message}`);
+      });
   }
 }

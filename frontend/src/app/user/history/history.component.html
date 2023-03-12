@@ -1,9 +1,15 @@
 <ng-container *ngIf="months.length; else noHistoryData">
   <mat-tab-group class="main-content">
-    <mat-tab *ngFor="let month of months" [label]="month.date | monthName">
+    <mat-tab *ngFor="let month of months">
+      <ng-template mat-tab-label>
+        <div class="paidMonth-tab">
+          {{month.date | monthName}}
+          <mat-icon *ngIf="month.paid" class="paid-icon">task_alt</mat-icon>
+        </div>
+      </ng-template>
       <section class="section">
         <div class="section-headline-container">
-          <h2>Bestellungen — {{month.date | monthName}}</h2>
+          <h2>Bestellungen</h2>
           <h2>{{month.total | euro}}</h2>
         </div>
 

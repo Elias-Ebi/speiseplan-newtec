@@ -1,0 +1,38 @@
+.choose-dish-container {
+  width: 100vw;
+}
+
+.textfield-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.table-container {
+  td, th {
+    vertical-align: middle;
+  }
+
+  .mat-mdc-row {
+    cursor: pointer;
+  }
+
+  .mat-mdc-row:hover {
+    background-color: var(--clrLightGrey);
+  }
+}
+
+.is-selected {
+  background-color: var(--clrLightBlue);
+}
+
+.no-data {
+  padding-top: 1rem;
+}
+
+
