@@ -442,7 +442,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:3000/order-month/2/2023",
+							"raw": "http://localhost:3000/order-month/month-overview",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -450,8 +450,7 @@
 							"port": "3000",
 							"path": [
 								"order-month",
-								"2",
-								"2023"
+								"month-overview"
 							]
 						}
 					},

@@ -8,40 +8,37 @@ import { MonthNamePipe } from "../../shared/pipes/month-name.pipe";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { FormsModule } from "@angular/forms";
-import { MatTableModule } from "@angular/material/table";
+import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { ApiService } from "../../shared/services/api.service";
-import { DateService } from "../../shared/services/date.service";
 import { OrderMonth } from "../../shared/models/order-month";
 import { MatTabsModule } from "@angular/material/tabs";
-import PlainDate = Temporal.PlainDate;
+import { MonthOverviewMonth, MonthOverviewOrderMonth } from "./month-overview.models";
+import { groupBy, sortByYearMonth } from "../../user/shared/utils";
+import { MatButtonToggleModule } from "@angular/material/button-toggle";
+import PlainYearMonth = Temporal.PlainYearMonth;
 
 @Component({
   selector: 'app-month-overview',
   standalone: true,
-  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule, MatTabsModule],
+  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule, MatTabsModule, MatButtonToggleModule],
   templateUrl: './month-overview.component.html',
   styleUrls: ['./month-overview.component.scss']
 })
 export class MonthOverviewComponent implements OnInit {
+  months: MonthOverviewMonth[] = [];
+  displayedColumns = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];
+  guestMode = false;
+  private dataMap = new Map<string, MonthOverviewOrderMonth[]>();
 
-  dataMap = new Map<PlainDate, OrderMonth[]>();
-  lastSixMonths = this.dateService.getLastSixMonths();
-  searchTerm: string = "";
-  dataSource: OrderMonth[] = [];
+  constructor(private apiService: ApiService) {
+  }
 
-  constructor(
-    private apiService: ApiService,
-    private dateService: DateService
-  ) {
+  get Headline() {
+    return this.guestMode ? 'Gäste' : 'Mitarbeiter';
   }
 
   async ngOnInit(): Promise<void> {
-    await this.loadMonthoverview();
-    this.setDataSource(0);
-  }
-
-  setDataSource(index: number) {
-    this.dataSource = this.dataMap.get(this.lastSixMonths[index]) || [];
+    await this.generateEmployeeData();
   }
 
   async setPaymentStatus(oderMonth: OrderMonth) {
@@ -49,24 +46,45 @@ export class MonthOverviewComponent implements OnInit {
     oderMonth.paid = updatedOrderMonth.paid;
   }
 
-  async search(month: PlainDate) {
-    if (this.searchTerm != "") {
-      this.dataSource = this.dataMap.get(month)?.filter(item => item.profile.name.toLowerCase().includes(this.searchTerm.toLowerCase())) || [];
-    } else {
-      this.dataSource = this.dataMap.get(month) || [];
+  search(month: MonthOverviewMonth) {
+    month.dataSource.filterPredicate = (data: OrderMonth, filter: string) => {
+      const name = data.profile.name.toLowerCase();
+      const nameFilter = filter.trim().toLowerCase();
+      return name.indexOf(nameFilter) != -1;
     }
+
+    month.dataSource.filter = month.searchTerm;
   }
 
-  private async loadMonthoverview(): Promise<void> {
-    this.lastSixMonths = this.dateService.getLastSixMonths();
-    const requests = this.lastSixMonths.map(month =>
-      this.apiService.getOderMonthsFrom(month)
-    );
-    const results = await Promise.all(requests);
-    for (let i = 0; i < this.lastSixMonths.length; i++) {
-      this.dataMap.set(this.lastSixMonths[i], results[i]);
-    }
+  resetSearchTerm(month: MonthOverviewMonth) {
+    month.searchTerm = '';
+    this.search(month);
   }
 
-  displayedColumns: string[] = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];
+  private async generateEmployeeData() {
+    const orderMonths = await this.apiService.getMonthOverview();
+    const transformedOrderMonths: MonthOverviewOrderMonth[] = orderMonths.map((orderMonth) => {
+      return {
+        ...orderMonth,
+        yearMonth: PlainYearMonth.from({year: orderMonth.year, month: orderMonth.month}).toString(),
+      }
+    })
+
+    this.dataMap = groupBy(transformedOrderMonths, 'yearMonth');
+    this.months = this.generateMonthsArray();
+    this.displayedColumns = ['customer', 'count', 'sum', 'paid_status', 'paid_button'];
+  }
+
+  private generateMonthsArray(): MonthOverviewMonth[] {
+    const months: MonthOverviewMonth[] = Array.from(this.dataMap.entries()).map(([yearMonth, orderMonths]) => {
+      return {
+        yearMonth: PlainYearMonth.from(yearMonth),
+        orderMonths,
+        dataSource: new MatTableDataSource<OrderMonth>(orderMonths),
+        searchTerm: ''
+      }
+    })
+
+    return months.sort((a, b) => sortByYearMonth(a.yearMonth, b.yearMonth)).reverse();
+  }
 }

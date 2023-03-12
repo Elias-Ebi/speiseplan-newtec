@@ -1,45 +1,56 @@
-<mat-tab-group (selectedIndexChange)="setDataSource($event)" class="main-content">
-  <mat-tab *ngFor="let month of lastSixMonths" [label]="month | monthName ">
-    <section class="section">
-      <div class="section-headline-container">
-        <h2>{{month | monthName}}</h2>
+<ng-container *ngIf="months.length; else noData">
+  <mat-tab-group class="main-content">
+    <mat-tab *ngFor="let month of months" [label]="month.yearMonth | monthName">
+      <section class="section">
+        <div class="section-headline-container">
+          <h2>Monatsübersicht - {{Headline}}</h2>
 
-        <div class="headline-buttons">
-          <button color="primary" mat-flat-button>
-            <mat-icon>notifications_active</mat-icon>
-            Zahlungserinnerung
-          </button>
+          <div *ngIf="!guestMode" class="headline-buttons">
+            <button color="primary" disabled mat-flat-button>
+              <mat-icon>notifications_active</mat-icon>
+              Zahlungserinnerung
+            </button>
+          </div>
         </div>
-      </div>
 
-      <hr class="bg-neutral"/>
+        <hr class="bg-neutral"/>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Suchen</mat-label>
-        <input matInput placeholder="Geben sie einen Namen ein" [(ngModel)]="searchTerm" (keyup)="search(month)">
-        <mat-icon matPrefix>search</mat-icon>
-      </mat-form-field>
+        <div class="grid align-start">
+          <mat-form-field class="span-6">
+            <mat-label>Suchen</mat-label>
+            <input (keyup)="search(month)" [(ngModel)]="month.searchTerm" matInput placeholder="Name eingeben">
+            <mat-icon matPrefix>search</mat-icon>
+            <button (click)="resetSearchTerm(month)" *ngIf="month.searchTerm" mat-icon-button matSuffix>
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
 
-      <table [dataSource]="dataSource" mat-table>
-        <ng-container matColumnDef="customer">
-          <th *matHeaderCellDef mat-header-cell>
-            <h2>Besteller</h2>
-          </th>
-          <td *matCellDef="let element" mat-cell>
-            <p>{{element.profile.name}}</p>
-          </td>
-        </ng-container>
+          <mat-button-toggle-group [(ngModel)]="guestMode" class="span-6 justify-self-end">
+            <mat-button-toggle [value]="false">Mitarbeiter</mat-button-toggle>
+            <mat-button-toggle [value]="true" disabled>Gäste</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
 
-        <ng-container matColumnDef="count">
-          <th *matHeaderCellDef mat-header-cell>
-            <h2>Anzahl</h2>
-          </th>
-          <td *matCellDef="let element" mat-cell>
-            <p>{{element.orders.length}}</p>
-          </td>
-        </ng-container>
+        <table [dataSource]="month.dataSource" mat-table>
+          <ng-container matColumnDef="customer">
+            <th *matHeaderCellDef mat-header-cell>
+              <h2>Besteller</h2>
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              <p>{{element.profile.name}}</p>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="sum">
+          <ng-container matColumnDef="count">
+            <th *matHeaderCellDef mat-header-cell>
+              <h2>Anzahl</h2>
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              <p>{{element.orders.length}}</p>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sum">
           <th *matHeaderCellDef mat-header-cell>
             <h2>Betrag</h2>
           </th>
@@ -80,9 +91,14 @@
           </td>
         </ng-container>
 
-        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
-      </table>
-    </section>
-  </mat-tab>
-</mat-tab-group>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+        </table>
+      </section>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>
+
+<ng-template #noData>
+  <p class="main-content">Monatsübersicht aktuell nicht verfügbar.</p>
+</ng-template>
