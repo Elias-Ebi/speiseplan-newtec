@@ -84,7 +84,6 @@ export class OrderManagementComponent implements OnInit {
       endDate: '',
     },
   };
-  selectedDate: Date | undefined;
   selectedDateRange: DateRange<Date> | undefined;
 
   constructor(
@@ -141,6 +140,10 @@ export class OrderManagementComponent implements OnInit {
     await this.removeDateFilter();
   }
 
+  get dateSelected() {
+    return this.filter.dateFilter.startDate || this.filter.dateFilter.endDate;
+  }
+
   async selectedChange(m: any) {
     if (!this.selectedDateRange?.start || this.selectedDateRange?.end) {
       this.selectedDateRange = new DateRange<Date>(m, null);
@@ -160,15 +163,14 @@ export class OrderManagementComponent implements OnInit {
     }
   }
 
-  async filterOrdersByDate() {
-    this.filter.dateFilter.startDate = this.transformDate(this.selectedDate);
+  async filterOrdersByDate(event: Date) {
+    this.filter.dateFilter.startDate = this.transformDate(event);
     await this.filterData();
   }
 
   async removeDateFilter() {
     this.filter.dateFilter.startDate = '';
     this.filter.dateFilter.endDate = '';
-    this.selectedDate = undefined;
     this.selectedDateRange = undefined;
     await this.filterData();
   }
