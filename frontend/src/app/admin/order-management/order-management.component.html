@@ -79,40 +79,6 @@
         </div>
       </div>
 
-
-
-
-      <!--
-<div class="ui-container">
-        <button mat-stroked-button (click)="toggleFilter()" class=" filter-button">
-          <mat-icon>filter_alt</mat-icon>
-          <p>Filter</p>
-        </button>
-
-        <div class="delete-multiple-container">
-          <mat-slide-toggle class="slider"
-            (change)="toggleEditMode()"
-            [checked]="editMultipleOrders"
-            color="primary"
-            labelPosition="before"
-          >
-            Mehrere Stornieren
-          </mat-slide-toggle>
-
-          <button class="delete-marked-button"
-            (click)="openCancelMultipleDialog()"
-            *ngIf="editMultipleOrders"
-            [disabled]="checkedOrders.length === 0"
-            color="primary"
-            mat-flat-button
-          >
-            <mat-icon>edit</mat-icon>
-            Markierte stornieren
-          </button>
-        </div>
-      </div>
--->
-
       <table [dataSource]="dataSource" class="bg-background" mat-table>
         <!-- Date Column -->
         <ng-container matColumnDef="date">
