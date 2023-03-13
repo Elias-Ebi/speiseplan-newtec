@@ -9,7 +9,7 @@ import { ApiService } from "../../../shared/services/api.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatInputModule } from "@angular/material/input";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { GuestOrderDialogValues, OrderDay } from "../order.models";
+import { OrderDay } from "../order.models";
 
 @Component({
   selector: 'app-guest-order-dialog',
@@ -31,13 +31,6 @@ export class GuestOrderDialogComponent {
   ) {
   }
 
-  get values(): GuestOrderDialogValues {
-    const guestName = this.form.value.guestName;
-    const mealIds = Array.from(this.selectedIds);
-
-    return {guestName, mealIds};
-  }
-
   initializeForm(): FormGroup {
     return this.fb.group({
       guestName: ['']
@@ -55,5 +48,12 @@ export class GuestOrderDialogComponent {
     orderMeal.ordered ? this.selectedIds.delete(id) : this.selectedIds.add(id);
 
     orderMeal.ordered = !orderMeal.ordered;
+  }
+
+  order() {
+    const guestName = this.form.value.guestName;
+    const mealIds = Array.from(this.selectedIds);
+
+    this.dialogRef.close({guestName, mealIds});
   }
 }
