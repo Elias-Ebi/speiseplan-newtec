@@ -14,7 +14,7 @@
 - Frontend will be available under `http://localhost:4200/`, PgAdmin for Database configuration `http://localhost:5050`.
 
 ### PgAdmin-Configuration
-*This is a dev-setup and will be solved differently in the final release!*
+*These steps might have to be repeated when stopping and starting containers. This is a dev-setup and will be solved differently in the final release!*
 - In the demo-build you can login using the default credentials for pgadmin in the docker-compose.yml
 - Add a new server:
   - In the General-Tab, choose a name to your liking
