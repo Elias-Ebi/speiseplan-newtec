@@ -13,7 +13,7 @@
       <mat-select #category (selectionChange)="applyFilter($event)" placeholder="Kategorie wählen">
         <mat-option>Kein Filter</mat-option>
         <mat-option *ngFor="let category of categories" [value]="category.id">
-          {{category.label}}
+          {{category.name}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -38,7 +38,7 @@
       <ng-container matColumnDef="category">
         <th *matHeaderCellDef mat-header-cell>
           <h2>Kategorie</h2></th>
-        <td *matCellDef="let element" mat-cell>{{getCategoryLabel(element.categoryId)}}</td>
+        <td *matCellDef="let element" mat-cell>{{getCategoryName(element.categoryId)}}</td>
       </ng-container>
 
       <ng-container matColumnDef="action">
@@ -62,9 +62,9 @@
       </tr>
       <tr *matNoDataRow>
         <td class="no-data">
-          {{searchInput.value.length == 0 && getCategoryLabel(category.id) == 0 ?
+          {{searchInput.value.length == 0 && !getCategoryName(category.id) ?
           "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
-            "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" + getCategoryLabel(category.value) + "\""
+            "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" + getCategoryName(category.value) + "\""
           }}
         </td>
       </tr>

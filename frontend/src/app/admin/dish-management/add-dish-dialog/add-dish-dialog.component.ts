@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -36,7 +36,7 @@ import { Category, CategoryService } from 'src/app/shared/services/category.serv
   templateUrl: './add-dish-dialog.component.html',
   styleUrls: ['./add-dish-dialog.component.scss'],
 })
-export class AddDishDialogComponent {
+export class AddDishDialogComponent implements OnInit {
   MAX_LENGTH: number = 70;
   orderTime: string;
   deliveryTime: string;
@@ -86,10 +86,8 @@ export class AddDishDialogComponent {
     this.deliveryTime = '00:00';
     this.total = 0.0;
 
-    const currentDay = new Date();
-
     // let yesterday.setDate(new Date() - 1);
-    this.minDate = currentDay;
+    this.minDate = new Date();
     this.maxDate = new Date();
     this.maxDate.setDate(this.deliveryDate.getDate() - 1);
   }
@@ -109,28 +107,6 @@ export class AddDishDialogComponent {
       date.setDate(this.deliveryDate.getDate() - 1);
     }
     return date;
-  }
-
-  getCategoryLabel(id: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.id === id) {
-        result = c.label;
-      }
-    });
-    return result;
-  }
-
-  getCategoryId(label: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.label === label) {
-        result = c.id;
-      }
-    });
-    return result;
   }
 
   closeDialog() {
@@ -206,8 +182,7 @@ export class AddDishDialogComponent {
   formatDate(date: Date): string {
     let month = (date.getMonth() + 1).toString().padStart(2, '0');
     let day = date.getDate().toString().padStart(2, '0');
-    var formatedDate = date.getFullYear() + '-' + month + '-' + day;
-    return formatedDate;
+    return date.getFullYear() + '-' + month + '-' + day;
   }
 
   validate() {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit, ViewChild, } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -34,7 +34,7 @@ import { Category, CategoryService } from 'src/app/shared/services/category.serv
   templateUrl: './choose-dish-dialog.component.html',
   styleUrls: ['./choose-dish-dialog.component.scss'],
 })
-export class ChooseDishDialogComponent implements AfterViewInit, OnInit {
+export class ChooseDishDialogComponent implements OnInit {
   displayedData: string[] = ['title', 'description', 'category', 'action'];
   dataSource: MatTableDataSource<MealTemplate>;
   dishes: MealTemplate[];
@@ -65,33 +65,11 @@ export class ChooseDishDialogComponent implements AfterViewInit, OnInit {
     this.dishes = await this.api.getMealTemplate();
     this.dataSource = new MatTableDataSource(this.dishes);
     this.dataSource.paginator = this.paginator;
-  }
-
-  getCategoryLabel(val: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.id === val) {
-        result = c.label;
-      }
-    });
-    return result;
-  }
-
-  getCategoryValue(label: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.label === label) {
-        result = c.id;
-      }
-    });
-    return result;
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  getCategoryName(id: string): string | undefined {
+    return this.categoryService.getCategory(id)?.name;
   }
 
   applySearch(event: Event) {
