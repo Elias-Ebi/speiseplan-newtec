@@ -5,9 +5,9 @@ import { OrderManagementComponent } from './order-management/order-management.co
 import { DishesComponent } from './dish-management/dishes.component';
 
 export const ADMIN_ROUTES: Route[] = [
-  { path: '', component: OverviewComponent },
-  { path: 'month-overview', component: MonthOverviewComponent },
-  { path: 'order-management', component: OrderManagementComponent },
-  { path: 'meal-management', component: DishesComponent },
-  { path: '**', redirectTo: '' }
+  {path: '', component: OverviewComponent},
+  {path: 'month-overview', component: MonthOverviewComponent},
+  {path: 'order-management', component: OrderManagementComponent},
+  {path: 'meal-management', component: DishesComponent},
+  {path: '**', redirectTo: ''}
 ];

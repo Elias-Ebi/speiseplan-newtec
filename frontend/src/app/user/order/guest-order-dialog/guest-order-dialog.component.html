@@ -23,12 +23,12 @@
     </div>
 
     <div class="button-container">
-      <button (click)="closeDialog()" mat-stroked-button type="button">Abbrechen</button>
+      <button (click)="closeDialog()" mat-stroked-button>Abbrechen</button>
 
       <button
         [disabled]="form.invalid || !selectedIds.size" [mat-dialog-close]="values"
         color="primary"
-        mat-flat-button type="submit"
+        mat-flat-button
       >
         Bestätigen
       </button>
