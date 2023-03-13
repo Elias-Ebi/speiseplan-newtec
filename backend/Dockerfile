@@ -3,5 +3,7 @@ WORKDIR /app
 COPY . .
 RUN npm install
 EXPOSE 3000
-CMD npm run build
-CMD npm run start:prod
+CMD npm run start
+#fixme build missing packages
+#CMD npm run build
+#CMD npm run start:prod
