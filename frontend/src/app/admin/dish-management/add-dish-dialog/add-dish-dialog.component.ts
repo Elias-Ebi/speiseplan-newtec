@@ -14,11 +14,7 @@ import * as _ from "lodash";
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
-interface Category {
-  value: string;
-  view: string;
-}
+import { Category, CategoryService } from 'src/app/shared/services/category.service';
 
 @Component({
   selector: 'app-add-dish-dialog',
@@ -57,12 +53,7 @@ export class AddDishDialogComponent {
   maxDate: Date;
   total: number;
 
-  categories: Category[] = [
-    {value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch'},
-    {value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch'},
-    {value: 'af03df2a-0d22-4e7d-8a12-9269ecd318af', view: 'Vegan'},
-    {value: '85d77591-0b55-4df4-93b0-03c00bcb14b9', view: 'Salat'},
-  ];
+  categories: Category[];
 
 
   constructor(
@@ -71,10 +62,12 @@ export class AddDishDialogComponent {
     public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined },
     private matDialogRef: MatDialogRef<AddDishDialogComponent>,
     private api: ApiService,
+    private categoryService: CategoryService,
     private dateAdapter: DateAdapter<any>,
     private snackBar: MatSnackBar
   ) {
     this.dateAdapter.setLocale('de');
+    this.categories = this.categoryService.getAllCategories();
     if (data.selectedMealTemplate) {
       this.name = data.selectedMealTemplate.name;
       this.description = data.selectedMealTemplate.description;
@@ -118,23 +111,23 @@ export class AddDishDialogComponent {
     return date;
   }
 
-  getCategoryView(val: string): string | any {
+  getCategoryLabel(id: string): string | any {
     let result: string = '';
 
     this.categories.forEach((c) => {
-      if (c.value === val) {
-        result = c.view;
+      if (c.id === id) {
+        result = c.label;
       }
     });
     return result;
   }
 
-  getCategoryValue(view: string): string | any {
+  getCategoryId(label: string): string | any {
     let result: string = '';
 
     this.categories.forEach((c) => {
-      if (c.view === view) {
-        result = c.value;
+      if (c.label === label) {
+        result = c.id;
       }
     });
     return result;

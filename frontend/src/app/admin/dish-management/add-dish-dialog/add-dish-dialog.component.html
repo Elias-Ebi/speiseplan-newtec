@@ -28,8 +28,8 @@
     <mat-form-field>
       <mat-label>Kategorie</mat-label>
       <mat-select (selectionChange)="validate()" [(ngModel)]="categoryId" placeholder="Kategorie wählen">
-        <mat-option *ngFor="let category of categories" [value]="category.value">
-          {{category.view}}
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{category.label}}
         </mat-option>
       </mat-select>
     </mat-form-field>
