@@ -40,11 +40,9 @@
     </mat-form-field>
 
     <div class="date-time-row">
-      <mat-form-field (click)="datepicker.open()">
+      <mat-form-field>
         <mat-label>Lieferdatum</mat-label>
-        <input disabled [value]="deliveryDate" matInput>
-        <mat-datepicker-toggle [for]="datepicker" matIconSuffix></mat-datepicker-toggle>
-        <mat-datepicker #datepicker></mat-datepicker>
+        <input disabled [value]="deliveryDate.toLocaleDateString()" matInput>
       </mat-form-field>
 
       <mat-form-field>
