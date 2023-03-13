@@ -1,0 +1,27 @@
+<div class="dialog-container list-container-wide">
+  <h2>Standardwerte ändern</h2>
+  <div class="form">
+    <mat-form-field appearance="fill" class="form-settings">
+      <mat-label>Standardpreis</mat-label>
+      <input matInput (blur)="transformInputToFloat($event)" [(ngModel)]="currentDefaultValues.total" />
+      <mat-icon matSuffix *ngIf="startDefaultValues.total !== currentDefaultValues.total"
+        style="scale: 0.5; color: var(--clrPrimary)">circle</mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="form-settings">
+      <mat-label>Bestellfrist-Uhrzeit</mat-label>
+      <input matInput type="time" [(ngModel)]="currentDefaultValues.orderableTime" />
+      <mat-icon matSuffix *ngIf="
+          startDefaultValues.orderableTime !==
+          currentDefaultValues.orderableTime
+        " style="scale: 0.5; color: var(--clrPrimary)">circle</mat-icon>
+    </mat-form-field>
+  </div>
+  <div class="dialog-buttons-container">
+    <button mat-stroked-button color="primary" class="set-button" (click)="closeDialog()">
+      Abbrechen
+    </button>
+    <button mat-raised-button color="primary" class="set-button" [disabled]="startDefaultValues.total === currentDefaultValues.total" (click)="applyChanges()">
+      Bestätigen
+    </button>
+  </div>
+</div>

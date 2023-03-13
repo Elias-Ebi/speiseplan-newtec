@@ -11,39 +11,24 @@
       <div class="filter-form-fields">
         <mat-form-field>
           <mat-label>Besteller</mat-label>
-          <input (keyup)="filterData()" [(ngModel)]="filter.buyerFilter" matInput/>
-          <button
-            (click)="removeFilter('buyerFilter')"
-            *ngIf="filter.buyerFilter"
-            mat-icon-button
-            matSuffix
-          >
+          <input (keyup)="filterData()" [(ngModel)]="filter.buyerFilter" matInput />
+          <button (click)="removeFilter('buyerFilter')" *ngIf="filter.buyerFilter" mat-icon-button matSuffix>
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Gast</mat-label>
-          <input (keyup)="filterData()" [(ngModel)]="filter.guestFilter" matInput/>
-          <button
-            (click)="removeFilter('guestFilter')"
-            *ngIf="filter.guestFilter"
-            mat-icon-button
-            matSuffix
-          >
+          <input (keyup)="filterData()" [(ngModel)]="filter.guestFilter" matInput />
+          <button (click)="removeFilter('guestFilter')" *ngIf="filter.guestFilter" mat-icon-button matSuffix>
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
 
         <mat-form-field>
           <mat-label>Menü</mat-label>
-          <input (keyup)="filterData()" [(ngModel)]="filter.mealFilter" matInput/>
-          <button
-            (click)="removeFilter('mealFilter')"
-            *ngIf="filter.mealFilter"
-            mat-icon-button
-            matSuffix
-          >
+          <input (keyup)="filterData()" [(ngModel)]="filter.mealFilter" matInput />
+          <button (click)="removeFilter('mealFilter')" *ngIf="filter.mealFilter" mat-icon-button matSuffix>
             <mat-icon>close</mat-icon>
           </button>
         </mat-form-field>
@@ -51,33 +36,22 @@
 
       <hr>
 
-      <mat-slide-toggle
-        (change)="toggleDateIntervalMode()"
-        [checked]="useDateInterval"
-        color="primary"
-        labelPosition="before"
-      >
+      <mat-slide-toggle (change)="toggleDateIntervalMode()" [checked]="useDateInterval" color="primary"
+        labelPosition="before">
         Datumsspanne
       </mat-slide-toggle>
 
-      <mat-calendar
-        (selectedChange)="filterOrdersByDate()"
-        *ngIf="!useDateInterval"
-        [(selected)]="selectedDate"
-      >
+      <mat-calendar (selectedChange)="filterOrdersByDate()" *ngIf="!useDateInterval" [(selected)]="selectedDate">
       </mat-calendar>
 
-      <mat-calendar
-        (selectedChange)="selectedChange($event)"
-        *ngIf="useDateInterval"
-        [selected]="selectedDateRange"
-      >
+      <mat-calendar (selectedChange)="selectedChange($event)" *ngIf="useDateInterval" [selected]="selectedDateRange">
       </mat-calendar>
 
-      <div (click)="removeDateFilter()" *ngIf="selectedDate || selectedDateRange" class="icon-with-text filter-button">
-        <mat-icon>close</mat-icon>
+      <button mat-stroked-button (click)="removeDateFilter()" *ngIf="selectedDate || selectedDateRange"
+        class="drawer-reset-filter-button">
+        <mat-icon>filter_alt_off</mat-icon>
         <p>Datumsfilter entfernen</p>
-      </div>
+      </button>
 
     </div>
   </mat-drawer>
@@ -86,13 +60,37 @@
     <section>
       <!-- UI above table -->
       <div class="ui-container">
-        <div (click)="toggleFilter()" class="icon-with-text filter-button">
+        <div class="filter-container">
+          <button mat-stroked-button (click)="toggleFilter()" class="filter-button">
+            <mat-icon>filter_alt</mat-icon>
+            <p>Filter</p>
+          </button>
+          <mat-slide-toggle class="slider" (change)="toggleEditMode()" [checked]="editMultipleOrders"
+            color="primary" labelPosition="before">
+            Mehrere Stornieren
+          </mat-slide-toggle>
+        </div>
+        <div class="delete-selected-button-container">
+          <button (click)="openCancelMultipleDialog()" *ngIf="editMultipleOrders"
+            [disabled]="checkedOrders.length === 0" color="primary" mat-flat-button>
+            <mat-icon>edit</mat-icon>
+            Markierte stornieren
+          </button>
+        </div>
+      </div>
+
+
+
+
+      <!--
+<div class="ui-container">
+        <button mat-stroked-button (click)="toggleFilter()" class=" filter-button">
           <mat-icon>filter_alt</mat-icon>
           <p>Filter</p>
-        </div>
+        </button>
 
-        <div class="list-container">
-          <mat-slide-toggle
+        <div class="delete-multiple-container">
+          <mat-slide-toggle class="slider"
             (change)="toggleEditMode()"
             [checked]="editMultipleOrders"
             color="primary"
@@ -101,7 +99,7 @@
             Mehrere Stornieren
           </mat-slide-toggle>
 
-          <button
+          <button class="delete-marked-button"
             (click)="openCancelMultipleDialog()"
             *ngIf="editMultipleOrders"
             [disabled]="checkedOrders.length === 0"
@@ -113,6 +111,7 @@
           </button>
         </div>
       </div>
+-->
 
       <table [dataSource]="dataSource" class="bg-background" mat-table>
         <!-- Date Column -->
@@ -182,11 +181,7 @@
         <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
       </table>
 
-      <mat-paginator
-        [pageSizeOptions]="[5, 10, 20]"
-        class="paginator"
-        showFirstLastButtons
-      >
+      <mat-paginator [pageSizeOptions]="[5, 10, 20]" class="paginator" showFirstLastButtons>
       </mat-paginator>
     </section>
   </div>

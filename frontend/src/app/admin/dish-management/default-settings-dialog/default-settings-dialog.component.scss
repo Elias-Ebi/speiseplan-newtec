@@ -1,0 +1,11 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dialog-buttons-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}

@@ -23,6 +23,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DeleteDishDialogComponent } from './delete-dish-dialog/delete-dish-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DefaultSettingsDialogComponent } from './default-settings-dialog/default-settings-dialog.component';
 
 interface Category {
   value: string;
@@ -188,6 +189,13 @@ export class DishesComponent implements OnInit {
           }
         }
       });
+  }
+
+  openDefaultSettingsDialog() {
+    const dialogRef = this.dialog.open(DefaultSettingsDialogComponent, {
+      data: {},
+      autoFocus: false,
+    });
   }
 
   async onTabChange(event: any) {
