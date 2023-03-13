@@ -5,12 +5,12 @@
     <mat-form-field>
       <mat-label>Suchen</mat-label>
       <mat-icon matPrefix>search</mat-icon>
-      <input (keyup)="applySearch($event)" matInput #searchInput>
+      <input #searchInput (keyup)="applySearch($event)" matInput>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Kategoriefilter</mat-label>
-      <mat-select (selectionChange)="applyFilter($event)" placeholder="Kategorie wählen" #test>
+      <mat-select #test (selectionChange)="applyFilter($event)" placeholder="Kategorie wählen">
         <mat-option>Kein Filter</mat-option>
         <mat-option *ngFor="let category of categories" [value]="category.value">
           {{category.view}}
@@ -20,49 +20,49 @@
   </div>
 
   <div class="table-container">
-    <table mat-table [dataSource]="dataSource">
+    <table [dataSource]="dataSource" mat-table>
       <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef>
+        <th *matHeaderCellDef mat-header-cell>
           <h2>Gericht</h2>
         </th>
-        <td mat-cell *matCellDef="let element">{{element.name}}</td>
+        <td *matCellDef="let element" mat-cell>{{element.name}}</td>
       </ng-container>
 
       <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>
+        <th *matHeaderCellDef mat-header-cell>
           <h2>Beschreibung</h2>
         </th>
-        <td mat-cell *matCellDef="let element">{{element.description}}</td>
+        <td *matCellDef="let element" mat-cell>{{element.description}}</td>
       </ng-container>
 
       <ng-container matColumnDef="category">
-        <th mat-header-cell *matHeaderCellDef>
+        <th *matHeaderCellDef mat-header-cell>
           <h2>Kategorie</h2></th>
-        <td mat-cell *matCellDef="let element">{{getCategoryView(element.categoryId)}}</td>
+        <td *matCellDef="let element" mat-cell>{{getCategoryView(element.categoryId)}}</td>
       </ng-container>
 
       <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>
+        <th *matHeaderCellDef mat-header-cell>
           <h2>Aktion</h2>
         </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button class="icon-button" (click)="onClickDelete(element)">
+        <td *matCellDef="let element" mat-cell>
+          <button (click)="onClickDelete(element)" class="icon-button" mat-icon-button>
             <mat-icon>delete</mat-icon>
           </button>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedData"></tr>
+      <tr *matHeaderRowDef="displayedData" mat-header-row></tr>
       <tr
         (click)="clickedRows.has(row) ? clickedRows.delete(row) : clickedRows.size < 1 ? clickedRows.add(row) : null"
-        [class.is-selected]="clickedRows.has(row)"
-        mat-row *matRowDef="let row; columns: displayedData;">
+        *matRowDef="let row; columns: displayedData;"
+        [class.is-selected]="clickedRows.has(row)" mat-row>
       </tr>
       <tr *matNoDataRow>
         <td class="no-data">
           {{searchInput.value.length == 0 && getCategoryView(test.value) == 0 ?
-            "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
-            "Es existiert kein Eintrag mit \""+searchInput.value+"\"" : "Es existiert kein Eintrag mit \""+getCategoryView(test.value)+"\""
+          "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
+            "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" + getCategoryView(test.value) + "\""
           }}
         </td>
       </tr>
@@ -72,7 +72,7 @@
   </div>
 
   <div class="button-group">
-    <button mat-stroked-button color="primary" (click)="onClickCancel()">Abbrechen</button>
-    <button mat-flat-button color="primary" (click)="onClickApply(clickedRows)">Bestätigen</button>
+    <button (click)="onClickCancel()" color="primary" mat-stroked-button>Abbrechen</button>
+    <button (click)="onClickApply(clickedRows)" color="primary" mat-flat-button>Bestätigen</button>
   </div>
 </div>

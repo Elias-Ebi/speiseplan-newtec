@@ -102,7 +102,11 @@
 
             <div *ngIf="!orderDay.guestCount" class="span-4"></div>
 
-            <button (click)="deleteOrdersOn(orderDay.date)" class="span-1 justify-self-end icon-button" mat-icon-button>
+            <button
+              (click)="openCancelOrderDialog(orderDay.date)"
+              class="span-1 justify-self-end icon-button"
+              mat-icon-button
+            >
               <mat-icon>no_food</mat-icon>
             </button>
           </div>

@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from '@angular/material/input';
-import { Temporal } from '@js-temporal/polyfill';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Order } from 'src/app/shared/models/order';
@@ -37,7 +36,6 @@ export class CancelMultipleOrdersDialogComponent {
       } catch (e) {
         console.error(e);
       }
-      
     }
     this.dialogRef.close();
   }
