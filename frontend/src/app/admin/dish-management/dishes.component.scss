@@ -48,3 +48,13 @@ th {
 .mat-mdc-paginator {
   background-color: var(--clrBackground);
 }
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.action-column {
+  text-align: right;
+}
