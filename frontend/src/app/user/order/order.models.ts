@@ -1,8 +1,9 @@
 import { Temporal } from "@js-temporal/polyfill";
 import { Order } from "../../shared/models/order";
+import PlainDate = Temporal.PlainDate;
 
 export interface OrderDay {
-  date: Temporal.PlainDate,
+  date: PlainDate,
   orderMeals: OrderMeal[],
   guestOrders: Order[],
   anyOrders: boolean,
@@ -22,4 +23,9 @@ export interface OrderMeal {
 export interface GuestOrderDialogValues {
   guestName: string,
   mealIds: string[]
+}
+
+export interface GuestOrderCancelDialogValues {
+  date: PlainDate;
+  orderId: string;
 }

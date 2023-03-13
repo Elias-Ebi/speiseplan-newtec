@@ -21,6 +21,7 @@ import { OrderService } from "../shared/services/order.service";
 import { lastValueFrom } from "rxjs";
 import { StateService } from "../../shared/services/state.service";
 import PlainDate = Temporal.PlainDate;
+import {CancelOrderDialogComponent} from "./cancel-dialog/cancel-order-dialog.component";
 
 @Component({
   selector: 'app-home',
@@ -61,6 +62,20 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  openCancelOrderDialog(date: PlainDate): void {
+    const dialogRef = this.dialog.open(CancelOrderDialogComponent, {
+      data: date,
+      autoFocus: false,
+    });
+
+    const dialogClosedP = lastValueFrom(dialogRef.afterClosed());
+    dialogClosedP.then(async (reload: boolean) => {
+      if(reload) {
+        await this.loadDashboard();
+      }
+    });
+  }
+
   async ngOnInit(): Promise<void> {
     await this.loadDashboard();
   }
@@ -83,17 +98,6 @@ export class HomeComponent implements OnInit {
     })
       .catch((err) => {
         this.snackbarService.error(`Das Menü konnte nicht als Räuberteller angeboten werden! ${err.message.message}`);
-      });
-  }
-
-  async deleteOrdersOn(date: PlainDate) {
-    this.apiService.deleteOrdersOn(date).then(async () => {
-      await this.loadDashboard();
-
-      this.snackbarService.success(`Bestellungen für den ${date.toLocaleString()} erfolgreich storniert.`);
-    })
-      .catch((err) => {
-        this.snackbarService.error(`Bestellungen konnten nicht storniert werden! ${err.message.message}`);
       });
   }
 

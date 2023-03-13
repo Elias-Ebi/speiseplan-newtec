@@ -62,9 +62,8 @@
                 <p>{{guestOrder.meal.name}}</p>
               </div>
 
-
               <button
-                (click)="handleOrder(guestOrder.meal.id, guestOrder.id, day.date, true)"
+                (click)="openCancelOrderDialog(day.date, guestOrder.id)"
                 class="span-1 justify-self-end icon-button"
                 mat-icon-button
               >
