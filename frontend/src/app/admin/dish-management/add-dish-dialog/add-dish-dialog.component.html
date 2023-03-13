@@ -2,12 +2,12 @@
   <h2>Neues Gericht erstellen</h2>
 
   <div class="button-group">
-    <button mat-flat-button color="primary" [disabled]="!isTemplateValid" (click)="saveAsTemplate()">
+    <button (click)="saveAsTemplate()" [disabled]="!isTemplateValid" color="primary" mat-flat-button>
       <mat-icon>save</mat-icon>
       Als Vorlage Speichern
     </button>
 
-    <button mat-flat-button color="primary" (click)="openTemplateDialog()">
+    <button (click)="openTemplateDialog()" color="primary" mat-flat-button>
       <mat-icon>menu_book</mat-icon>
       Vorlagen öffnen
     </button>
@@ -16,18 +16,18 @@
   <div class="form">
     <mat-form-field>
       <mat-label>Gericht</mat-label>
-      <input matInput [(ngModel)]="name" (change)="validate()">
+      <input (change)="validate()" [(ngModel)]="name" matInput>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Beschreibung</mat-label>
-      <input matInput #message maxlength="70" [(ngModel)]="description" (change)="validate()">
-      <mat-hint class="clr-primary" align="end">{{message.value.length}} / {{MAX_LENGTH}}</mat-hint>
+      <input #message (change)="validate()" [(ngModel)]="description" matInput maxlength="70">
+      <mat-hint align="end" class="clr-primary">{{message.value.length}} / {{MAX_LENGTH}}</mat-hint>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Kategorie</mat-label>
-      <mat-select placeholder="Kategorie wählen" [(ngModel)]="categoryId" (selectionChange)="validate()">
+      <mat-select (selectionChange)="validate()" [(ngModel)]="categoryId" placeholder="Kategorie wählen">
         <mat-option *ngFor="let category of categories" [value]="category.value">
           {{category.view}}
         </mat-option>
@@ -36,43 +36,44 @@
 
     <mat-form-field>
       <mat-label>Preis</mat-label>
-      <input matInput disabled [value]="total.toString()">
+      <input [value]="total.toString()" disabled matInput>
     </mat-form-field>
 
     <div class="date-time-row">
       <mat-form-field>
         <mat-label>Lieferdatum</mat-label>
-        <input disabled [value]="deliveryDate.toLocaleDateString()" matInput>
+        <input [value]="deliveryDate.toLocaleDateString()" disabled matInput>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Liefer-Uhrzeit</mat-label>
-        <input matInput [(ngModel)]="deliveryTime" type="time">
+        <input [(ngModel)]="deliveryTime" matInput type="time">
       </mat-form-field>
     </div>
 
     <div class="date-time-row">
       <mat-form-field (click)="orderable.open()">
         <mat-label>Bestellfrist-Datum</mat-label>
-        <input [matDatepicker]="orderable" [min]="minDate" [max]="maxDate" [matDatepickerFilter]="dateWeekendFilter" [value]="orderableDate" [(ngModel)]="orderableDate" matInput (dateChange)="validate()">
+        <input (dateChange)="validate()" [(ngModel)]="orderableDate" [matDatepickerFilter]="dateWeekendFilter" [matDatepicker]="orderable"
+               [max]="maxDate" [min]="minDate" [value]="orderableDate" matInput>
         <mat-datepicker-toggle [for]="orderable" matIconSuffix></mat-datepicker-toggle>
         <mat-datepicker #orderable></mat-datepicker>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Bestellfrist-Uhrzeit</mat-label>
-        <input matInput [(ngModel)]="orderTime" type="time">
+        <input [(ngModel)]="orderTime" matInput type="time">
       </mat-form-field>
     </div>
 
-    <div class="hint" *ngIf="!areDatesValid">
+    <div *ngIf="!areDatesValid" class="hint">
       <mat-icon class="warning">warning_amber</mat-icon>
       {{validationHint}}
     </div>
   </div>
 
   <div class="dialog-buttons-container">
-    <button mat-stroked-button color="primary" (click)="closeDialog()">Abbrechen</button>
-    <button mat-flat-button color="primary" (click)="createMeal()" [disabled]="!isFormValid">Erstellen</button>
+    <button (click)="closeDialog()" color="primary" mat-stroked-button>Abbrechen</button>
+    <button (click)="createMeal()" [disabled]="!isFormValid" color="primary" mat-flat-button>Erstellen</button>
   </div>
 </div>

@@ -3,7 +3,7 @@
     <div class=" list-container-wide">
       <div class="section-headline-container">
         <h2 class="clr-black">Filter</h2>
-        <button class="close-filter-btn" (click)="toggleFilter()" mat-icon-button>
+        <button (click)="toggleFilter()" class="close-filter-btn" mat-icon-button>
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -61,19 +61,20 @@
       </mat-slide-toggle>
 
       <mat-calendar
-        *ngIf="!useDateInterval" [(selected)]="selectedDate"
         (selectedChange)="filterOrdersByDate()"
+        *ngIf="!useDateInterval"
+        [(selected)]="selectedDate"
       >
       </mat-calendar>
 
       <mat-calendar
+        (selectedChange)="selectedChange($event)"
         *ngIf="useDateInterval"
         [selected]="selectedDateRange"
-        (selectedChange)="selectedChange($event)"
       >
       </mat-calendar>
 
-      <div *ngIf="selectedDate || selectedDateRange" (click)="removeDateFilter()" class="icon-with-text filter-button">
+      <div (click)="removeDateFilter()" *ngIf="selectedDate || selectedDateRange" class="icon-with-text filter-button">
         <mat-icon>close</mat-icon>
         <p>Datumsfilter entfernen</p>
       </div>
@@ -100,8 +101,13 @@
             Mehrere Stornieren
           </mat-slide-toggle>
 
-          <button *ngIf="editMultipleOrders" (click)="openCancelMultipleDialog()"
-                  [disabled]="checkedOrders.length === 0" color="primary" mat-flat-button>
+          <button
+            (click)="openCancelMultipleDialog()"
+            *ngIf="editMultipleOrders"
+            [disabled]="checkedOrders.length === 0"
+            color="primary"
+            mat-flat-button
+          >
             <mat-icon>edit</mat-icon>
             Markierte stornieren
           </button>
@@ -147,7 +153,7 @@
         </ng-container>
 
 
-        <!-- Aktion Clomuns Single -->
+        <!-- Aktion Columns Single -->
         <ng-container matColumnDef="action-single">
           <th *matHeaderCellDef class="action-column" mat-header-cell>
             <h2>Aktion</h2>
@@ -162,7 +168,7 @@
           </td>
         </ng-container>
 
-        <!-- Aktion Clomuns Multiple -->
+        <!-- Aktion Columns Multiple -->
         <ng-container matColumnDef="action-multiple">
           <th *matHeaderCellDef class="action-column" mat-header-cell>
             <h2>Aktion</h2>
@@ -176,8 +182,9 @@
         <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
       </table>
 
-      <mat-paginator class="paginator"
+      <mat-paginator
         [pageSizeOptions]="[5, 10, 20]"
+        class="paginator"
         showFirstLastButtons
       >
       </mat-paginator>

@@ -4,9 +4,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
-import {ApiService} from "../../../shared/services/api.service";
-import {SnackbarService} from "../../../shared/services/snackbar.service";
-import {Temporal} from "@js-temporal/polyfill";
+import { ApiService } from "../../../shared/services/api.service";
+import { SnackbarService } from "../../../shared/services/snackbar.service";
+import { Temporal } from "@js-temporal/polyfill";
 import PlainDate = Temporal.PlainDate;
 
 @Component({
@@ -23,7 +23,7 @@ export class CancelOrderDialogComponent {
     private dialogRef: MatDialogRef<CancelOrderDialogComponent>,
     private apiService: ApiService,
     private snackbarService: SnackbarService,
-) {
+  ) {
   }
 
   closeDialog() {
@@ -40,6 +40,4 @@ export class CancelOrderDialogComponent {
         this.snackbarService.error(`Bestellungen konnten nicht storniert werden! ${err.message.message}`);
       });
   }
-
-
 }

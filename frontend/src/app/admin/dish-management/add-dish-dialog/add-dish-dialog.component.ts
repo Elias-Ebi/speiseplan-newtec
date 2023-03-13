@@ -1,11 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  MatDialogModule,
-  MAT_DIALOG_DATA,
-  MatDialogRef,
-  MatDialog
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,15 +8,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { MealTemplate } from 'src/app/shared/models/meal-template';
-import { MatDatepickerInputEvent, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
-import { Temporal } from '@js-temporal/polyfill';
 import * as _ from "lodash";
-import { Meal } from 'src/app/shared/models/meal';
 import { MatIconModule } from '@angular/material/icon';
-import { ChooseDishDialogComponent } from '../choose-dish-dialog/choose-dish-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 interface Category {
   value: string;
@@ -66,17 +58,17 @@ export class AddDishDialogComponent {
   total: number;
 
   categories: Category[] = [
-    { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
-    { value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch' },
-    { value: 'af03df2a-0d22-4e7d-8a12-9269ecd318af', view: 'Vegan' },
-    { value: '85d77591-0b55-4df4-93b0-03c00bcb14b9', view: 'Salat' },
+    {value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch'},
+    {value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch'},
+    {value: 'af03df2a-0d22-4e7d-8a12-9269ecd318af', view: 'Vegan'},
+    {value: '85d77591-0b55-4df4-93b0-03c00bcb14b9', view: 'Salat'},
   ];
 
 
   constructor(
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    public data: {weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined},
+    public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined },
     private matDialogRef: MatDialogRef<AddDishDialogComponent>,
     private api: ApiService,
     private dateAdapter: DateAdapter<any>,
@@ -171,14 +163,14 @@ export class AddDishDialogComponent {
     };
 
     this.matDialogRef.close(
-       {mealToAdd: meal, useTemplate: false}
+      {mealToAdd: meal, useTemplate: false}
     );
   }
 
   openTemplateDialog() {
     this.matDialogRef.close(
       {mealToAdd: {}, useTemplate: true}
-   );
+    );
   }
 
   async saveAsTemplate() {
@@ -187,7 +179,7 @@ export class AddDishDialogComponent {
       description: this.description,
       categoryId: this.categoryId,
     };
-    try  {
+    try {
       await this.api.putMealTemplate(mealTemplate);
       this.snackBar.open("Vorlage gespeichert!", "OK", {
         duration: 3000,
@@ -202,24 +194,24 @@ export class AddDishDialogComponent {
   }
 
   formatDateWithTime(date: Date, time?: string): string {
-    let month = (date.getMonth()+1).toString().padStart(2, '0');
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
     let day = date.getDate().toString().padStart(2, '0');
     var dateWithTime = date.getFullYear() + '-' + month + '-' + day + "T";
     if (time) {
       dateWithTime = dateWithTime + time + ":00"
     } else {
       dateWithTime = dateWithTime + date.getHours().toString().padStart(2, '0')
-      + ":"
-      + date.getMinutes().toString().padStart(2, '0')
-      + ":"
-      + date.getSeconds().toString().padStart(2, '0');
+        + ":"
+        + date.getMinutes().toString().padStart(2, '0')
+        + ":"
+        + date.getSeconds().toString().padStart(2, '0');
 
     }
     return dateWithTime;
   }
 
   formatDate(date: Date): string {
-    let month = (date.getMonth()+1).toString().padStart(2, '0');
+    let month = (date.getMonth() + 1).toString().padStart(2, '0');
     let day = date.getDate().toString().padStart(2, '0');
     var formatedDate = date.getFullYear() + '-' + month + '-' + day;
     return formatedDate;
@@ -236,7 +228,7 @@ export class AddDishDialogComponent {
     this.isTemplateValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
   }
 
-  validateDate(){
+  validateDate() {
     // check if orderable date is later than delivery date
     if (this.deliveryDate && this.orderableDate) {
       if (this.orderableDate > this.deliveryDate) {

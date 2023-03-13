@@ -139,7 +139,7 @@ export class ApiService {
   }
 
   async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
-    const body = { orders: orders }
+    const body = {orders: orders}
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delete/admin/`, body)
     return lastValueFrom(response);
   }

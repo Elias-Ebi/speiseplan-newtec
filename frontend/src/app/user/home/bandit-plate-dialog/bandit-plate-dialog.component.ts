@@ -5,8 +5,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
 import { HomeUnchangeableOrderDay } from "../home.models";
-import {ApiService} from "../../../shared/services/api.service";
-import {SnackbarService} from "../../../shared/services/snackbar.service";
+import { ApiService } from "../../../shared/services/api.service";
+import { SnackbarService } from "../../../shared/services/snackbar.service";
 
 @Component({
   selector: 'app-bandit-plate-dialog',
@@ -22,14 +22,14 @@ export class BanditPlateDialogComponent {
     private dialogRef: MatDialogRef<BanditPlateDialogComponent>,
     private apiService: ApiService,
     private snackbarService: SnackbarService,
-) {
+  ) {
   }
 
   closeDialog() {
     this.dialogRef.close();
   }
 
-  async takeBandit (orderId: string) {
+  async takeBandit(orderId: string) {
     this.apiService.takeBanditPlate(orderId).then(async (order) => {
 
       this.closeDialog();

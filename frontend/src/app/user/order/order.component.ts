@@ -14,12 +14,12 @@ import { groupBy, sortByDate, sortByNumber, sortByString } from "../shared/utils
 import { MatDialog } from "@angular/material/dialog";
 import { GuestOrderDialogComponent } from "./guest-order-dialog/guest-order-dialog.component";
 import * as _ from "lodash";
-import {GuestOrderDialogValues, OrderDay, OrderMeal} from "./order.models";
+import { GuestOrderDialogValues, OrderDay, OrderMeal } from "./order.models";
 import { firstValueFrom, lastValueFrom } from "rxjs";
 import { OrderService } from "../shared/services/order.service";
 import { StateService } from "../../shared/services/state.service";
+import { CancelGuestOrderDialogComponent } from "./cancel-dialog/cancel-guest-order-dialog.component";
 import PlainDate = Temporal.PlainDate;
-import {CancelGuestOrderDialogComponent} from "./cancel-dialog/cancel-guest-order-dialog.component";
 
 @Component({
   selector: 'app-order',
@@ -103,7 +103,7 @@ export class OrderComponent implements OnInit {
 
     const dialogClosedP = lastValueFrom(dialogRef.afterClosed());
     dialogClosedP.then(async (reload: boolean) => {
-      if(reload) {
+      if (reload) {
         await this.updateOrderDay(date);
       }
     });

@@ -60,23 +60,23 @@ export class DateService {
     return this.getNextDate(currentDate, currentTime, this.threshold, 1);
   }
 
-  private getNextDate(startDate: PlainDate, time: PlainTime, threshold: PlainTime, daysToAdd: number): PlainDate {
-    if (PlainTime.compare(time, threshold) >= 0) {
-      return startDate.add({days: daysToAdd + 1});
-    }
-
-    return startDate.add({days: daysToAdd});
-  }
-
-  public getNextFiveWeekDays(){
+  public getNextFiveWeekDays() {
     let currentDate = Temporal.Now.plainDateISO();
     const weekdays = [];
     while (weekdays.length < 5) {
       if (currentDate.dayOfWeek >= 1 && currentDate.dayOfWeek <= 5) {
         weekdays.push(new PlainDate(currentDate.year, currentDate.month, currentDate.day));
       }
-      currentDate = currentDate.add({days:1})
+      currentDate = currentDate.add({days: 1})
     }
     return weekdays;
+  }
+
+  private getNextDate(startDate: PlainDate, time: PlainTime, threshold: PlainTime, daysToAdd: number): PlainDate {
+    if (PlainTime.compare(time, threshold) >= 0) {
+      return startDate.add({days: daysToAdd + 1});
+    }
+
+    return startDate.add({days: daysToAdd});
   }
 }

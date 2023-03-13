@@ -20,8 +20,8 @@ import { SnackbarService } from "../../shared/services/snackbar.service";
 import { OrderService } from "../shared/services/order.service";
 import { lastValueFrom } from "rxjs";
 import { StateService } from "../../shared/services/state.service";
+import { CancelOrderDialogComponent } from "./cancel-dialog/cancel-order-dialog.component";
 import PlainDate = Temporal.PlainDate;
-import {CancelOrderDialogComponent} from "./cancel-dialog/cancel-order-dialog.component";
 
 @Component({
   selector: 'app-home',
@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
 
     const dialogClosedP = lastValueFrom(dialogRef.afterClosed());
     dialogClosedP.then(async (reload: boolean) => {
-      if(reload) {
+      if (reload) {
         await this.loadDashboard();
       }
     });
