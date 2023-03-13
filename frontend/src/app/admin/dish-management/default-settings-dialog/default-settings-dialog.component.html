@@ -1,26 +1,36 @@
 <div class="dialog-container list-container-wide">
-  <h2>Standardwerte ändern</h2>
+  <h2>Standardwerte anpassen</h2>
+
   <div class="form">
-    <mat-form-field appearance="fill" class="form-settings">
-      <mat-label>Standardpreis</mat-label>
-      <input matInput (blur)="transformInputToFloat($event)" [(ngModel)]="currentDefaultValues.total" />
-      <mat-icon matSuffix *ngIf="startDefaultValues.total !== currentDefaultValues.total"
-        style="scale: 0.5; color: var(--clrPrimary)">circle</mat-icon>
+    <mat-form-field class="form-settings">
+      <mat-label>Preis</mat-label>
+      <input (blur)="transformInput()" [(ngModel)]="currentDefaultValues.total" matInput step="0.1" type="number"/>
+      <mat-icon class="icon" matPrefix>euro</mat-icon>
     </mat-form-field>
-    <mat-form-field appearance="fill" class="form-settings">
-      <mat-label>Bestellfrist-Uhrzeit</mat-label>
-      <input matInput type="time" [(ngModel)]="currentDefaultValues.orderableTime" />
-      <mat-icon matSuffix *ngIf="
-          startDefaultValues.orderableTime !==
-          currentDefaultValues.orderableTime
-        " style="scale: 0.5; color: var(--clrPrimary)">circle</mat-icon>
+
+    <mat-form-field class="form-settings">
+      <mat-label>Bestellfrist</mat-label>
+      <input [(ngModel)]="currentDefaultValues.orderableTime" matInput type="time"/>
+      <mat-icon class="icon" matPrefix>schedule</mat-icon>
     </mat-form-field>
   </div>
+
   <div class="dialog-buttons-container">
-    <button mat-stroked-button color="primary" class="set-button" (click)="closeDialog()">
+    <button
+      (click)="closeDialog()"
+      class="set-button"
+      color="primary"
+      mat-stroked-button
+    >
       Abbrechen
     </button>
-    <button mat-raised-button color="primary" class="set-button" [disabled]="startDefaultValues.total === currentDefaultValues.total" (click)="applyChanges()">
+
+    <button
+      (click)="applyChanges()"
+      [disabled]="invalid"
+      class="set-button"
+      color="primary"
+      mat-raised-button>
       Bestätigen
     </button>
   </div>

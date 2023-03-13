@@ -28,8 +28,8 @@
     <mat-form-field>
       <mat-label>Kategorie</mat-label>
       <mat-select (selectionChange)="validate()" [(ngModel)]="categoryId" placeholder="Kategorie wählen">
-        <mat-option *ngFor="let category of categories" [value]="category.value">
-          {{category.view}}
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{category.name}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -54,8 +54,15 @@
     <div class="date-time-row">
       <mat-form-field (click)="orderable.open()">
         <mat-label>Bestellfrist-Datum</mat-label>
-        <input (dateChange)="validate()" [(ngModel)]="orderableDate" [matDatepickerFilter]="dateWeekendFilter" [matDatepicker]="orderable"
-               [max]="maxDate" [min]="minDate" [value]="orderableDate" matInput>
+        <input
+          (dateChange)="validate()"
+          [(ngModel)]="orderableDate"
+          [matDatepicker]="orderable"
+          [matDatepickerFilter]="dateWeekendFilter"
+          [max]="maxDate"
+          [min]="minDate"
+          matInput
+        >
         <mat-datepicker-toggle [for]="orderable" matIconSuffix></mat-datepicker-toggle>
         <mat-datepicker #orderable></mat-datepicker>
       </mat-form-field>

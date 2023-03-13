@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, Inject, OnInit, ViewChild, } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef, } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -12,11 +12,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
+import { Category, CategoryService } from 'src/app/shared/services/category.service';
 
-interface Category {
-  value: string;
-  view: string;
-}
 
 @Component({
   selector: 'app-choose-dish-dialog',
@@ -37,19 +34,14 @@ interface Category {
   templateUrl: './choose-dish-dialog.component.html',
   styleUrls: ['./choose-dish-dialog.component.scss'],
 })
-export class ChooseDishDialogComponent implements AfterViewInit, OnInit {
+export class ChooseDishDialogComponent implements OnInit {
   displayedData: string[] = ['title', 'description', 'category', 'action'];
   dataSource: MatTableDataSource<MealTemplate>;
   dishes: MealTemplate[];
 
   clickedRows = new Set<MealTemplate>();
 
-  categories: Category[] = [
-    {value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch'},
-    {value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch'},
-    {value: 'af03df2a-0d22-4e7d-8a12-9269ecd318af', view: 'Vegan'},
-    {value: '85d77591-0b55-4df4-93b0-03c00bcb14b9', view: 'Salat'},
-  ];
+  categories: Category[];
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -60,10 +52,11 @@ export class ChooseDishDialogComponent implements AfterViewInit, OnInit {
     @Inject(MAT_DIALOG_DATA)
     readonly data: { name: string; description: string; categoryId: string },
     private matDialogRef: MatDialogRef<ChooseDishDialogComponent>,
-    public dialog: MatDialog,
-    private api: ApiService
+    private api: ApiService,
+    private categoryService: CategoryService,
   ) {
     this.dishes = [];
+    this.categories = this.categoryService.getAllCategories();
     this.dataSource = new MatTableDataSource();
   }
 
@@ -71,33 +64,11 @@ export class ChooseDishDialogComponent implements AfterViewInit, OnInit {
     this.dishes = await this.api.getMealTemplate();
     this.dataSource = new MatTableDataSource(this.dishes);
     this.dataSource.paginator = this.paginator;
-  }
-
-  getCategoryView(val: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.value === val) {
-        result = c.view;
-      }
-    });
-    return result;
-  }
-
-  getCategoryValue(view: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.view === view) {
-        result = c.value;
-      }
-    });
-    return result;
-  }
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  getCategoryName(id: string): string | undefined {
+    return this.categoryService.getCategory(id)?.name;
   }
 
   applySearch(event: Event) {

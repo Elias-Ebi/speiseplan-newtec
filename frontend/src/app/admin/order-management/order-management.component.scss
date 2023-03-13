@@ -3,8 +3,8 @@
 */
 .ui-container {
   display: flex;
-  flex-direction: column;
-  justify-content: right;
+  justify-content: space-between;
+  align-items: start;
 }
 
 /*
@@ -45,10 +45,10 @@ th {
   width: fit-content;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-}
 
-.drawer-reset-filter-button {
-  width: 100%
+  &:hover {
+    background-color: var(--clrLightGrey);
+  }
 }
 
 /*
@@ -76,20 +76,6 @@ th {
 .close-filter-btn {
   background-color: transparent;
   color: var(--clrNeutral);
-}
-
-.filter-container {
-  .filter-button {
-    float: left;
-  }
-  .slider {
-    float: right;
-  }
-}
-
-.delete-selected-button-container {
-  display:flex;
-  justify-content: right;
 }
 
 

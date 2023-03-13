@@ -10,17 +10,17 @@
 
     <mat-form-field>
       <mat-label>Kategoriefilter</mat-label>
-      <mat-select #test (selectionChange)="applyFilter($event)" placeholder="Kategorie wählen">
+      <mat-select #category (selectionChange)="applyFilter($event)" placeholder="Kategorie wählen">
         <mat-option>Kein Filter</mat-option>
-        <mat-option *ngFor="let category of categories" [value]="category.value">
-          {{category.view}}
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{category.name}}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
   <div class="table-container">
-    <table [dataSource]="dataSource" mat-table>
+    <table [dataSource]="dataSource" class="bg-background" mat-table>
       <ng-container matColumnDef="title">
         <th *matHeaderCellDef mat-header-cell>
           <h2>Gericht</h2>
@@ -38,17 +38,19 @@
       <ng-container matColumnDef="category">
         <th *matHeaderCellDef mat-header-cell>
           <h2>Kategorie</h2></th>
-        <td *matCellDef="let element" mat-cell>{{getCategoryView(element.categoryId)}}</td>
+        <td *matCellDef="let element" mat-cell>{{getCategoryName(element.categoryId)}}</td>
       </ng-container>
 
       <ng-container matColumnDef="action">
-        <th *matHeaderCellDef mat-header-cell>
+        <th *matHeaderCellDef class="action-column" mat-header-cell>
           <h2>Aktion</h2>
         </th>
         <td *matCellDef="let element" mat-cell>
-          <button (click)="onClickDelete(element)" class="icon-button" mat-icon-button>
-            <mat-icon>delete</mat-icon>
-          </button>
+          <div class="action-buttons">
+            <button (click)="onClickDelete(element)" class="icon-button" mat-icon-button>
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
         </td>
       </ng-container>
 
@@ -60,9 +62,9 @@
       </tr>
       <tr *matNoDataRow>
         <td class="no-data">
-          {{searchInput.value.length == 0 && getCategoryView(test.value) == 0 ?
+          {{searchInput.value.length == 0 && !getCategoryName(category.id) ?
           "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
-            "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" + getCategoryView(test.value) + "\""
+            "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" + getCategoryName(category.value) + "\""
           }}
         </td>
       </tr>

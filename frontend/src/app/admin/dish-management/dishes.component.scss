@@ -15,9 +15,9 @@
   align-items: center;
 
   .arrow-button:disabled mat-icon {
-      color: var(--clrLine);
-    }
+    color: var(--clrLine);
   }
+}
 
 .dish-table {
   td, th {
