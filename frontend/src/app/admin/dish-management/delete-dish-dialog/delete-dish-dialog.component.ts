@@ -4,8 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ApiService } from 'src/app/shared/services/api.service';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-delete-dish-dialog',
@@ -17,16 +16,13 @@ import { ApiService } from 'src/app/shared/services/api.service';
 export class DeleteDishDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data:
-      {
-        name: string,
-        id: string,
-      }
-    ,
-    private dialogRef: MatDialogRef<DeleteDishDialogComponent>,
-    private snackBar: MatSnackBar,
-    private api: ApiService
-  ) { }
+    public data: {
+      name: string,
+      id: string,
+    },
+    private dialogRef: MatDialogRef<DeleteDishDialogComponent>
+  ) {
+  }
 
   closeDialog(isDeletingDishConfirmed: boolean) {
     this.dialogRef.close(

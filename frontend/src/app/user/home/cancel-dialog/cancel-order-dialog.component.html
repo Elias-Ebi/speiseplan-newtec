@@ -1,0 +1,22 @@
+<div class="dialog-container">
+  <section class="section">
+    <h2>Stornierbestätigung {{date | fullDate}} </h2>
+    <hr class="bg-neutral"/>
+
+    <p>
+      Wollen sie die Bestellung vom wirklich stornieren?
+    </p>
+
+    <div class="button-container">
+      <button (click)="closeDialog()" mat-stroked-button>Abbrechen</button>
+
+      <button
+        (click)="deleteOrdersOn(date)"
+        color="primary"
+        mat-flat-button
+      >
+        Bestätigen
+      </button>
+    </div>
+  </section>
+</div>

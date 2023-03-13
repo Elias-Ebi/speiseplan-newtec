@@ -4,39 +4,40 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
-import { HomeUnchangeableOrderDay } from "../home.models";
 import { ApiService } from "../../../shared/services/api.service";
 import { SnackbarService } from "../../../shared/services/snackbar.service";
+import { Temporal } from "@js-temporal/polyfill";
+import PlainDate = Temporal.PlainDate;
 
 @Component({
-  selector: 'app-bandit-plate-dialog',
+  selector: 'app-cancel-order-dialog',
   standalone: true,
   imports: [CommonModule, MatIconModule, MatButtonModule, FullDatePipe],
-  templateUrl: './bandit-plate-dialog.component.html',
-  styleUrls: ['./bandit-plate-dialog.component.scss']
+  templateUrl: './cancel-order-dialog.component.html',
+  styleUrls: ['./cancel-order-dialog.component.scss']
 })
-export class BanditPlateDialogComponent {
+export class CancelOrderDialogComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public banditPlateDays: HomeUnchangeableOrderDay[],
-    private dialogRef: MatDialogRef<BanditPlateDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public date: PlainDate,
+    private dialogRef: MatDialogRef<CancelOrderDialogComponent>,
     private apiService: ApiService,
     private snackbarService: SnackbarService,
   ) {
   }
 
   closeDialog() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
-  async takeBandit(orderId: string) {
-    this.apiService.takeBanditPlate(orderId).then(async (order) => {
+  async deleteOrdersOn(date: PlainDate) {
+    await this.apiService.deleteOrdersOn(date).then(async () => {
 
-      this.closeDialog();
-      this.snackbarService.success(`${order.meal.name} erfolgreich übernommen.`);
+      this.dialogRef.close(true);
+      this.snackbarService.success(`Alle Bestellungen erfolgreich storniert.`);
     })
       .catch((err) => {
-        this.snackbarService.error(`Der Räuberteller konnte nicht übernommen werden! ${err.message.message}`);
+        this.snackbarService.error(`Bestellungen konnten nicht storniert werden! ${err.message.message}`);
       });
   }
 }
