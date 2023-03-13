@@ -14,8 +14,17 @@
 }
 
 .table-container {
+  table {
+    text-align: right;
+  }
+
   td, th {
+    padding: 0.5rem 0;
     vertical-align: middle;
+  }
+
+  th {
+    border-bottom: 1px solid var(--clrNeutral);
   }
 
   .mat-mdc-row {
@@ -35,4 +44,13 @@
   padding-top: 1rem;
 }
 
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.action-column {
+  text-align: right;
+}
 
