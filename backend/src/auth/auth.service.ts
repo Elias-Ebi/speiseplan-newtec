@@ -2,7 +2,7 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/data/entitites/user.entity';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { JwtPayload } from './models/jwt-payload';
 import { AuthUser } from './models/AuthUser';
 import { Profile } from '../data/entitites/profile.entity';
@@ -67,5 +67,39 @@ export class AuthService {
     }
 
     return profile;
+  }
+
+  async getAllAdminProfiles(): Promise<Profile[]> {
+    const options: FindManyOptions<Profile> = {
+      where: { isAdmin: true }
+    };
+
+    const profiles = await this.profileRepository.find(options);
+
+    return profiles;
+  }
+
+  async getAllNonAdminProfiles(): Promise<Profile[]> {
+    const options: FindManyOptions<Profile> = {
+      where: { isAdmin: false }
+    };
+
+    const profiles = await this.profileRepository.find(options);
+    
+    return profiles;
+  }
+
+  async toggleAdminAccess(concernedUser: string): Promise<Profile> {
+    const options: FindOneOptions<Profile> = {
+      where: { email: concernedUser }
+    };
+    const profile = await this.profileRepository.findOne(options);
+    
+    if (!profile) {
+      throw new UnauthorizedException('Profile not found!');
+    } else {
+      profile.isAdmin = !profile.isAdmin;
+      return this.profileRepository.save(profile);
+    }
   }
 }

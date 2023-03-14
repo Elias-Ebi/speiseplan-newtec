@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { SkipAuth } from './decorators/skip-auth.decorator';
 import { Profile } from '../data/entitites/profile.entity';
 import { AuthUser } from './models/AuthUser';
+import { AdminOnly } from './decorators/admin-only.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -32,5 +33,24 @@ export class AuthController {
   getProfile(@Request() req): Promise<Profile> {
     const user = req.user as AuthUser;
     return this.authService.getProfile(user.email);
+  }
+
+  @Get('admin-profiles')
+  @AdminOnly()
+  getAllAdminProfiles(@Request() req): Promise<Profile[]> {
+    return this.authService.getAllAdminProfiles();
+  }
+
+  @Get('non-admin-profiles')
+  @AdminOnly()
+  getAllNonAdminProfiles(@Request() req): Promise<Profile[]> {
+    return this.authService.getAllNonAdminProfiles();
+  }
+
+  @Put('admin-access')
+  @AdminOnly()
+  toggleAdminAccess(@Request() req): Promise<Profile> {
+    const concernedUser = req.body.concernedUser;
+    return this.authService.toggleAdminAccess(concernedUser);
   }
 }
