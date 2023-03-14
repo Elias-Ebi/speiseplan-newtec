@@ -61,9 +61,8 @@
       </mat-slide-toggle>
 
       <mat-calendar
-        (selectedChange)="filterOrdersByDate()"
+        (selectedChange)="filterOrdersByDate($event)"
         *ngIf="!useDateInterval"
-        [(selected)]="selectedDate"
       >
       </mat-calendar>
 
@@ -74,7 +73,7 @@
       >
       </mat-calendar>
 
-      <div (click)="removeDateFilter()" *ngIf="selectedDate || selectedDateRange" class="icon-with-text filter-button">
+      <div (click)="removeDateFilter()" *ngIf="dateSelected" class="icon-with-text filter-button">
         <mat-icon>close</mat-icon>
         <p>Datumsfilter entfernen</p>
       </div>

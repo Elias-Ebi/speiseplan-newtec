@@ -26,7 +26,8 @@
       <button (click)="closeDialog()" mat-stroked-button>Abbrechen</button>
 
       <button
-        [disabled]="form.invalid || !selectedIds.size" [mat-dialog-close]="values"
+        (click)="order()"
+        [disabled]="form.invalid || !selectedIds.size"
         color="primary"
         mat-flat-button
       >
