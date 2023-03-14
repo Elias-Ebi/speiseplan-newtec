@@ -5,8 +5,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
 import { OrderCardComponent } from "../../shared/components/order-card/order-card.component";
-import { ApiService } from "../../../shared/services/api.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatInputModule } from "@angular/material/input";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { OrderDay } from "../order.models";
@@ -25,8 +23,6 @@ export class GuestOrderDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public orderDay: OrderDay,
     private dialogRef: MatDialogRef<GuestOrderDialogComponent>,
-    private apiService: ApiService,
-    private snackBar: MatSnackBar,
     private fb: FormBuilder
   ) {
   }

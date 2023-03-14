@@ -1,312 +1,326 @@
 <div class="main-content">
+  <div class="section">
+    <div class="section-headline-container">
+      <h2>Gerichteverwaltung</h2>
+      <button (click)="openDefaultSettingsDialog()" class="standard-settings-button" color="primary" mat-stroked-button>
+        <mat-icon>tune</mat-icon>
+        Standardwerte anpassen
+      </button>
+    </div>
+
+    <hr class="bg-neutral"/>
+  </div>
+
   <div class="dishes--date-container">
-    <button mat-icon-button class="arrow-button" (click)="getPreviousCalendarWeek()"
-      [disabled]="this.calendarWeekIndex == 0">
+    <button (click)="getPreviousCalendarWeek()" [disabled]="this.calendarWeekIndex == 0" class="arrow-button"
+            mat-icon-button>
       <mat-icon class="arrow-back" color="primary">arrow_back</mat-icon>
     </button>
 
     <h2>{{ currentlyDisplayedWeek.span }}</h2>
 
-    <button mat-icon-button class="arrow-button" (click)="getNextCalendarWeek()"
-      [disabled]="this.calendarWeekIndex == MAX_FOLLOWING_WEEKS">
+    <button (click)="getNextCalendarWeek()" [disabled]="this.calendarWeekIndex == MAX_FOLLOWING_WEEKS" class="arrow-button"
+            mat-icon-button>
       <mat-icon class="arrow-forward" color="primary">arrow_forward</mat-icon>
     </button>
   </div>
 
   <div class="dishes--week-tabs-container">
-    <mat-tab-group #tabs (selectedTabChange)="onTabChange($event)" animationDuration="0ms" [selectedIndex]="currentTab">
-      <mat-tab label="Montag" [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex &gt; 0">
-        <table id="table-monday" mat-table [dataSource]="dataSource" class="bg-background">
+    <mat-tab-group #tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="currentTab" animationDuration="0ms">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0" label="Montag">
+        <table [dataSource]="dataSource" class="bg-background" id="table-monday" mat-table>
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%">
+            <th *matHeaderCellDef mat-header-cell style="width: 20%">
               <h2>Gericht</h2>
             </th>
-            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%">
+            <th *matHeaderCellDef mat-header-cell style="width: 65%">
               <h2>Beschreibung</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               {{ element.description }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 10%">
+            <th *matHeaderCellDef mat-header-cell style="width: 10%">
               <h2>Kategorie</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{ getCategoryView(element.categoryId) }}
+            <td *matCellDef="let element" mat-cell>
+              {{ getCategoryName(element.categoryId) }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef style="width: 5%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
               <h2>Aktion</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button color="primary" class="icon-button" matTooltip="Entfernen" matTooltipPosition="right"
-                (click)="onClickDeleteDish(element)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
+                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
+                        matTooltip="Entfernen"
+                        matTooltipPosition="right">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
-          <tr class="mat-row" *matNoDataRow>
-            <td style="
+          <tr *matNoDataRow class="mat-row">
+            <td class="mat-cell" colspan="4" style="
                 padding-top: 1rem;
                 padding-left: 1rem;
                 padding-bottom: 1rem;
-              " class="mat-cell" colspan="4">
+              ">
               {{ "Es sind keine Daten vorhanden." }}
             </td>
           </tr>
         </table>
 
-        <button mat-flat-button color="primary" class="button-add" (click)="onClickChooseDish()">
+        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
           GERICHT HINZUFÜGEN
         </button>
       </mat-tab>
-      <mat-tab label="Dienstag" [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex  &gt; 1">
-        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex  > 1" label="Dienstag">
+        <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
               <h2>Gericht</h2>
             </th>
-            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
               <h2>Beschreibung</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               {{ element.description }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 10%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
               <h2>Kategorie</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{ getCategoryView(element.categoryId) }}
+            <td *matCellDef="let element" mat-cell>
+              {{ getCategoryName(element.categoryId) }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef style="width: 5%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
               <h2>Aktion</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button color="primary" class="icon-button" matTooltip="Entfernen" matTooltipPosition="right"
-                (click)="onClickDeleteDish(element)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
+                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
+                        matTooltip="Entfernen"
+                        matTooltipPosition="right">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
-          <tr class="mat-row" *matNoDataRow>
-            <td style="
+          <tr *matNoDataRow class="mat-row">
+            <td class="mat-cell" colspan="4" style="
                 padding-top: 1rem;
                 padding-left: 1rem;
                 padding-bottom: 1rem;
-              " class="mat-cell" colspan="4">
+              ">
               {{ "Es sind keine Daten vorhanden." }}
             </td>
           </tr>
         </table>
 
-        <button mat-flat-button color="primary" class="button-add" (click)="onClickChooseDish()">
+        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
           GERICHT HINZUFÜGEN
         </button>
       </mat-tab>
-      <mat-tab label="Mittwoch" [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex &gt; 2">
-        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 2" label="Mittwoch">
+        <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
               <h2>Gericht</h2>
             </th>
-            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
               <h2>Beschreibung</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               {{ element.description }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 10%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
               <h2>Kategorie</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{ getCategoryView(element.categoryId) }}
+            <td *matCellDef="let element" mat-cell>
+              {{ getCategoryName(element.categoryId) }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef style="width: 5%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
               <h2>Aktion</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button color="primary" class="icon-button" matTooltip="Entfernen" matTooltipPosition="right"
-                (click)="onClickDeleteDish(element)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
+                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
+                        matTooltip="Entfernen"
+                        matTooltipPosition="right">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
-          <tr class="mat-row" *matNoDataRow>
-            <td style="
+          <tr *matNoDataRow class="mat-row">
+            <td class="mat-cell" colspan="4" style="
                 padding-top: 1rem;
                 padding-left: 1rem;
                 padding-bottom: 1rem;
-              " class="mat-cell" colspan="4">
+              ">
               {{ "Es sind keine Daten vorhanden." }}
             </td>
           </tr>
         </table>
 
-        <button mat-flat-button color="primary" class="button-add" (click)="onClickChooseDish()">
+        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
           GERICHT HINZUFÜGEN
         </button>
       </mat-tab>
-      <mat-tab label="Donnerstag" [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex &gt; 3">
-        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 3" label="Donnerstag">
+        <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
               <h2>Gericht</h2>
             </th>
-            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
               <h2>Beschreibung</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               {{ element.description }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 10%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
               <h2>Kategorie</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{ getCategoryView(element.categoryId) }}
+            <td *matCellDef="let element" mat-cell>
+              {{ getCategoryName(element.categoryId) }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef style="width: 5%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
               <h2>Aktion</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button color="primary" class="icon-button" matTooltip="Entfernen" matTooltipPosition="right"
-                (click)="onClickDeleteDish(element)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
+                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
+                        matTooltip="Entfernen"
+                        matTooltipPosition="right">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
-          <tr class="mat-row" *matNoDataRow>
-            <td style="
+          <tr *matNoDataRow class="mat-row">
+            <td class="mat-cell" colspan="4" style="
                 padding-top: 1rem;
                 padding-left: 1rem;
                 padding-bottom: 1rem;
-              " class="mat-cell" colspan="4">
+              ">
               {{ "Es sind keine Daten vorhanden." }}
             </td>
           </tr>
         </table>
 
-        <button mat-flat-button color="primary" class="button-add" (click)="onClickChooseDish()">
+        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
           GERICHT HINZUFÜGEN
         </button>
       </mat-tab>
-      <mat-tab label="Freitag" [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex &gt; 4">
-        <table mat-table [dataSource]="dataSource" class="bg-background dish-table">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 4" label="Freitag">
+        <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef style="width: 20%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
               <h2>Gericht</h2>
             </th>
-            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th mat-header-cell *matHeaderCellDef style="width: 65%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
               <h2>Beschreibung</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
+            <td *matCellDef="let element" mat-cell>
               {{ element.description }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef style="width: 10%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
               <h2>Kategorie</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
-              {{ getCategoryView(element.categoryId) }}
+            <td *matCellDef="let element" mat-cell>
+              {{ getCategoryName(element.categoryId) }}
             </td>
           </ng-container>
 
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef style="width: 5%" class="clr-primary fs-body-bold">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
               <h2>Aktion</h2>
             </th>
-            <td mat-cell *matCellDef="let element">
-              <div class="action-buttons">
-                <button mat-icon-button color="primary" class="icon-button" matTooltip="Entfernen" matTooltipPosition="right"
-                (click)="onClickDeleteDish(element)">
+            <td *matCellDef="let element" mat-cell>
+              <button (click)="onClickDeleteDish(element)" color="primary" mat-icon-button matTooltip="Entfernen"
+                      matTooltipPosition="right">
                 <mat-icon>delete</mat-icon>
               </button>
-            </div>
             </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
 
-          <tr class="mat-row" *matNoDataRow>
-            <td style="
+          <tr *matNoDataRow class="mat-row">
+            <td class="mat-cell" colspan="4" style="
                 padding-top: 1rem;
                 padding-left: 1rem;
                 padding-bottom: 1rem;
-              " class="mat-cell" colspan="4">
+              ">
               {{ "Es sind keine Daten vorhanden." }}
             </td>
           </tr>
         </table>
 
-        <button mat-flat-button color="primary" class="button-add" (click)="onClickChooseDish()">
+        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
           GERICHT HINZUFÜGEN
         </button>
       </mat-tab>

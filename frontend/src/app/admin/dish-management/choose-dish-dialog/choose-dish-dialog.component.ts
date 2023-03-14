@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef, } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef, } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -52,7 +52,6 @@ export class ChooseDishDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA)
     readonly data: { name: string; description: string; categoryId: string },
     private matDialogRef: MatDialogRef<ChooseDishDialogComponent>,
-    public dialog: MatDialog,
     private api: ApiService,
     private categoryService: CategoryService,
   ) {
