@@ -11,7 +11,7 @@ import { ApiService } from 'src/app/shared/services/api.service';
 import { SnackbarService } from "../../../shared/services/snackbar.service";
 
 @Component({
-  selector: 'app-default-settings-dialog',
+  selector: 'app-default-settings-dialogRef',
   standalone: true,
   imports: [
     CommonModule,
