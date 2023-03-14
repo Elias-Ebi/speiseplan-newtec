@@ -60,6 +60,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
+                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
+                  matTooltipPosition="left">
+                  <mat-icon>edit</mat-icon>
+                </button>
                 <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
                         matTooltip="Entfernen"
                         matTooltipPosition="right">
@@ -84,7 +88,7 @@
         </table>
 
         <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
-          GERICHT HINZUFÜGEN
+          Gericht hinzufügen
         </button>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex  > 1" label="Dienstag">
@@ -120,7 +124,11 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
+                <button mat-icon-button class="icon-button-outlined" color="primary" matTooltip="Bearbeiten"
+                  matTooltipPosition="left">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button (click)="onClickDeleteDish(element)" class="icon-button" (click)="onClickEditDish(element)" color="primary" mat-icon-button
                         matTooltip="Entfernen"
                         matTooltipPosition="right">
                   <mat-icon>delete</mat-icon>
@@ -144,7 +152,7 @@
         </table>
 
         <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
-          GERICHT HINZUFÜGEN
+          Gericht hinzufügen
         </button>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 2" label="Mittwoch">
@@ -180,6 +188,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
+                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
+                  matTooltipPosition="left">
+                  <mat-icon>edit</mat-icon>
+                </button>
                 <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
                         matTooltip="Entfernen"
                         matTooltipPosition="right">
@@ -204,7 +216,7 @@
         </table>
 
         <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
-          GERICHT HINZUFÜGEN
+          Gericht hinzufügen
         </button>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 3" label="Donnerstag">
@@ -240,6 +252,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
+                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
+                  matTooltipPosition="left">
+                  <mat-icon>edit</mat-icon>
+                </button>
                 <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
                         matTooltip="Entfernen"
                         matTooltipPosition="right">
@@ -264,7 +280,7 @@
         </table>
 
         <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
-          GERICHT HINZUFÜGEN
+          Gericht hinzufügen
         </button>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 4" label="Freitag">
@@ -299,10 +315,17 @@
               <h2>Aktion</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
-              <button (click)="onClickDeleteDish(element)" color="primary" mat-icon-button matTooltip="Entfernen"
-                      matTooltipPosition="right">
-                <mat-icon>delete</mat-icon>
-              </button>
+              <div class="action-buttons">
+                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
+                  matTooltipPosition="left">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
+                        matTooltip="Entfernen"
+                        matTooltipPosition="right">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 
@@ -321,7 +344,7 @@
         </table>
 
         <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
-          GERICHT HINZUFÜGEN
+          Gericht hinzufügen
         </button>
       </mat-tab>
     </mat-tab-group>

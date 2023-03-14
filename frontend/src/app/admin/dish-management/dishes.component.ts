@@ -93,7 +93,7 @@ export class DishesComponent implements OnInit {
     return this.categoryService.getCategory(id)?.name;
   }
 
-  onClickChooseDish(selectedMealTemplate?: MealTemplate) {
+  onClickChooseDish(selectedMealTemplate?: MealTemplate, mealToEdit?: Meal) {
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
     let currentDay =
       this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
@@ -103,6 +103,7 @@ export class DishesComponent implements OnInit {
         weekday: this.weekdayProperty,
         deliveryDate: new Date(currentDay),
         selectedMealTemplate,
+        mealToEdit,
       },
       autoFocus: false,
     });
@@ -120,15 +121,20 @@ export class DishesComponent implements OnInit {
             dialogRef
               .afterClosed()
               .subscribe(async (selectedMealTemplate: any) => {
-                if (JSON.stringify(selectedMealTemplate) !== '{}') {
-                  this.onClickChooseDish(selectedMealTemplate);
+                if (JSON.stringify(selectedMealTemplate !== '{}')) {
+                  this.onClickChooseDish(selectedMealTemplate, mealToEdit);
                 }
               });
           } else {
-            this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(
-              mealData.mealToAdd
-            );
-            await this.api.addMeal(mealData.mealToAdd);
+            if (!mealToEdit) {
+              this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(
+                mealData.mealToAdd
+              );
+              await this.api.addMeal(mealData.mealToAdd);
+            } else {
+              mealData.mealToAdd.id = mealToEdit.id;
+              await this.api.updateMeal(mealData.mealToAdd);
+            }
             await this.updateTableSource();
           }
         }
@@ -153,6 +159,10 @@ export class DishesComponent implements OnInit {
           }
         }
       });
+  }
+
+  onClickEditDish(element: Meal) {
+    this.onClickChooseDish(undefined, element)
   }
 
   openDefaultSettingsDialog() {

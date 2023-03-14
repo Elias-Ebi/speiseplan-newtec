@@ -64,7 +64,6 @@ export class DefaultSettingsDialogComponent implements OnInit {
       .catch(() => {
         this.snackbarService.error('Standardwerte konnten nicht gespreichert werden.');
       });
-
     this.closeDialog();
   }
 

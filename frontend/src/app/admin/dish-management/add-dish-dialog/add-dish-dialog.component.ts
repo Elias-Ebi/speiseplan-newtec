@@ -14,6 +14,7 @@ import * as _ from "lodash";
 import { MatIconModule } from '@angular/material/icon';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { SnackbarService } from "../../../shared/services/snackbar.service";
+import { Meal } from 'src/app/shared/models/meal';
 
 @Component({
   selector: 'app-add-dish-dialog',
@@ -56,7 +57,7 @@ export class AddDishDialogComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined },
+    public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined, mealToEdit: Meal | undefined},
     private matDialogRef: MatDialogRef<AddDishDialogComponent>,
     private api: ApiService,
     private categoryService: CategoryService,
@@ -69,6 +70,11 @@ export class AddDishDialogComponent implements OnInit {
       this.name = data.selectedMealTemplate.name;
       this.description = data.selectedMealTemplate.description;
       this.categoryId = data.selectedMealTemplate.categoryId;
+      this.validate();
+    } else if(data.mealToEdit) {
+      this.name = data.mealToEdit.name;
+      this.description = data.mealToEdit.description;
+      this.categoryId = data.mealToEdit.categoryId;
       this.validate();
     } else {
       this.name = '';

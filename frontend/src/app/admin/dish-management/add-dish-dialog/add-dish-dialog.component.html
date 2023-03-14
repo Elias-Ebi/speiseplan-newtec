@@ -1,5 +1,5 @@
 <div class="dialog-container list-container-wide">
-  <h2>Neues Gericht erstellen</h2>
+  <h2>{{data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"}}</h2>
 
   <div class="button-group">
     <button (click)="saveAsTemplate()" [disabled]="!isTemplateValid" color="primary" mat-flat-button>
@@ -81,6 +81,6 @@
 
   <div class="dialog-buttons-container">
     <button (click)="closeDialog()" color="primary" mat-stroked-button>Abbrechen</button>
-    <button (click)="createMeal()" [disabled]="!isFormValid" color="primary" mat-flat-button>Erstellen</button>
+    <button (click)="createMeal()" [disabled]="!isFormValid" color="primary" mat-flat-button>Speichern</button>
   </div>
 </div>
