@@ -8,6 +8,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import { MealTemplate } from '../models/meal-template';
 import { DefaultValues } from '../models/default-values';
+import { Profile } from "../models/profile";
 import PlainDate = Temporal.PlainDate;
 
 @Injectable({
@@ -40,11 +41,6 @@ export class ApiService {
 
   async getMealsOn(date: PlainDate): Promise<Meal[]> {
     const response = this.httpClient.get<Meal[]>(`${environment.apiUrl}/meals/date/${date.toString()}`);
-    return lastValueFrom(response);
-  }
-
-  async deleteMeal(id: string): Promise<Meal> {
-    const response = this.httpClient.delete<Meal>(`${environment.apiUrl}/meals/${id}`);
     return lastValueFrom(response);
   }
 
@@ -133,6 +129,16 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async updateMeal(meal: Meal): Promise<Meal> {
+    const response = this.httpClient.put<Meal>(`${environment.apiUrl}/meals`, meal);
+    return lastValueFrom(response);
+  }
+
+  async deleteMeal(id: string): Promise<Meal> {
+    const response = this.httpClient.delete<Meal>(`${environment.apiUrl}/meals/${id}`);
+    return lastValueFrom(response);
+  }
+
   async getDefaultValues(): Promise<DefaultValues> {
     const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);
@@ -151,6 +157,21 @@ export class ApiService {
 
   async getAllChangeableOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/admin/changeable`);
+    return lastValueFrom(response);
+  }
+
+  async getAllAdminProfiles(): Promise<Profile[]> {
+    const response = this.httpClient.get<Profile[]>(`${environment.apiUrl}/auth/admin-profiles`);
+    return lastValueFrom(response);
+  }
+
+  async getAllNonAdminProfiles(): Promise<Profile[]> {
+    const response = this.httpClient.get<Profile[]>(`${environment.apiUrl}/auth/non-admin-profiles`);
+    return lastValueFrom(response);
+  }
+
+  async toggleAdminAccess(email: string): Promise<Profile> {
+    const response = this.httpClient.put<Profile>(`${environment.apiUrl}/auth/change-admin-access/${email}`, {});
     return lastValueFrom(response);
   }
 }

@@ -49,8 +49,8 @@ export class DishesComponent implements OnInit {
 
   MAX_FOLLOWING_WEEKS = 2;
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
-  dataSource: MatTableDataSource<Meal>;
-  weekdayProperty: string;
+  dataSource = new MatTableDataSource<Meal>();
+  weekdayProperty = 'monday';
   currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(
     Temporal.Now.plainDateISO()
   );
@@ -64,8 +64,6 @@ export class DishesComponent implements OnInit {
     private snackbarService: SnackbarService,
     private categoryService: CategoryService
   ) {
-    this.weekdayProperty = 'monday';
-    this.dataSource = new MatTableDataSource();
   }
 
   async ngOnInit(): Promise<void> {
@@ -93,7 +91,7 @@ export class DishesComponent implements OnInit {
     return this.categoryService.getCategory(id)?.name;
   }
 
-  onClickChooseDish(selectedMealTemplate?: MealTemplate) {
+  create(selectedMealTemplate?: MealTemplate, mealToEdit?: Meal) {
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
     let currentDay =
       this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
@@ -103,6 +101,7 @@ export class DishesComponent implements OnInit {
         weekday: this.weekdayProperty,
         deliveryDate: new Date(currentDay),
         selectedMealTemplate,
+        mealToEdit,
       },
       autoFocus: false,
     });
@@ -121,45 +120,54 @@ export class DishesComponent implements OnInit {
               .afterClosed()
               .subscribe(async (selectedMealTemplate: any) => {
                 if (JSON.stringify(selectedMealTemplate) !== '{}') {
-                  this.onClickChooseDish(selectedMealTemplate);
+                  this.create(selectedMealTemplate, mealToEdit);
                 }
               });
           } else {
-            this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(
-              mealData.mealToAdd
-            );
-            await this.api.addMeal(mealData.mealToAdd);
+            if (!mealToEdit) {
+              this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(
+                mealData.mealToAdd
+              );
+              await this.api.addMeal(mealData.mealToAdd);
+            } else {
+              mealData.mealToAdd.id = mealToEdit.id;
+              await this.api.updateMeal(mealData.mealToAdd);
+            }
             await this.updateTableSource();
           }
         }
       });
   }
 
-  onClickDeleteDish(element: any) {
+  edit(meal: Meal) {
+    this.create(undefined, meal)
+  }
+
+  delete(meal: Meal) {
     const dialogRef = this.dialog.open(DeleteDishDialogComponent, {
-      data: {name: element.name},
+      data: {name: meal.name},
     });
 
     dialogRef
       .afterClosed()
       .subscribe(async (data: { isDeletingDishConfirmed: boolean }) => {
-        if (data.isDeletingDishConfirmed) {
-          try {
-            await this.api.deleteMeal(element.id);
-            await this.updateTableSource();
-            this.snackbarService.success('Gericht erfolgreich gelöscht!');
-          } catch (error) {
-            this.snackbarService.error('Gericht konnte nicht gelöscht werden.');
-          }
+        if (!data.isDeletingDishConfirmed) {
+          return;
         }
+
+        await this.api.deleteMeal(meal.id)
+          .then(() => {
+            this.snackbarService.success('Gericht erfolgreich gelöscht!');
+          })
+          .catch(() => {
+            this.snackbarService.error('Gericht konnte nicht gelöscht werden.');
+          });
+        await this.updateTableSource();
       });
   }
 
-  openDefaultSettingsDialog() {
-    this.dialog.open(DefaultSettingsDialogComponent, {
-      data: {},
-      autoFocus: false,
-    });
+  editDefaultSettings() {
+    this.dialog.open(DefaultSettingsDialogComponent, {autoFocus: false});
   }
 
   async onTabChange(event: any) {
@@ -218,10 +226,7 @@ export class DishesComponent implements OnInit {
   }
 
   async updateTableSource() {
-    const mealsOnDate = await this.api.getMealsOn(
-      this.currentlyDisplayedWeek[this.weekdayProperty].date
-    );
-    this.dataSource = new MatTableDataSource(mealsOnDate);
+    this.dataSource.data = await this.api.getMealsOn(this.currentlyDisplayedWeek[this.weekdayProperty].date);
   }
 
   async disableImpossibleTabs() {
@@ -238,7 +243,7 @@ export class DishesComponent implements OnInit {
         this.currentlyDisplayedWeek.monday.date
       );
       // to consider: sunday == 0, mondaytab = 0
-      const currentIndex = this.parseToTabIndex(new Date().getDay());
+      const currentIndex = new Date().getDay() - 1;
       if (currentIndex < 4) {
         this.currentTab = currentIndex + 1;
       }
@@ -258,9 +263,5 @@ export class DishesComponent implements OnInit {
         await this.updateTableSource();
       }
     }
-  }
-
-  parseToTabIndex(day: number) {
-    return day - 1;
   }
 }
