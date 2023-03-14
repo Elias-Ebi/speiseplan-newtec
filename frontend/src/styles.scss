@@ -70,6 +70,12 @@ button {
   max-width: calc(80rem + 2 * 2rem);
 }
 
+.dialog-action-button-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
 .icon-with-text {
   display: grid;
   align-items: center;
@@ -85,6 +91,11 @@ button {
   color: white;
   background: var(--clrPrimary);
   border-radius: 0.75rem;
+}
+
+.icon-button:disabled.icon-button:disabled {
+  color: var(--clrDisabled);
+  background: var(--clrDisabledBackground);
 }
 
 .icon-button-outlined.icon-button-outlined {

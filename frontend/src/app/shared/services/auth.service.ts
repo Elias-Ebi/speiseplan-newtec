@@ -56,21 +56,4 @@ export class AuthService {
     const profile = await lastValueFrom(response$);
     this.profileSource$.next(profile);
   }
-
-
-  async getAllAdminProfiles(): Promise<Profile[]> {
-    const response = this.httpClient.get<Profile[]>(`${environment.apiUrl}/auth/admin-profiles`);
-    return lastValueFrom(response);
-  }
-
-  async getAllNonAdminProfiles(): Promise<Profile[]> {
-    const response = this.httpClient.get<Profile[]>(`${environment.apiUrl}/auth/non-admin-profiles`);
-    return lastValueFrom(response);
-  }
-
-  async toggleAdminAccess(userEmail: string): Promise<Profile> {
-    const payload = {concernedUser: userEmail}
-    const response = this.httpClient.put<Profile>(`${environment.apiUrl}/auth/admin-access`, payload);
-    return lastValueFrom(response);
-  }
 }

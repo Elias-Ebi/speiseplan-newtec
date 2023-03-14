@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,6 +14,7 @@ import * as _ from "lodash";
 import { MatIconModule } from '@angular/material/icon';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { SnackbarService } from "../../../shared/services/snackbar.service";
+import { Meal } from 'src/app/shared/models/meal';
 
 @Component({
   selector: 'app-add-dish-dialog',
@@ -35,28 +36,26 @@ import { SnackbarService } from "../../../shared/services/snackbar.service";
 })
 export class AddDishDialogComponent implements OnInit {
   MAX_LENGTH: number = 70;
-  orderTime: string;
-  deliveryTime: string;
-  isFormValid: boolean = false;
+  orderTime: string = '00:00';
+  deliveryTime: string = '00:00';
+  isFormValid = false;
   areDatesValid = true;
   validationHint = '';
-  isTemplateValid: boolean = false;
-  name: string;
-  description: string;
-  categoryId: string;
+  isTemplateValid = false;
+  name = '';
+  description = '';
+  categoryId = '';
   deliveryDate: Date;
   orderableDate: Date;
-  minDate: Date;
-  maxDate: Date;
-  total: number;
-
+  minDate: Date = new Date();
+  maxDate: Date = new Date();
+  total: number = 0;
   categories: Category[];
 
 
   constructor(
-    public dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA)
-    public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined },
+    public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined, mealToEdit: Meal | undefined },
     private matDialogRef: MatDialogRef<AddDishDialogComponent>,
     private api: ApiService,
     private categoryService: CategoryService,
@@ -65,28 +64,27 @@ export class AddDishDialogComponent implements OnInit {
   ) {
     this.dateAdapter.setLocale('de');
     this.categories = this.categoryService.getAllCategories();
+
+
     if (data.selectedMealTemplate) {
       this.name = data.selectedMealTemplate.name;
       this.description = data.selectedMealTemplate.description;
       this.categoryId = data.selectedMealTemplate.categoryId;
-      this.validate();
-    } else {
-      this.name = '';
-      this.description = '';
-      this.categoryId = '';
+    } else if (data.mealToEdit) {
+      this.name = data.mealToEdit.name;
+      this.description = data.mealToEdit.description;
+      this.categoryId = data.mealToEdit.categoryId;
     }
-    this.validateTemplate();
+
+    this.validate();
     this.deliveryDate = data.deliveryDate;
     this.orderableDate = _.cloneDeep(data.deliveryDate);
     this.orderableDate = this.setOrderableDate();
-    this.orderTime = '00:00';
-    this.deliveryTime = '00:00';
-    this.total = 0.0;
-
-    // let yesterday.setDate(new Date() - 1);
-    this.minDate = new Date();
-    this.maxDate = new Date();
     this.maxDate.setDate(this.deliveryDate.getDate() - 1);
+  }
+
+  get dialogTitle() {
+    return this.data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"
   }
 
   async ngOnInit() {
@@ -145,12 +143,14 @@ export class AddDishDialogComponent implements OnInit {
       description: this.description,
       categoryId: this.categoryId,
     };
-    try {
-      await this.api.putMealTemplate(mealTemplate);
-      this.snackbarService.success("Vorlage erfolgreich gespeichert!");
-    } catch (error) {
-      this.snackbarService.error("Vorlage konnte nicht gespeichert werden.");
-    }
+
+    await this.api.putMealTemplate(mealTemplate)
+      .then(() => {
+        this.snackbarService.success("Vorlage erfolgreich gespeichert!");
+      })
+      .catch(() => {
+        this.snackbarService.error("Vorlage konnte nicht gespeichert werden.");
+      });
   }
 
   formatDateWithTime(date: Date, time?: string): string {
@@ -179,39 +179,33 @@ export class AddDishDialogComponent implements OnInit {
   validate() {
     // TODO:check dates & time
     this.isFormValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
-    this.validateTemplate();
     this.validateDate();
   }
 
-  validateTemplate() {
-    this.isTemplateValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
-  }
-
   validateDate() {
-    // check if orderable date is later than delivery date
-    if (this.deliveryDate && this.orderableDate) {
-      if (this.orderableDate > this.deliveryDate) {
-        this.isFormValid = false;
-        this.areDatesValid = false;
-        this.validationHint = 'Das Bestelldatum darf nicht hinter dem Lieferdatum liegen.';
-        // check if delivery date or orderable date is on a weekend
-      } else if (this.deliveryDate.getDay() == 6 || this.deliveryDate.getDay() == 0) {
-        this.isFormValid = false;
-        this.areDatesValid = false;
-        this.validationHint = 'Das Lieferdatum darf nicht auf einem Wochenendtag liegen.';
-      } else if (this.orderableDate.getDay() == 6 || this.orderableDate.getDay() == 0) {
-        this.isFormValid = false;
-        this.areDatesValid = false;
-        this.validationHint = 'Das Bestelldatum darf nicht auf einem Wochenendtag liegen.';
-      } else {
-        this.validationHint = ''
-        this.areDatesValid = true;
-      }
+    if (!this.deliveryDate || !this.orderableDate) {
+      return;
+    }
+
+    if (this.orderableDate > this.deliveryDate) {
+      this.isFormValid = false;
+      this.areDatesValid = false;
+      this.validationHint = 'Das Bestelldatum darf nicht hinter dem Lieferdatum liegen.';
+    } else if (this.deliveryDate.getDay() == 6 || this.deliveryDate.getDay() == 0) {
+      this.isFormValid = false;
+      this.areDatesValid = false;
+      this.validationHint = 'Das Lieferdatum darf nicht auf einem Wochenendtag liegen.';
+    } else if (this.orderableDate.getDay() == 6 || this.orderableDate.getDay() == 0) {
+      this.isFormValid = false;
+      this.areDatesValid = false;
+      this.validationHint = 'Das Bestelldatum darf nicht auf einem Wochenendtag liegen.';
+    } else {
+      this.validationHint = ''
+      this.areDatesValid = true;
     }
   }
 
   dateWeekendFilter(date: Date | null): boolean {
-    //prevent saturdays and sundays from being selected
     const day = (date || new Date()).getDay();
     return day !== 0 && day !== 6;
   }
