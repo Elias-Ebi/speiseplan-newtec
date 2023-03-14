@@ -94,10 +94,6 @@ export class AddDishDialogComponent implements OnInit {
     this.orderTime = defaultValues.orderableTime;
   }
 
-  get dialogTitle() {
-    return this.data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"
-  }
-
   setOrderableDate() {
     let date = new Date();
     if (this.data.weekday === 'monday') {
