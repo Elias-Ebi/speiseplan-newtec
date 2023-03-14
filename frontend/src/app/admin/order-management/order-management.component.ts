@@ -92,6 +92,10 @@ export class OrderManagementComponent implements OnInit {
   ) {
   }
 
+  get dateSelected() {
+    return this.filter.dateFilter.startDate || this.filter.dateFilter.endDate;
+  }
+
   async ngOnInit(): Promise<void> {
     this.orders = await this.getOrders();
     this.dataSource.data = this.orders;
@@ -138,10 +142,6 @@ export class OrderManagementComponent implements OnInit {
   async toggleDateIntervalMode() {
     this.useDateInterval = !this.useDateInterval;
     await this.removeDateFilter();
-  }
-
-  get dateSelected() {
-    return this.filter.dateFilter.startDate || this.filter.dateFilter.endDate;
   }
 
   async selectedChange(m: any) {

@@ -57,8 +57,8 @@
         <input
           (dateChange)="validate()"
           [(ngModel)]="orderableDate"
-          [matDatepicker]="orderable"
           [matDatepickerFilter]="dateWeekendFilter"
+          [matDatepicker]="orderable"
           [max]="maxDate"
           [min]="minDate"
           matInput
@@ -79,7 +79,7 @@
     </div>
   </div>
 
-  <div class="dialog-buttons-container">
+  <div class="dialog-action-button-container">
     <button (click)="closeDialog()" color="primary" mat-stroked-button>Abbrechen</button>
     <button (click)="createMeal()" [disabled]="!isFormValid" color="primary" mat-flat-button>Speichern</button>
   </div>
