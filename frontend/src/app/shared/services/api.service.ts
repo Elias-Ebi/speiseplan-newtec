@@ -138,6 +138,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async setDefaultValues(defaultValues: DefaultValues): Promise<DefaultValues> {
+    const response = this.httpClient.post<DefaultValues>(`${environment.apiUrl}/meals/default-values`, defaultValues);
+    return lastValueFrom(response);
+  }
+
   async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
     const body = {orders: orders}
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delete/admin/`, body)

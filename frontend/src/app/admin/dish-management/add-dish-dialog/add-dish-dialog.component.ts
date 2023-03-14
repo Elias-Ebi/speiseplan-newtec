@@ -12,9 +12,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import * as _ from "lodash";
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
+import { SnackbarService } from "../../../shared/services/snackbar.service";
 
 @Component({
   selector: 'app-add-dish-dialog',
@@ -30,8 +29,6 @@ import { Category, CategoryService } from 'src/app/shared/services/category.serv
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatTooltipModule,
-    MatSnackBarModule
   ],
   templateUrl: './add-dish-dialog.component.html',
   styleUrls: ['./add-dish-dialog.component.scss'],
@@ -64,7 +61,7 @@ export class AddDishDialogComponent implements OnInit {
     private api: ApiService,
     private categoryService: CategoryService,
     private dateAdapter: DateAdapter<any>,
-    private snackBar: MatSnackBar
+    private snackbarService: SnackbarService
   ) {
     this.dateAdapter.setLocale('de');
     this.categories = this.categoryService.getAllCategories();
@@ -150,15 +147,9 @@ export class AddDishDialogComponent implements OnInit {
     };
     try {
       await this.api.putMealTemplate(mealTemplate);
-      this.snackBar.open("Vorlage gespeichert!", "OK", {
-        duration: 3000,
-        panelClass: 'success-snackbar'
-      });
+      this.snackbarService.success("Vorlage erfolgreich gespeichert!");
     } catch (error) {
-      this.snackBar.open("Vorlage konnte nicht gespeichert werden.", "OK", {
-        duration: 3000,
-        panelClass: 'success-snackbar'
-      });
+      this.snackbarService.error("Vorlage konnte nicht gespeichert werden.");
     }
   }
 
