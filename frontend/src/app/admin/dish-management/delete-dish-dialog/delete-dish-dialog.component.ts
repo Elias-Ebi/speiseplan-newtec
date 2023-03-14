@@ -4,12 +4,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-delete-dish-dialog',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatInputModule, MatSnackBarModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, MatInputModule],
   templateUrl: './delete-dish-dialog.component.html',
   styleUrls: ['./delete-dish-dialog.component.scss']
 })

@@ -1,3 +1,9 @@
+.main-content {
+  .standard-settings-button {
+    width: fit-content;
+  }
+}
+
 .dishes--date-container {
   display: flex;
   justify-content: space-between;
@@ -9,9 +15,9 @@
   align-items: center;
 
   .arrow-button:disabled mat-icon {
-      color: var(--clrLine);
-    }
+    color: var(--clrLine);
   }
+}
 
 .dish-table {
   td, th {
@@ -47,4 +53,14 @@ th {
 
 .mat-mdc-paginator {
   background-color: var(--clrBackground);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.action-column {
+  text-align: right;
 }
