@@ -83,6 +83,10 @@ export class AddDishDialogComponent implements OnInit {
     this.maxDate.setDate(this.deliveryDate.getDate() - 1);
   }
 
+  get dialogTitle() {
+    return this.data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"
+  }
+
   async ngOnInit() {
     const defaultValues = await this.api.getDefaultValues();
     this.total = defaultValues.total;

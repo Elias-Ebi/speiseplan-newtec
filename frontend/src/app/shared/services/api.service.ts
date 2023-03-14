@@ -8,6 +8,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { OrderMonth } from "../models/order-month";
 import { MealTemplate } from '../models/meal-template';
 import { DefaultValues } from '../models/default-values';
+import { Profile } from "../models/profile";
 import PlainDate = Temporal.PlainDate;
 
 @Injectable({
@@ -162,6 +163,21 @@ export class ApiService {
 
   async getAllChangeableOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/admin/changeable`);
+    return lastValueFrom(response);
+  }
+
+  async getAllAdminProfiles(): Promise<Profile[]> {
+    const response = this.httpClient.get<Profile[]>(`${environment.apiUrl}/auth/admin-profiles`);
+    return lastValueFrom(response);
+  }
+
+  async getAllNonAdminProfiles(): Promise<Profile[]> {
+    const response = this.httpClient.get<Profile[]>(`${environment.apiUrl}/auth/non-admin-profiles`);
+    return lastValueFrom(response);
+  }
+
+  async toggleAdminAccess(email: string): Promise<Profile> {
+    const response = this.httpClient.put<Profile>(`${environment.apiUrl}/auth/change-admin-access/${email}`, {});
     return lastValueFrom(response);
   }
 }
