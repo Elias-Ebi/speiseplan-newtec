@@ -178,6 +178,7 @@ export class AddDishDialogComponent implements OnInit {
 
   validate() {
     // TODO:check dates & time
+    this.isTemplateValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
     this.isFormValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
     this.validateDate();
   }
