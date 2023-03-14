@@ -37,7 +37,8 @@
 
       <ng-container matColumnDef="category">
         <th *matHeaderCellDef mat-header-cell>
-          <h2>Kategorie</h2></th>
+          <h2>Kategorie</h2>
+        </th>
         <td *matCellDef="let element" mat-cell>{{getCategoryName(element.categoryId)}}</td>
       </ng-container>
 
@@ -55,16 +56,15 @@
       </ng-container>
 
       <tr *matHeaderRowDef="displayedData" mat-header-row></tr>
-      <tr
-        (click)="clickedRows.has(row) ? clickedRows.delete(row) : clickedRows.size < 1 ? clickedRows.add(row) : null"
-        *matRowDef="let row; columns: displayedData;"
+      <tr (click)="selectRow(row)" *matRowDef="let row; columns: displayedData;"
         [class.is-selected]="clickedRows.has(row)" mat-row>
       </tr>
       <tr *matNoDataRow>
         <td class="no-data">
           {{searchInput.value.length == 0 && !getCategoryName(category.id) ?
           "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
-            "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" + getCategoryName(category.value) + "\""
+          "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" +
+          getCategoryName(category.value) + "\""
           }}
         </td>
       </tr>
