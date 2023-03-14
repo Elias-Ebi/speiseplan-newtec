@@ -39,7 +39,7 @@ export class DefaultSettingsDialogComponent implements OnInit {
   }
 
   get invalid() {
-    const unchangedTotal = this.currentDefaultValues.total === this.startDefaultValues.total;
+    const unchangedTotal = Number(this.currentDefaultValues.total) === Number(this.startDefaultValues.total);
     const unchangedOrderableTime = this.currentDefaultValues.orderableTime === this.startDefaultValues.orderableTime;
     const invalidOrderableTime = !this.currentDefaultValues.orderableTime;
     return unchangedTotal && unchangedOrderableTime || invalidOrderableTime;
@@ -52,7 +52,7 @@ export class DefaultSettingsDialogComponent implements OnInit {
   }
 
   transformInput() {
-    const total = this.currentDefaultValues.total;
+    const total = Number(this.currentDefaultValues.total);
     this.currentDefaultValues.total = parseFloat(total?.toFixed(2)) || 0;
   }
 
