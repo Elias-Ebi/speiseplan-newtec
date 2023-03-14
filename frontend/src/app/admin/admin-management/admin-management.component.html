@@ -1,0 +1,31 @@
+<section class="section main-content">
+  <div class="section-headline-container">
+    <h2>Admin Verwaltung</h2>
+
+    <button (click)="add()" color="primary" mat-flat-button>
+      <mat-icon>group_add</mat-icon>
+      Admin hinzufügen
+    </button>
+  </div>
+
+  <hr class="bg-neutral"/>
+
+  <div class="list-container">
+    <ng-container *ngFor="let admin of admins; let last = last">
+      <div class="grid align-center">
+        <p class="span-5">{{admin.email}}</p>
+        <p class="span-5">{{admin.name}}</p>
+        <button
+          (click)="delete(admin)"
+          [disabled]="admins.length === 1"
+          class="span-2 justify-self-end icon-button"
+          mat-icon-button
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <hr *ngIf="!last">
+    </ng-container>
+  </div>
+</section>

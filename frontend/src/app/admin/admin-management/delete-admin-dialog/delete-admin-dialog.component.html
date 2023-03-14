@@ -1,0 +1,19 @@
+<div class="dialog-container list-container-wide">
+  <h2>Admin entfernen</h2>
+
+  <p>
+    {{admin.name}} wirklich als Admin entfernen?
+  </p>
+
+  <div class="dialog-action-button-container">
+    <button (click)="closeDialog()" mat-stroked-button>Abbrechen</button>
+
+    <button
+      (click)="delete(admin.email)"
+      color="primary"
+      mat-flat-button
+    >
+      Bestätigen
+    </button>
+  </div>
+</div>

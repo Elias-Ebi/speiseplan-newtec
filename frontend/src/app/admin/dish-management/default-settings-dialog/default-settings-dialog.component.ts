@@ -11,7 +11,7 @@ import { ApiService } from 'src/app/shared/services/api.service';
 import { SnackbarService } from "../../../shared/services/snackbar.service";
 
 @Component({
-  selector: 'app-default-settings-dialog',
+  selector: 'app-default-settings-dialogRef',
   standalone: true,
   imports: [
     CommonModule,
@@ -30,7 +30,7 @@ export class DefaultSettingsDialogComponent implements OnInit {
 
   constructor(
     private api: ApiService,
-    private dialog: MatDialogRef<DefaultSettingsDialogComponent>,
+    private dialogRef: MatDialogRef<DefaultSettingsDialogComponent>,
     private snackbarService: SnackbarService
   ) {
     const defaultValues = {total: 0, deliveryTime: '', orderableTime: ''};
@@ -64,11 +64,10 @@ export class DefaultSettingsDialogComponent implements OnInit {
       .catch(() => {
         this.snackbarService.error('Standardwerte konnten nicht gespreichert werden.');
       });
-
     this.closeDialog();
   }
 
   closeDialog() {
-    this.dialog.close();
+    this.dialogRef.close();
   }
 }

@@ -1,8 +1,8 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/data/entitites/user.entity';
-import { FindOneOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { JwtPayload } from './models/jwt-payload';
 import { AuthUser } from './models/AuthUser';
 import { Profile } from '../data/entitites/profile.entity';
@@ -67,5 +67,36 @@ export class AuthService {
     }
 
     return profile;
+  }
+
+  async getAllAdminProfiles(): Promise<Profile[]> {
+    const options: FindManyOptions<Profile> = {
+      where: { isAdmin: true }
+    };
+
+    return await this.profileRepository.find(options);
+  }
+
+  async getAllNonAdminProfiles(): Promise<Profile[]> {
+    const options: FindManyOptions<Profile> = {
+      where: { isAdmin: false }
+    };
+
+    return await this.profileRepository.find(options);
+  }
+
+  async toggleAdminAccess(email: string): Promise<Profile> {
+    const adminsP = this.getAllAdminProfiles();
+    const profileP = this.getProfile(email);
+
+    const [admins, profile] = await Promise.all([adminsP, profileP]);
+
+    if (admins.length === 1 && profile.isAdmin) {
+      throw new BadRequestException('Can not delete last Admin of the system!');
+    }
+
+    profile.isAdmin = !profile.isAdmin;
+
+    return this.profileRepository.save(profile);
   }
 }
