@@ -5,11 +5,9 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { FullDatePipe } from "../../../shared/pipes/full-date.pipe";
 import { OrderCardComponent } from "../../shared/components/order-card/order-card.component";
-import { ApiService } from "../../../shared/services/api.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatInputModule } from "@angular/material/input";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { GuestOrderDialogValues, OrderDay } from "../order.models";
+import { OrderDay } from "../order.models";
 
 @Component({
   selector: 'app-guest-order-dialog',
@@ -25,17 +23,8 @@ export class GuestOrderDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public orderDay: OrderDay,
     private dialogRef: MatDialogRef<GuestOrderDialogComponent>,
-    private apiService: ApiService,
-    private snackBar: MatSnackBar,
     private fb: FormBuilder
   ) {
-  }
-
-  get values(): GuestOrderDialogValues {
-    const guestName = this.form.value.guestName;
-    const mealIds = Array.from(this.selectedIds);
-
-    return {guestName, mealIds};
   }
 
   initializeForm(): FormGroup {
@@ -55,5 +44,12 @@ export class GuestOrderDialogComponent {
     orderMeal.ordered ? this.selectedIds.delete(id) : this.selectedIds.add(id);
 
     orderMeal.ordered = !orderMeal.ordered;
+  }
+
+  order() {
+    const guestName = this.form.value.guestName;
+    const mealIds = Array.from(this.selectedIds);
+
+    this.dialogRef.close({guestName, mealIds});
   }
 }

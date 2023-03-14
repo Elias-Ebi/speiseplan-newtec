@@ -4,30 +4,24 @@ import { MonthNamePipe } from '../../shared/pipes/month-name.pipe';
 import { JsonPipe } from '@angular/common';
 import { WeekdayNamePipe } from '../../shared/pipes/weekday-name.pipe';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTabsModule, MatTabGroup } from '@angular/material/tabs';
+import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ChooseDishDialogComponent } from './choose-dish-dialog/choose-dish-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Meal } from 'src/app/shared/models/meal';
-import {
-  CalendarWeek,
-  CalendarWeekDay,
-} from 'src/app/shared/models/calendar-week';
+import { CalendarWeek } from 'src/app/shared/models/calendar-week';
 import { AddDishDialogComponent } from './add-dish-dialog/add-dish-dialog.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DeleteDishDialogComponent } from './delete-dish-dialog/delete-dish-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
-interface Category {
-  value: string;
-  view: string;
-}
+import { DefaultSettingsDialogComponent } from './default-settings-dialog/default-settings-dialog.component';
+import { CategoryService } from "../../shared/services/category.service";
+import { SnackbarService } from "../../shared/services/snackbar.service";
 
 @Component({
   selector: 'app-dish-management',
@@ -51,7 +45,7 @@ interface Category {
   styleUrls: ['./dishes.component.scss'],
 })
 export class DishesComponent implements OnInit {
-  @ViewChild('tabs', { static: false }) tabGroup!: MatTabGroup;
+  @ViewChild('tabs', {static: false}) tabGroup!: MatTabGroup;
 
   MAX_FOLLOWING_WEEKS = 2;
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
@@ -63,17 +57,12 @@ export class DishesComponent implements OnInit {
   currentTab: number = 0;
   calendarWeekIndex = 0;
   maxPossibleTabIndex = 0;
-  categories: Category[] = [
-    { value: '44c615e8-80e4-40c9-b026-70f96cd21dcd', view: 'Fleisch' },
-    { value: '6f8b2947-4784-4c61-b973-705b314ef4f6', view: 'Vegetarisch' },
-    { value: 'af03df2a-0d22-4e7d-8a12-9269ecd318af', view: 'Vegan' },
-    { value: '85d77591-0b55-4df4-93b0-03c00bcb14b9', view: 'Salat' },
-  ];
 
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
-    private snackBar: MatSnackBar
+    private snackbarService: SnackbarService,
+    private categoryService: CategoryService
   ) {
     this.weekdayProperty = 'monday';
     this.dataSource = new MatTableDataSource();
@@ -89,7 +78,7 @@ export class DishesComponent implements OnInit {
       checkDate.getDay() === 6
     ) {
       this.currentlyDisplayedWeek = await this.getCalenderWeek(
-        Temporal.Now.plainDateISO().add({ days: 7 })
+        Temporal.Now.plainDateISO().add({days: 7})
       );
     } else {
       this.currentlyDisplayedWeek = await this.getCalenderWeek(
@@ -100,26 +89,8 @@ export class DishesComponent implements OnInit {
     await this.updateTableSource();
   }
 
-  getCategoryView(val: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.value === val) {
-        result = c.view;
-      }
-    });
-    return result;
-  }
-
-  getCategoryValue(view: string): string | any {
-    let result: string = '';
-
-    this.categories.forEach((c) => {
-      if (c.view === view) {
-        result = c.value;
-      }
-    });
-    return result;
+  getCategoryName(id: string): string | undefined {
+    return this.categoryService.getCategory(id)?.name;
   }
 
   onClickChooseDish(selectedMealTemplate?: MealTemplate) {
@@ -166,7 +137,7 @@ export class DishesComponent implements OnInit {
 
   onClickDeleteDish(element: any) {
     const dialogRef = this.dialog.open(DeleteDishDialogComponent, {
-      data: { name: element.name },
+      data: {name: element.name},
     });
 
     dialogRef
@@ -176,23 +147,23 @@ export class DishesComponent implements OnInit {
           try {
             await this.api.deleteMeal(element.id);
             await this.updateTableSource();
-            this.snackBar.open('Gericht erfolgreich gelöscht!', 'OK', {
-              duration: 3000,
-              panelClass: 'success-snackbar',
-            });
+            this.snackbarService.success('Gericht erfolgreich gelöscht!');
           } catch (error) {
-            this.snackBar.open('Gericht konnte nicht gelöscht werden.', 'OK', {
-              duration: 3000,
-              panelClass: 'success-snackbar',
-            });
+            this.snackbarService.error('Gericht konnte nicht gelöscht werden.');
           }
         }
       });
   }
 
+  openDefaultSettingsDialog() {
+    this.dialog.open(DefaultSettingsDialogComponent, {
+      data: {},
+      autoFocus: false,
+    });
+  }
+
   async onTabChange(event: any) {
-    let eventIndex: number = Number.parseInt(event.index);
-    this.currentTab = eventIndex;
+    this.currentTab = Number.parseInt(event.index);
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
     await this.updateTableSource();
   }

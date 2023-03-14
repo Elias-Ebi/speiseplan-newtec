@@ -1,0 +1,38 @@
+<div class="dialog-container list-container-wide">
+  <h2>Standardwerte anpassen</h2>
+
+  <div class="form">
+    <mat-form-field class="form-settings">
+      <mat-label>Preis</mat-label>
+      <input (blur)="transformInput()" [(ngModel)]="currentDefaultValues.total" matInput step="0.1" type="number"/>
+      <mat-icon class="icon" matPrefix>euro</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="form-settings">
+      <mat-label>Bestellfrist</mat-label>
+      <input [(ngModel)]="currentDefaultValues.orderableTime" matInput type="time"/>
+      <mat-icon class="icon" matPrefix>schedule</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="dialog-buttons-container">
+    <button
+      (click)="closeDialog()"
+      class="set-button"
+      color="primary"
+      mat-stroked-button
+    >
+      Abbrechen
+    </button>
+
+    <button
+      (click)="applyChanges()"
+      [disabled]="invalid"
+      class="set-button"
+      color="primary"
+      mat-flat-button
+    >
+      Bestätigen
+    </button>
+  </div>
+</div>
