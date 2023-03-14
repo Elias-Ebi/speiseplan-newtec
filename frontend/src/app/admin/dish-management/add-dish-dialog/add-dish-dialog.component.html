@@ -1,5 +1,5 @@
 <div class="dialog-container list-container-wide">
-  <h2>{{data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"}}</h2>
+  <h2>{{dialogTitle}}</h2>
 
   <div class="button-group">
     <button (click)="saveAsTemplate()" [disabled]="!isTemplateValid" color="primary" mat-flat-button>

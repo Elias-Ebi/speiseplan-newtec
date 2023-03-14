@@ -2,7 +2,7 @@
   <div class="section">
     <div class="section-headline-container">
       <h2>Gerichteverwaltung</h2>
-      <button (click)="openDefaultSettingsDialog()" class="standard-settings-button" color="primary" mat-stroked-button>
+      <button (click)="editDefaultSettings()" class="standard-settings-button" color="primary" mat-flat-button>
         <mat-icon>tune</mat-icon>
         Standardwerte anpassen
       </button>
@@ -14,14 +14,14 @@
   <div class="dishes--date-container">
     <button (click)="getPreviousCalendarWeek()" [disabled]="this.calendarWeekIndex == 0" class="arrow-button"
             mat-icon-button>
-      <mat-icon class="arrow-back" color="primary">arrow_back</mat-icon>
+      <mat-icon class="arrow-back">arrow_back</mat-icon>
     </button>
 
     <h2>{{ currentlyDisplayedWeek.span }}</h2>
 
     <button (click)="getNextCalendarWeek()" [disabled]="this.calendarWeekIndex == MAX_FOLLOWING_WEEKS" class="arrow-button"
             mat-icon-button>
-      <mat-icon class="arrow-forward" color="primary">arrow_forward</mat-icon>
+      <mat-icon class="arrow-forward">arrow_forward</mat-icon>
     </button>
   </div>
 
@@ -37,7 +37,7 @@
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th *matHeaderCellDef mat-header-cell style="width: 65%">
+            <th *matHeaderCellDef mat-header-cell style="width: 50%">
               <h2>Beschreibung</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -46,7 +46,7 @@
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th *matHeaderCellDef mat-header-cell style="width: 10%">
+            <th *matHeaderCellDef mat-header-cell style="width: 25%">
               <h2>Kategorie</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -56,17 +56,14 @@
 
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
-              <h2>Aktion</h2>
+              <h2>Aktionen</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
-                  matTooltipPosition="left">
+                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
-                        matTooltip="Entfernen"
-                        matTooltipPosition="right">
+                <button (click)="delete(element)" class="icon-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -87,7 +84,7 @@
           </tr>
         </table>
 
-        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
+        <button (click)="create()" class="button-add" color="primary" mat-flat-button>
           Gericht hinzufügen
         </button>
       </mat-tab>
@@ -101,7 +98,7 @@
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 50%">
               <h2>Beschreibung</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -110,7 +107,7 @@
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 25%">
               <h2>Kategorie</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -120,17 +117,14 @@
 
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
-              <h2>Aktion</h2>
+              <h2>Aktionen</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" color="primary" matTooltip="Bearbeiten"
-                  matTooltipPosition="left">
+                <button mat-icon-button class="icon-button-outlined">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="onClickDeleteDish(element)" class="icon-button" (click)="onClickEditDish(element)" color="primary" mat-icon-button
-                        matTooltip="Entfernen"
-                        matTooltipPosition="right">
+                <button (click)="delete(element)" class="icon-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -151,7 +145,7 @@
           </tr>
         </table>
 
-        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
+        <button (click)="create()" class="button-add" color="primary" mat-flat-button>
           Gericht hinzufügen
         </button>
       </mat-tab>
@@ -165,7 +159,7 @@
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 50%">
               <h2>Beschreibung</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -174,7 +168,7 @@
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 25%">
               <h2>Kategorie</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -184,17 +178,14 @@
 
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
-              <h2>Aktion</h2>
+              <h2>Aktionen</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
-                  matTooltipPosition="left">
+                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
-                        matTooltip="Entfernen"
-                        matTooltipPosition="right">
+                <button (click)="delete(element)" class="icon-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -215,7 +206,7 @@
           </tr>
         </table>
 
-        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
+        <button (click)="create()" class="button-add" color="primary" mat-flat-button>
           Gericht hinzufügen
         </button>
       </mat-tab>
@@ -229,7 +220,7 @@
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 50%">
               <h2>Beschreibung</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -238,7 +229,7 @@
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 25%">
               <h2>Kategorie</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -248,17 +239,14 @@
 
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
-              <h2>Aktion</h2>
+              <h2>Aktionen</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
-                  matTooltipPosition="left">
+                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
-                        matTooltip="Entfernen"
-                        matTooltipPosition="right">
+                <button (click)="delete(element)" class="icon-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -279,7 +267,7 @@
           </tr>
         </table>
 
-        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
+        <button (click)="create()" class="button-add" color="primary" mat-flat-button>
           Gericht hinzufügen
         </button>
       </mat-tab>
@@ -293,7 +281,7 @@
           </ng-container>
 
           <ng-container matColumnDef="description">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 65%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 50%">
               <h2>Beschreibung</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -302,7 +290,7 @@
           </ng-container>
 
           <ng-container matColumnDef="category">
-            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 10%">
+            <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 25%">
               <h2>Kategorie</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
@@ -312,17 +300,14 @@
 
           <ng-container matColumnDef="action">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
-              <h2>Aktion</h2>
+              <h2>Aktionen</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" color="primary" (click)="onClickEditDish(element)" matTooltip="Bearbeiten"
-                  matTooltipPosition="left">
+                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="onClickDeleteDish(element)" class="icon-button" color="primary" mat-icon-button
-                        matTooltip="Entfernen"
-                        matTooltipPosition="right">
+                <button (click)="delete(element)" class="icon-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -343,7 +328,7 @@
           </tr>
         </table>
 
-        <button (click)="onClickChooseDish()" class="button-add" color="primary" mat-flat-button>
+        <button (click)="create()" class="button-add" color="primary" mat-flat-button>
           Gericht hinzufügen
         </button>
       </mat-tab>
