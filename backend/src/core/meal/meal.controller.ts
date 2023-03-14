@@ -43,6 +43,12 @@ export class MealController {
     return await this.mealService.getMealsOn(requestedDate);
   }
 
+  @Get('meal-counter/:date')
+  async getWeekMealCounter(@Param('date') mondayDate: string): Promise<number[]> {
+    const requestedDate = PlainDate.from(mondayDate);
+    return await this.mealService.getWeekMealCounter(requestedDate);
+  }
+
   @Post('default-values')
   @AdminOnly()
   async setDefaultValues(@Body() values: DefaultValues): Promise<DefaultValues> {

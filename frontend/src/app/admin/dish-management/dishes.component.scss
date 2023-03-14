@@ -64,3 +64,11 @@ th {
 .action-column {
   text-align: right;
 }
+
+/*
+* Badge style
+*/
+.mat-badge-medium.mat-badge-above .mat-badge-content {
+  position: absolute;
+  transform: translateX(25%);
+}
