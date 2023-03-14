@@ -43,11 +43,6 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
-  async deleteMeal(id: string): Promise<Meal> {
-    const response = this.httpClient.delete<Meal>(`${environment.apiUrl}/meals/${id}`);
-    return lastValueFrom(response);
-  }
-
   async getMonthOverview(): Promise<OrderMonth[]> {
     const response = this.httpClient.get<OrderMonth[]>(`${environment.apiUrl}/order-month/month-overview`);
     return lastValueFrom(response);
@@ -130,6 +125,16 @@ export class ApiService {
 
   async addMeal(meal: Meal): Promise<Meal> {
     const response = this.httpClient.post<Meal>(`${environment.apiUrl}/meals`, meal);
+    return lastValueFrom(response);
+  }
+
+  async updateMeal(meal: Meal): Promise<Meal> {
+    const response = this.httpClient.put<Meal>(`${environment.apiUrl}/meals`, meal);
+    return lastValueFrom(response);
+  }
+
+  async deleteMeal(id: string): Promise<Meal> {
+    const response = this.httpClient.delete<Meal>(`${environment.apiUrl}/meals/${id}`);
     return lastValueFrom(response);
   }
 
