@@ -94,10 +94,6 @@ export class AddDishDialogComponent implements OnInit {
     this.orderTime = defaultValues.orderableTime;
   }
 
-  get dialogTitle() {
-    return this.data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"
-  }
-
   setOrderableDate() {
     let date = new Date();
     if (this.data.weekday === 'monday') {
@@ -182,6 +178,7 @@ export class AddDishDialogComponent implements OnInit {
 
   validate() {
     // TODO:check dates & time
+    this.isTemplateValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
     this.isFormValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
     this.validateDate();
   }

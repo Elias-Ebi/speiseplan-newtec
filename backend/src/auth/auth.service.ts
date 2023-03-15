@@ -1,11 +1,11 @@
-import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/data/entitites/user.entity';
-import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { JwtPayload } from './models/jwt-payload';
-import { AuthUser } from './models/AuthUser';
-import { Profile } from '../data/entitites/profile.entity';
+import {BadRequestException, ConflictException, Injectable, UnauthorizedException} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+import {InjectRepository} from '@nestjs/typeorm';
+import {User} from 'src/data/entitites/user.entity';
+import {FindManyOptions, FindOneOptions, Repository} from 'typeorm';
+import {JwtPayload} from './models/jwt-payload';
+import {AuthUser} from './models/AuthUser';
+import {Profile} from '../data/entitites/profile.entity';
 
 @Injectable()
 export class AuthService {
@@ -67,6 +67,10 @@ export class AuthService {
     }
 
     return profile;
+  }
+
+  async getAllProfiles(): Promise<Profile[]> {
+    return await this.profileRepository.find();
   }
 
   async getAllAdminProfiles(): Promise<Profile[]> {

@@ -5,6 +5,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CoreModule } from './core/core.module';
 import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
+import {SharedModule} from './shared/shared.module';
 
 import * as dotenv from 'dotenv'
 
@@ -33,7 +34,8 @@ dotenv.config();
       ssl: false //false for local docker
     }),
     AuthModule,
-    CoreModule
+    CoreModule,
+    SharedModule
   ],
   providers: [
     {
