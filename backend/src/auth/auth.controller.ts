@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthService } from './auth.service';
-import { SkipAuth } from './decorators/skip-auth.decorator';
-import { Profile } from '../data/entitites/profile.entity';
-import { AuthUser } from './models/AuthUser';
-import { AdminOnly } from './decorators/admin-only.decorator';
+import {Body, Controller, Get, Param, Post, Put, Request, UseGuards} from '@nestjs/common';
+import {LocalAuthGuard} from './guards/local-auth.guard';
+import {AuthService} from './auth.service';
+import {SkipAuth} from './decorators/skip-auth.decorator';
+import {Profile} from '../data/entitites/profile.entity';
+import {AuthUser} from './models/AuthUser';
+import {AdminOnly} from './decorators/admin-only.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -33,6 +33,12 @@ export class AuthController {
   getProfile(@Request() req): Promise<Profile> {
     const user = req.user as AuthUser;
     return this.authService.getProfile(user.email);
+  }
+
+  @Get('profiles')
+  @AdminOnly()
+  getAllProfiles(): Promise<Profile[]> {
+    return this.authService.getAllProfiles();
   }
 
   @Get('admin-profiles')

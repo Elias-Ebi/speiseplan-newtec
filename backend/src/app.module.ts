@@ -1,11 +1,12 @@
-import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { CoreModule } from './core/core.module';
-import { environment } from './environment';
-import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
+import {Module} from '@nestjs/common';
+import {AuthModule} from './auth/auth.module';
+import {APP_GUARD} from '@nestjs/core';
+import {JwtAuthGuard} from './auth/guards/jwt-auth.guard';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {CoreModule} from './core/core.module';
+import {environment} from './environment';
+import {AdminOnlyGuard} from './auth/guards/admin-only.guard';
+import {SharedModule} from './shared/shared.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { AdminOnlyGuard } from './auth/guards/admin-only.guard';
       ssl: true
     }),
     AuthModule,
-    CoreModule
+    CoreModule,
+    SharedModule
   ],
   providers: [
     {
