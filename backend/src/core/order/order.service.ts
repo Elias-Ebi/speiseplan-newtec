@@ -1,27 +1,29 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository } from 'typeorm';
-import { Order } from '../../data/entitites/order.entity';
-import { AuthUser } from '../../auth/models/AuthUser';
-import { Meal } from '../../data/entitites/meal.entity';
-import { AuthService } from '../../auth/auth.service';
-import { Temporal } from '@js-temporal/polyfill';
-import { MealService } from '../meal/meal.service';
-import { OrderMonthService } from '../order-month/order-month.service';
-import { OrderMonth } from '../../data/entitites/order-month.entity';
-import { OrderOptions } from './options-models/order.options';
+import {BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository} from 'typeorm';
+import {Order} from '../../data/entitites/order.entity';
+import {AuthUser} from '../../auth/models/AuthUser';
+import {Meal} from '../../data/entitites/meal.entity';
+import {AuthService} from '../../auth/auth.service';
+import {Temporal} from '@js-temporal/polyfill';
+import {MealService} from '../meal/meal.service';
+import {EmailService} from '../../shared/email/email.service';
+import {OrderMonthService} from '../order-month/order-month.service';
+import {OrderMonth} from '../../data/entitites/order-month.entity';
+import {OrderOptions} from './options-models/order.options';
 import PlainDate = Temporal.PlainDate;
 import PlainDateTime = Temporal.PlainDateTime;
 
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectRepository(Order) private orderRepository: Repository<Order>,
-    @InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>,
-    @InjectRepository(Meal) private mealRepository: Repository<Meal>,
-    private authService: AuthService,
-    private mealService: MealService,
-    private orderMonthService: OrderMonthService
+      @InjectRepository(Order) private orderRepository: Repository<Order>,
+      @InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>,
+      @InjectRepository(Meal) private mealRepository: Repository<Meal>,
+      private authService: AuthService,
+      private mealService: MealService,
+      private orderMonthService: OrderMonthService,
+      private emailService: EmailService
   ) {
   }
 
@@ -61,6 +63,11 @@ export class OrderService {
     }
 
     order.isBanditplate = true;
+
+    // Send Email
+    const recipients = await this.authService.getAllProfiles();
+    const emails = recipients.map((recipient) => recipient.email);
+    this.emailService.sendNewBanditPlateMail(emails, order.meal.name);
 
     return this.orderRepository.save(order);
   }
