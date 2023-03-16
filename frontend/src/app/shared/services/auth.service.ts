@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { environment } from "../../environment";
-import { BehaviorSubject, lastValueFrom, map, Observable } from "rxjs";
-import { Router } from "@angular/router";
-import { Profile } from "../models/profile";
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {environment} from "../../environment";
+import {BehaviorSubject, lastValueFrom, map, Observable} from "rxjs";
+import {Router} from "@angular/router";
+import {Profile} from "../models/profile";
 
 export const ACCESS_TOKEN_KEY = 'access_token';
 
@@ -54,6 +54,10 @@ export class AuthService {
   async getAndSetProfile(): Promise<void> {
     const response$ = this.httpClient.get<Profile>(`${environment.apiUrl}/auth/profile`);
     const profile = await lastValueFrom(response$);
+    this.profileSource$.next(profile);
+  }
+
+  setProfile(profile: Profile) {
     this.profileSource$.next(profile);
   }
 }

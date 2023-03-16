@@ -35,6 +35,22 @@ export class AuthController {
     return this.authService.getProfile(user.email);
   }
 
+  @Put('change-name')
+  changeName(@Request() req, @Body('name') name: string): Promise<Profile> {
+    const user = req.user as AuthUser;
+    return this.authService.changeName(user, name);
+  }
+
+  @Put('change-password')
+  changePassword(
+      @Request() req,
+      @Body('currentPassword') currentPassword: string,
+      @Body('newPassword') newPassword: string
+  ) {
+    const user = req.user as AuthUser;
+    return this.authService.changePassword(user, currentPassword, newPassword);
+  }
+
   @Get('profiles')
   @AdminOnly()
   getAllProfiles(): Promise<Profile[]> {
