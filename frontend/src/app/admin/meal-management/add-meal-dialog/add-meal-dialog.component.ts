@@ -31,10 +31,10 @@ import { Meal } from 'src/app/shared/models/meal';
     MatNativeDateModule,
     MatIconModule,
   ],
-  templateUrl: './add-dish-dialog.component.html',
-  styleUrls: ['./add-dish-dialog.component.scss'],
+  templateUrl: './add-meal-dialog.component.html',
+  styleUrls: ['./add-meal-dialog.component.scss'],
 })
-export class AddDishDialogComponent implements OnInit {
+export class AddMealDialogComponent implements OnInit {
   MAX_LENGTH: number = 70;
   orderTime: string = '00:00';
   deliveryTime: string = '00:00';
@@ -56,7 +56,7 @@ export class AddDishDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined, mealToEdit: Meal | undefined },
-    private matDialogRef: MatDialogRef<AddDishDialogComponent>,
+    private matDialogRef: MatDialogRef<AddMealDialogComponent>,
     private api: ApiService,
     private categoryService: CategoryService,
     private dateAdapter: DateAdapter<any>,

@@ -8,17 +8,17 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ChooseDishDialogComponent } from './choose-dish-dialog/choose-dish-dialog.component';
+import { ChooseMealDialogComponent } from './choose-meal-dialog/choose-meal-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Meal } from 'src/app/shared/models/meal';
 import { CalendarWeek } from 'src/app/shared/models/calendar-week';
-import { AddDishDialogComponent } from './add-dish-dialog/add-dish-dialog.component';
+import { AddMealDialogComponent } from './add-meal-dialog/add-meal-dialog.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DeleteDishDialogComponent } from './delete-dish-dialog/delete-dish-dialog.component';
+import { DeleteMealDialogComponent } from './delete-meal-dialog/delete-meal-dialog.component';
 import { DefaultSettingsDialogComponent } from './default-settings-dialog/default-settings-dialog.component';
 import { CategoryService } from "../../shared/services/category.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
@@ -26,7 +26,7 @@ import { SnackbarService } from "../../shared/services/snackbar.service";
 @Component({
   selector: 'app-dish-management',
   standalone: true,
-  templateUrl: './dishes.component.html',
+  templateUrl: './meal-management.component.html',
   imports: [
     MonthNamePipe,
     JsonPipe,
@@ -42,9 +42,9 @@ import { SnackbarService } from "../../shared/services/snackbar.service";
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  styleUrls: ['./dishes.component.scss'],
+  styleUrls: ['./meal-management.component.scss'],
 })
-export class DishesComponent implements OnInit {
+export class MealManagementComponent implements OnInit {
   @ViewChild('tabs', {static: false}) tabGroup!: MatTabGroup;
 
   MAX_FOLLOWING_WEEKS = 2;
@@ -96,7 +96,7 @@ export class DishesComponent implements OnInit {
     let currentDay =
       this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
 
-    const dialogRef = this.dialog.open(AddDishDialogComponent, {
+    const dialogRef = this.dialog.open(AddMealDialogComponent, {
       data: {
         weekday: this.weekdayProperty,
         deliveryDate: new Date(currentDay),
@@ -111,7 +111,7 @@ export class DishesComponent implements OnInit {
       .subscribe(async (mealData: { mealToAdd: any; useTemplate: boolean }) => {
         if (JSON.stringify(mealData) !== '{}') {
           if (mealData.useTemplate) {
-            const dialogRef = this.dialog.open(ChooseDishDialogComponent, {
+            const dialogRef = this.dialog.open(ChooseMealDialogComponent, {
               data: {},
               autoFocus: false,
             });
@@ -144,7 +144,7 @@ export class DishesComponent implements OnInit {
   }
 
   delete(meal: Meal) {
-    const dialogRef = this.dialog.open(DeleteDishDialogComponent, {
+    const dialogRef = this.dialog.open(DeleteMealDialogComponent, {
       data: {name: meal.name},
     });
 
@@ -200,7 +200,9 @@ export class DishesComponent implements OnInit {
         precedingWeekDate
       );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-      this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
+      if(this.calendarWeekIndex == 0) {
+        this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
+      }
       await this.updateTableSource();
     }
   }

@@ -15,7 +15,8 @@
   align-items: center;
 
   .arrow-button:disabled mat-icon {
-    color: var(--clrLine);
+    color: var(--clrDisabled);
+    background-color: var(--clrDisabledBackground);
   }
 }
 
