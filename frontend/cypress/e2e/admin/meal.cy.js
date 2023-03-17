@@ -1,7 +1,9 @@
 /// <reference types="cypress" />
 
-describe('visit app', () => {
+const mealNameAdd = 'Montag-Test';
+const mealNameEdit = 'Montag-TestEdit';
 
+describe('visit app', () => {
   /* before('log in', () => {
     cy.visit('http://localhost:4200');
     // cy.pause();
@@ -20,7 +22,6 @@ describe('visit app', () => {
     cy.get('#login-email-input').type(`test@cypress.de`);
     cy.get('#login-password-input').type(`cypress`);
     cy.get('button').contains('Login').click();
-
   })
 
   /*after('log out', () => {
@@ -28,6 +29,7 @@ describe('visit app', () => {
    cy.get('p').contains('Logout').click()
   })
 */
+
 
 /*
   it('navigate to admin view', () => {
@@ -53,40 +55,133 @@ describe('visit app', () => {
     cy.get('.arrow-button').last().should('be.not.disabled');
   })
 
+
   it('add meal', () => {
     cy.visit('http://localhost:4200/admin/meal-management');
     cy.wait(1000);
 
-    //navigate to next week, because there it is always possible to add a meal
+    //navigate to next week, because there it is always possible to add a meal on monday
     cy.get('.arrow-button').last().click();
 
+    // count elemets: to check if the number of saved meals is really one higher when 'save' button was clicked
     let countOfElements = 0;
     cy.get('#table-monday').find('tr').then($elements => {
       console.log('new length: ',  $elements.length);
       countOfElements = $elements.length;
     }).then(() => {
 
-      cy.get('button').contains('GERICHT HINZUFÜGEN').click();
-      cy.get('#create').should('be.disabled');
+      cy.get('button').contains('Gericht hinzufügen').click();
+      cy.get('#save').should('be.disabled');
 
-      cy.get('.dish').first().type('Montag-Test');
-      cy.get('#create').should('be.disabled');
+      cy.get('#meal-name').first().type(mealNameAdd);
+      cy.get('#save').should('be.disabled');
 
-      cy.get('.description').first().type('Beschreibung-Test');
-      cy.get('#create').should('be.disabled');
+      cy.get('#meal-description').first().type('Beschreibung-Test');
+      cy.get('#save').should('be.disabled');
 
-      cy.get('.category').first().click(); // opens the drop down
+      cy.get('#meal-category').first().click(); // opens the drop down
 
       // simulate click event on the drop down item (mat-option)
       cy.get('mat-option').contains('Vegetarisch').click();  // this is jquery click() not cypress click()
-      cy.get('#create').should('be.not.disabled');
+      cy.get('#save').should('be.not.disabled');
 
-      cy.get('#create').click()
+      cy.get('#save').click();
 
       cy.get('#table-monday').find('tr').should('have.length', countOfElements++);
-    }) ;
+    });
   })
-  */
+
+
+  it('edit meal', () => {
+    cy.visit('http://localhost:4200/admin/meal-management');
+    cy.wait(1000);
+
+    //navigate to next week, because there it is always possible to add a meal on monday
+    cy.get('.arrow-button').last().click();
+
+
+    cy.get('table') // Wählen Sie die Tabelle aus
+    .contains('tr', mealNameAdd) // Suchen Sie die Zeile, die den bestimmten Text enthält
+    .find('.meal-edit-button') // Wählen Sie den Button innerhalb dieser Zeile aus
+    .click() // Klicken Sie auf den Button
+
+    cy.get('#save').should('be.enabled');
+
+    cy.get('#meal-name').first().clear().type(mealNameEdit);
+    cy.get('#save').should('be.enabled');
+
+    cy.get('#meal-description').first().clear().type('Beschreibung-TestEdit');
+    cy.get('#save').should('be.enabled');
+
+    cy.get('#meal-category').first().click(); // opens the drop down
+
+    // simulate click event on the drop down item (mat-option)
+    cy.get('mat-option').contains('Fleisch').click();  // this is jquery click() not cypress click()
+    cy.get('#save').should('be.not.disabled');
+
+    cy.get('#save').click();
+
+    cy.get('table') // Wählen Sie die Tabelle aus
+    .contains('tr', mealNameEdit) // Suchen Sie die Zeile, die den bestimmten Text enthält
+    .should('exist')
+  })
+
+
+  it('delete meal', () => {
+    cy.visit('http://localhost:4200/admin/meal-management');
+    cy.wait(1000);
+
+    //navigate to next week, because there it is always possible to add a meal on monday
+    cy.get('.arrow-button').last().click();
+
+    cy.get('table') // Wählen Sie die Tabelle aus
+    .contains('tr', mealNameEdit) // Suchen Sie die Zeile, die den bestimmten Text enthält
+    .find('.meal-delete-button') // Wählen Sie den Button innerhalb dieser Zeile aus
+    .click(); // Klicken Sie auf den Button
+
+    cy.get('button').last().click();
+
+    cy.get('table') // Wählen Sie die Tabelle aus
+    .contains('tr', mealNameEdit) // Suchen Sie die Zeile, die den bestimmten Text enthält
+    .should('not.exist')
+  })
+
+*/
+
+
+// [#]===============================[ DATE & TIME TESTS ]===============================[#]
+
+  it('check month transition', () => {
+    const dateIncurrentMonth = new Date(2023, 2, 30); // this is a  thrusday, the next week is another month
+    console.log('realToDate: ', dateIncurrentMonth)
+    cy.clock(dateIncurrentMonth);
+
+    cy.visit('http://localhost:4200/admin/meal-management');
+
+    cy.get('.arrow-button').last().click(); // the next week is in a new month
+
+    cy.wait(2000);
+
+    cy.get("div.mat-mdc-tab").eq(0).click().then(() => {
+      cy.get("div.mat-mdc-tab").eq(0).trigger('selectedTabChange', {tab: 'Montag'});
+    }).then(() => {
+      console.log('CYPRESS: click add meal button')
+      // cy.get('button').contains('Montag hinzufügen').click();
+      cy.wait(1000);
+      cy.get('#meal-monday-add-button').click();
+      cy.get('#meal-delivery-date').should('have.value', '3.4.2023'); // First Monday in new month
+      cy.get('#meal-orderable-date').should('have.value', '31.3.2023'); // The friday before
+    })
+    console.log('CYPRESS: tab selected')
+    /*
+    cy.get('mat-tab-group mat-tab-header').contains('Montag').click().then(() => {
+      cy.get('mat-tab-group').trigger('selectedTabChange', {tab: 'Montag'});
+    });
+    */
+   // cy.get('div[role=tab]').eq(0).click({ timeout: 2000, force: true }); // open monday tab
+  })
+
+
 
   // Lieferdatum liegt hinter dem Bestellbarkeitsdatum (Bestellungsdatum auf den Montag der vergangenen Woche)
   // Bestelldatum an einem Wochenende
@@ -196,17 +291,24 @@ it('calendar week switch selected tab', () => {
 
   // ------- to test: --------
   /*  Switching KW:
-        * not possible to go to passed week
-        * only two weeks into the future
-        * tab is not accessible if the day in current week has passed
-        * if a meal is generated, it has to be listed in the given kw & tab
+        * not possible to go to passed week ✔
+        * only two weeks into the future ✔
+        * tab is not accessible if the day in current week has passed ✔
 
-      Adding dsihes
+      Adding dishes
         * Adding meal correctly
+        * if a meal is generated, it has to be listed in the given kw & tab (multiple meals on same day, check badge)
+        * edit meal
+        * delete meal (delete all meals that were added before?)
+
+        * Check if tabs work properly when current day is on a weekend
+
         * adding the same meal twice
         * check if confirmation button is disabled if it shoul be (one input field missing, contradicting date/time )
         * is it possible to input something into the input fields, that should not be possible?
         * canceling the adding process
+
+        * Check if orderabledate and deliverydate are set properly on month and year transitions
 
       Adding templates
         * opening the dialog

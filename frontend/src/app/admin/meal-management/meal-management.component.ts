@@ -171,9 +171,11 @@ export class MealManagementComponent implements OnInit {
   }
 
   async onTabChange(event: any) {
+    console.log('onTabChange');
     this.currentTab = Number.parseInt(event.index);
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
     await this.updateTableSource();
+    console.log('onTabChange nach tableupdate');
   }
 
   async getNextCalendarWeek() {

@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
 import { SnackbarService } from "../../../shared/services/snackbar.service";
 import { Meal } from 'src/app/shared/models/meal';
+import { Temporal } from '@js-temporal/polyfill';
 
 @Component({
   selector: 'app-add-dish-dialog',
@@ -96,6 +97,8 @@ export class AddMealDialogComponent implements OnInit {
 
   setOrderableDate() {
     let date = new Date();
+    date.setFullYear(this.deliveryDate.getFullYear());
+    date.setMonth(this.deliveryDate.getMonth());
     if (this.data.weekday === 'monday') {
       date.setDate(this.deliveryDate.getDate() - 3);
     } else {

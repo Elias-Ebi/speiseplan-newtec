@@ -27,7 +27,7 @@
   </div>
 
   <div class="dishes--week-tabs-container">
-    <mat-tab-group #tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="currentTab" animationDuration="0ms">
+    <mat-tab-group data-cy="tab-group" #tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="currentTab" animationDuration="0ms">
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0" label="Montag">
         <table [dataSource]="dataSource" class="bg-background" id="table-monday" mat-table>
           <ng-container matColumnDef="title">
@@ -61,10 +61,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
+                <button (click)="edit(element)" class="icon-button-outlined meal-edit-button" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="delete(element)" class="icon-button" mat-icon-button>
+                <button (click)="delete(element)" class="icon-button meal-delete-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -85,7 +85,7 @@
           </tr>
         </table>
 
-        <button (click)="create()" class="button-add" color="primary" mat-flat-button>
+        <button id="meal-monday-add-button" (click)="create()" class="button-add" color="primary" mat-flat-button>
           Gericht hinzufügen
         </button>
       </mat-tab>
@@ -122,10 +122,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button class="icon-button-outlined" mat-icon-button>
+                <button class="icon-button-outlined meal-edit-button" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="delete(element)" class="icon-button" mat-icon-button>
+                <button (click)="delete(element)" class="icon-button meal-delete-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -146,7 +146,7 @@
           </tr>
         </table>
 
-        <button (click)="create()" class="button-add" color="primary" mat-flat-button>
+        <button id="meal-tuesday-add-button" (click)="create()" class="button-add" color="primary" mat-flat-button>
           Gericht hinzufügen
         </button>
       </mat-tab>
@@ -183,10 +183,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
+                <button (click)="edit(element)" class="icon-button-outlined meal-edit-button" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="delete(element)" class="icon-button" mat-icon-button>
+                <button (click)="delete(element)" class="icon-button meal-delete-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -244,10 +244,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
+                <button (click)="edit(element)" class="icon-button-outlined meal-edit-button" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="delete(element)" class="icon-button" mat-icon-button>
+                <button (click)="delete(element)" class="icon-button meal-delete-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
@@ -305,10 +305,10 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
+                <button (click)="edit(element)" class="icon-button-outlined meal-edit-button" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button (click)="delete(element)" class="icon-button" mat-icon-button>
+                <button (click)="delete(element)" class="icon-button meal-delete-button" mat-icon-button>
                   <mat-icon>delete</mat-icon>
                 </button>
               </div>
