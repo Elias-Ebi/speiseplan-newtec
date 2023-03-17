@@ -1,0 +1,21 @@
+<div class="dialog-container list-container-wide">
+  <h2>Name ändern</h2>
+
+  <mat-form-field>
+    <mat-label>Vorname Nachname</mat-label>
+    <input [(ngModel)]="name" matInput required>
+  </mat-form-field>
+
+  <div class="dialog-action-button-container">
+    <button (click)="closeDialog()" mat-stroked-button>Abbrechen</button>
+
+    <button
+      (click)="changeName()"
+      [disabled]="!name.length"
+      color="primary"
+      mat-flat-button
+    >
+      Bestätigen
+    </button>
+  </div>
+</div>

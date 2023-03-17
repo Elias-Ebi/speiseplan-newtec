@@ -16,8 +16,13 @@
         <p>Historie</p>
       </li>
 
-      <li (click)="logout()">
-        <p>Logout</p>
+      <li>
+        <mat-icon [matMenuTriggerFor]="accMenu" class="account-icon">account_circle</mat-icon>
+        <mat-menu #accMenu>
+          <button (click)="changePassword()" mat-menu-item>Passwort ändern</button>
+          <button (click)="changeName()" mat-menu-item>Name ändern</button>
+          <button (click)="logout()" mat-menu-item>Logout</button>
+        </mat-menu>
       </li>
     </ul>
   </div>
