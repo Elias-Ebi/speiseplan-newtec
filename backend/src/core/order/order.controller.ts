@@ -81,6 +81,13 @@ export class OrderController {
     return this.orderService.deleteMultipleOrdersByAdmin(req.body.orders as Order[], user);
   }
 
+  @Post('multiple-orders/deleteById')
+  @AdminOnly()
+  async deleteMultipleOrdersById(@Request() req): Promise<boolean> {
+    const user = req.user as AuthUser;
+    return this.orderService.deleteMultipleOrdersById(req.body.ordersId as string[], user);
+  }
+
   @Delete(':id')
   async deleteOrder(@Param('id') id: string, @Request() req): Promise<Order> {
     const user = req.user as AuthUser;

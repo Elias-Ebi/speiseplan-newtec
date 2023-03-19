@@ -252,6 +252,18 @@ export class OrderService {
     }
   }
 
+  async deleteMultipleOrdersById(orderIds: string[], user: AuthUser) {
+    try {
+      const time = Temporal.Now.plainDateTimeISO();
+      for (const order of orderIds) {
+        await this.delete(time, order, user)
+      }
+      return true;
+    } catch (errors) {
+      return false;
+    }
+  }
+
   async create(email: string, meal: Meal, guestName: string): Promise<Order> {
     const date = PlainDate.from(meal.date);
 

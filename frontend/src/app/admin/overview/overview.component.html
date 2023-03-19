@@ -8,9 +8,7 @@
           Exportieren
         </button>
       </div>
-
       <hr class="bg-neutral"/>
-
       <mat-accordion displayMode="flat" multi="true">
         <mat-expansion-panel *ngFor="let order of dataMap.get(day)">
           <mat-expansion-panel-header>
@@ -19,16 +17,13 @@
                 <mat-icon>restaurant</mat-icon>
                 <p>{{order.meal.name}}</p>
               </div>
-
               <p>{{order.total}}</p>
-
-              <button (click)="$event.stopPropagation()" color="primary" mat-flat-button>
+              <button (click)="onClickInform($event, order)" color="primary" mat-flat-button>
                 <mat-icon>no_meals</mat-icon>
                 Absagen
               </button>
             </mat-panel-title>
           </mat-expansion-panel-header>
-
           <div *ngFor="let user of order.users" class="icon-with-text">
             <mat-icon>person</mat-icon>
             <p>{{user.name}}</p>

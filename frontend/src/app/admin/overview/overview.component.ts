@@ -16,6 +16,8 @@ import { Profile } from "../../shared/models/profile";
 import { Meal } from "../../shared/models/meal";
 import { saveAs } from 'file-saver';
 import PlainDate = Temporal.PlainDate;
+import {MatDialog} from "@angular/material/dialog";
+import {OverviewInformDialogComponent} from "./overview-inform-dialog/overview-inform-dialog.component";
 
 @Component({
   selector: 'app-overview',
@@ -30,6 +32,7 @@ export class OverviewComponent implements OnInit {
   weekdays = this.dateService.getNextFiveWeekDays();
 
   constructor(
+    public dialog: MatDialog,
     private apiService: ApiService,
     private dateService: DateService) {
   }
@@ -73,6 +76,31 @@ export class OverviewComponent implements OnInit {
       });
       this.dataMap.set(day, data);
     }
+  }
+
+  onClickInform(event: MouseEvent, mealOverview: MealOverview) {
+    //to prevent button-click expanding the expansion panel
+    event.stopPropagation();
+    console.log(mealOverview.meal.name);
+    const dialogRef = this.dialog.open(OverviewInformDialogComponent, {data: {meal: mealOverview.meal, users: mealOverview.users} });
+
+    dialogRef.afterClosed().subscribe(async (data: {sendMessage: boolean, selectedUsers: Profile[]}) => {
+      if(data.sendMessage){
+        try {
+          const allOrders = await this.apiService.getAllOrdersOnDate(Temporal.PlainDate.from(mealOverview.meal.date));
+          const filteredOrders = allOrders.filter((order: Order) => order.meal.id === mealOverview.meal.id)
+            .filter((order: Order)=> data.selectedUsers.some((profile: Profile) => profile.name === order.profile.name))
+            .map((order: Order) => order.id);
+
+          const ordersCanceled = await this.apiService.deleteMultipleOrdersById(filteredOrders);
+          this.loadWeek();
+
+        } catch (error) {
+          //todo Error-handling
+        }
+      }
+    });
+
   }
 
   downloadDayAsCsv(day: PlainDate) {
