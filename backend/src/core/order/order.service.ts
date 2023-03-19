@@ -259,15 +259,17 @@ export class OrderService {
     }
   }
 
-  async deleteMultipleOrdersById(orderIds: string[], user: AuthUser) {
+  async deleteMultipleOrdersById(orderIds: string[], user: AuthUser): Promise<Order[]> {
+    const ordersChanged: Order[] = [];
     try {
       const time = Temporal.Now.plainDateTimeISO();
       for (const order of orderIds) {
-        await this.delete(time, order, user)
+        ordersChanged.push(await this.get(order));
+        await this.delete(time, order, user);
       }
-      return true;
+      return ordersChanged;
     } catch (errors) {
-      return false;
+      return ordersChanged;
     }
   }
 

@@ -38,11 +38,11 @@ export class OverviewComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.weekdays = this.dateService.getNextFiveWeekDays();
     await this.loadWeek();
   }
 
   async loadWeek(): Promise<void> {
-    this.weekdays = this.dateService.getNextFiveWeekDays();
     const week = new Map<PlainDate, Order[]>();
 
     const requests = this.weekdays.map(day =>
@@ -91,9 +91,9 @@ export class OverviewComponent implements OnInit {
           const filteredOrders = allOrders.filter((order: Order) => order.meal.id === mealOverview.meal.id)
             .filter((order: Order)=> data.selectedUsers.some((profile: Profile) => profile.name === order.profile.name))
             .map((order: Order) => order.id);
-
-          const ordersCanceled = await this.apiService.deleteMultipleOrdersById(filteredOrders);
-          this.loadWeek();
+          //todo guest visibility
+          const ordersCanceled = await this.apiService.deleteMultipleOrdersByIdAndInform(filteredOrders);
+          await this.loadWeek();
 
         } catch (error) {
           //todo Error-handling

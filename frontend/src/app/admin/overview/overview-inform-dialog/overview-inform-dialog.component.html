@@ -5,26 +5,16 @@
     <p>
       Wählen sie die Nutzer aus, deren Gerichte sie stornieren wollen.
     </p>
-
     <mat-form-field appearance="fill">
       <mat-label>Nutzer</mat-label>
       <mat-select [formControl]="userSelection" multiple>
-        <mat-option *ngFor="let user of data.users" [value]="user">{{user.name}}</mat-option>
+        <mat-option (click)="allSelected=false"  *ngFor="let user of data.users" [value]="user">{{user.name}}</mat-option>
       </mat-select>
     </mat-form-field>
     <mat-checkbox (click)="selectAll()" [checked]="allSelected">Alle Nutzer auswählen</mat-checkbox>
-
-
     <div class="button-container">
       <button (click)="closeDialog(false)" mat-stroked-button>Abbrechen</button>
-
-      <button
-        (click)="closeDialog(true)"
-        color="primary"
-        mat-flat-button
-      >
-        Bestätigen
-      </button>
+      <button (click)="closeDialog(true)" color="primary" mat-flat-button>Bestätigen</button>
     </div>
   </section>
 </div>
