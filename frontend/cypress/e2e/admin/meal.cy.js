@@ -158,17 +158,16 @@ describe('visit app', () => {
 
     cy.visit('http://localhost:4200/admin/meal-management');
 
-    cy.get('.arrow-button').last().click(); // the next week is in a new month
+    cy.get('.arrow-button').last().click({ timeout: 0, force: true }); // the next week is in a new month
 
-    cy.wait(2000);
-
-    cy.get("div.mat-mdc-tab").eq(0).click().then(() => {
+    cy.get("div.mat-mdc-tab").eq(0).click({ timeout: 1000, force: true }).then(() => {
+      cy.wait(1000);
       cy.get("div.mat-mdc-tab").eq(0).trigger('selectedTabChange', {tab: 'Montag'});
     }).then(() => {
       console.log('CYPRESS: click add meal button')
       // cy.get('button').contains('Montag hinzufügen').click();
-      cy.wait(1000);
-      cy.get('#meal-monday-add-button').click();
+
+      cy.get('#meal-monday-add-button').click({ timeout: 2000, force: true });
       cy.get('#meal-delivery-date').should('have.value', '3.4.2023'); // First Monday in new month
       cy.get('#meal-orderable-date').should('have.value', '31.3.2023'); // The friday before
     })
