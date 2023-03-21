@@ -9,11 +9,11 @@
         </button>
       </div>
       <hr class="bg-neutral"/>
-      <mat-accordion displayMode="flat" multi="true">
+      <mat-accordion displayMode="flat" multi="true" style="width: 100%">
         <mat-expansion-panel *ngFor="let sameMealOrders of dataMap.get(day)">
           <mat-expansion-panel-header>
             <mat-panel-title class="panel-header">
-              <div class="icon-with-text">
+              <div class="icon-with-text" style="display: flex; gap: 0.65rem">
                 <mat-icon>restaurant</mat-icon>
                 <p>{{sameMealOrders[0].meal.name}}</p>
               </div>
