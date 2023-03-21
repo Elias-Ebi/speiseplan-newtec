@@ -24,10 +24,20 @@
               </button>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div *ngFor="let order of sameMealOrders" class="icon-with-text">
-            <mat-icon>person</mat-icon>
-            <p *ngIf="order.guestName">{{order.profile.name}} für {{order.guestName}}</p>
-            <p *ngIf="!order.guestName">{{order.profile.name}}</p>
+          <div *ngFor="let order of sameMealOrders; last as last" style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%">
+            <div style="display: flex; width: 100%; flex-direction: row;">
+              <div style="display: flex; width: 33%; gap: 0.65rem; position: relative; top: 0.25rem">
+                <mat-icon>person</mat-icon>
+                <p *ngIf="!order.guestName" class="span-2">{{order.profile.name}}</p>
+                <div>
+                  <p *ngIf="order.guestName" class="span-2">{{order.guestName}}</p>
+                </div>
+              </div>
+              <div style="width: 33%;">
+                <p *ngIf="order.guestName" class="span-2">(Gast von {{order.profile.name}})</p>
+              </div>
+            </div>
+            <mat-divider [inset]="false" *ngIf="!last"></mat-divider>
           </div>
         </mat-expansion-panel>
       </mat-accordion>

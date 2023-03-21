@@ -8,9 +8,18 @@
     <mat-form-field appearance="fill">
       <mat-label>Nutzer</mat-label>
       <mat-select [formControl]="userSelection" multiple>
-        <mat-option (click)="allSelected=false"  *ngFor="let order of data.meals" [value]="order">
-          <p *ngIf="order.guestName"> {{order.profile.name}} für {{order.guestName}}</p>
-          <p *ngIf="!order.guestName"> {{order.profile.name}}</p>
+        <mat-option (click)="allSelected=false" *ngFor="let order of data.meals" [value]="order" style="width: 100%">
+          <div style="display: flex; width: 100%">
+            <div>
+              <p *ngIf="order.guestName"> {{order.guestName}}</p>
+            </div>
+            <div>
+              <p style="position: absolute; right: 1rem" *ngIf="order.guestName">(Gast von {{order.profile.name}})</p>
+            </div>
+            <div style="">
+              <p *ngIf="!order.guestName"> {{order.profile.name}}</p>
+            </div>
+          </div>
         </mat-option>
       </mat-select>
     </mat-form-field>

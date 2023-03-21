@@ -15,11 +15,12 @@ import PlainDate = Temporal.PlainDate;
 import {MatDialog} from "@angular/material/dialog";
 import {OverviewInformDialogComponent} from "./overview-inform-dialog/overview-inform-dialog.component";
 import {MatTreeModule} from "@angular/material/tree";
+import {MatListModule} from "@angular/material/list";
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CommonModule, MatIconModule, MatTabsModule, EuroPipe, WeekdayNamePipe, MatButtonModule, MatExpansionModule, MatTreeModule],
+  imports: [CommonModule, MatIconModule, MatTabsModule, EuroPipe, WeekdayNamePipe, MatButtonModule, MatExpansionModule, MatTreeModule, MatListModule],
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss']
 })
