@@ -74,4 +74,10 @@ export class AuthController {
   toggleAdminAccess(@Param('email') email: string): Promise<Profile> {
     return this.authService.toggleAdminAccess(email);
   }
+
+  @SkipAuth()
+  @Get('reset-password/:email')
+  resetPassword(@Param('email') email: string): Promise<boolean> {
+    return this.authService.resetPassword(email);
+  }
 }
