@@ -71,13 +71,10 @@ export class OverviewComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(async (data: { sendMessage: boolean, selectedUsers: Profile[] }) => {
+    dialogRef.afterClosed().subscribe(async (data: { sendMessage: boolean, selectedUsers: Order[] }) => {
       if (data.sendMessage) {
         try {
-          const allOrders = await this.apiService.getAllOrdersOnDate(Temporal.PlainDate.from(mealOrders[0].date));
-          const filteredOrders = allOrders.filter((order: Order) => order.meal.id === mealOrders[0].meal.id)
-            .filter((order: Order) => data.selectedUsers.some((profile: Profile) => profile.name === order.profile.name))
-            .map((order: Order) => order.id);
+          const filteredOrders: string[] = data.selectedUsers.map((order: Order) => order.id);
           const ordersCanceled = await this.apiService.deleteMultipleOrdersByIdAndInform(filteredOrders);
           await this.loadWeek();
         } catch (error) {
