@@ -28,7 +28,6 @@ export class AuthService {
     );
   }
 
-
   register(email: string, name: string, password: string): Promise<Profile> {
     const payload = {email, name, password};
     const response$ = this.httpClient.post<Profile>(`${environment.apiUrl}/auth/register`, payload);
@@ -44,6 +43,11 @@ export class AuthService {
     await this.getAndSetProfile();
 
     this.router.navigateByUrl('/');
+  }
+
+  resetPassword(email: string): Promise<boolean> {
+    const response = this.httpClient.get<boolean>(`${environment.apiUrl}/auth/reset-password/${email}`);
+    return lastValueFrom(response);
   }
 
   logout(): void {

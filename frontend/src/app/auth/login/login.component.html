@@ -1,4 +1,4 @@
-<form (submit)="onSubmit()" [formGroup]="form" class="main-layout">
+<form [formGroup]="form" class="main-layout">
   <h2>NewTec Speiseplan</h2>
 
   <mat-form-field>
@@ -8,10 +8,15 @@
 
   <mat-form-field>
     <mat-label>Passwort</mat-label>
-    <input formControlName="password" matInput required type="password">
+    <input formControlName="password" matInput required [type]="getInputType()">
+    <button (click)="toggleHide()" mat-icon-button matSuffix>
+      <mat-icon class="clr-primary">{{getVisibilityIcon()}}</mat-icon>
+    </button>
   </mat-form-field>
 
-  <p class="clr-primary link" routerLink="/auth/register">Registrieren</p>
+  <p class="clr-primary link reset-password" routerLink="/auth/reset">Passwort zurücksetzen</p>
 
-  <button class="login-button" color="primary" mat-flat-button>Login</button>
+  <button (click)="onSubmit()" class="login-button" color="primary" mat-flat-button>Login</button>
+
+  <p class="clr-primary link" routerLink="/auth/register">Registrieren</p>
 </form>

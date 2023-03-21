@@ -43,4 +43,23 @@ export class EmailService {
             Euer Speiseplan-Team ;)`
         )
     }
+
+    sendResetPasswordMail(email: string) {
+        const mailOptions = {
+            from: this.email,
+            to: email,
+            subject: 'Passwort zurücksetzen',
+            html: this.resetPasswordText()
+        };
+
+        this.client.sendMail(mailOptions, (error) => {
+            if(error) {
+                this.logger.log(error);
+            }
+        });
+    }
+
+    private resetPasswordText(): string {
+        return "Passwort zurücksetzen!";
+    }
 }

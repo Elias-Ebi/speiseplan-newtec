@@ -6,16 +6,18 @@ import { MatButtonModule } from "@angular/material/button";
 import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { AuthService } from "../../shared/services/auth.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, MatInputModule, RouterLink, MatButtonModule, ReactiveFormsModule],
+  imports: [CommonModule, MatInputModule, RouterLink, MatButtonModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
   form: FormGroup = this.initializeForm();
+  hidePw = true;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
   }
@@ -39,5 +41,17 @@ export class RegisterComponent {
         alert(error.error.message)
       })
     }
+  }
+
+  toggleHide() {
+    this.hidePw = !this.hidePw;
+  }
+
+  getVisibilityIcon(): string {
+    return this.hidePw ? 'visibility' : 'visibility_off';
+  }
+
+  getInputType(): string {
+    return this.hidePw ? 'password' : 'text';
   }
 }

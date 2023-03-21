@@ -12,11 +12,13 @@ import {FindManyOptions, FindOneOptions, Repository} from 'typeorm';
 import {JwtPayload} from './models/jwt-payload';
 import {AuthUser} from './models/AuthUser';
 import {Profile} from '../data/entitites/profile.entity';
+import { EmailService } from 'src/shared/email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
+    private emailService: EmailService,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile) private profileRepository: Repository<Profile>
   ) {
@@ -59,6 +61,22 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign(payload)
     };
+  }
+
+  async resetPassword(email: string) {
+    const options: FindOneOptions<User> = {
+      where: { email }
+    };
+
+    const result = await this.userRepository.findOne(options);
+
+    if(!result) {
+      return false;
+    }
+    
+    this.emailService.sendResetPasswordMail(email);
+    
+    return true;
   }
 
   async getUser(email: string): Promise<User>{

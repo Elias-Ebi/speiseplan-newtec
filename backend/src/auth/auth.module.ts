@@ -9,6 +9,7 @@ import { User } from '../data/entitites/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { environment } from '../environment';
 import { Profile } from '../data/entitites/profile.entity';
+import { EmailService } from 'src/shared/email/email.service';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { Profile } from '../data/entitites/profile.entity';
     TypeOrmModule.forFeature([User, Profile])
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService],
   exports: [AuthService]
 })
 export class AuthModule {
