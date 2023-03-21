@@ -47,6 +47,17 @@ export class MealService {
     return this.mealRepository.find(options);
   }
 
+  async getWeekMealCounter(mondayDate: PlainDate): Promise<number[]> {
+    const weekCounter = []
+    let date = mondayDate;
+    for(let i = 0; i < 5; i++) {
+      const mealsOnDate =  await this.getMealsOn(date);
+      weekCounter.push(mealsOnDate.length);
+      date = date.add({days: 1});
+    }    
+    return weekCounter;
+  }
+
   async getNextOrderable(time: PlainDateTime): Promise<Meal[]> {
     const nextOrderableDate = await this.getMinDateFrom(time);
 
