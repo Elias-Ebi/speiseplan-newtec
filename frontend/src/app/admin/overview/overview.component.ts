@@ -18,6 +18,7 @@ import {MatTreeModule} from "@angular/material/tree";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
+import DocHandler from 'jspdf-autotable'
 
 
 interface jsPDFWithPlugin extends jsPDF {
@@ -111,10 +112,12 @@ export class OverviewComponent implements OnInit {
 
     const dayData = this.dataMap.get(day);
 
-    let body: string[][] = []
     let tableCounter = 0;
+    let finalY = 0;
+    console.log('start table loop')
     dayData?.forEach(d => {
-        let tableSum = 0;
+      let body: string[][] = []
+      let tableSum = 0;
         // fill table entries for current meal
         d.forEach((entry) => {
           let buyer = entry.guestName? (entry.guestName+ ' (Gast von ' +  entry.profile.name + ')') : entry.profile.name;
@@ -123,7 +126,6 @@ export class OverviewComponent implements OnInit {
           tableSum = tableSum + entry.meal.total;
           tableCounter ++;
         })
-
 
         var options = {
           didParseCell: function(data: any) {
@@ -145,18 +147,18 @@ export class OverviewComponent implements OnInit {
               data.cell.styles = { halign: "right" };
             }
           },
-          
         };
 
         // draw table
         doc.autoTable({
           theme: 'plain',
-          startY: 80 + (tableCounter * lineHeight),
+          startY: finalY + 200, //80 + (tableCounter * lineHeight),
           head: [[d[0].meal.name, 'Besteller', 'Preis' ]],
           body: body,
           foot: [['', 'Summe:   ', tableSum.toFixed(2) + ' €']],
           didParseCell: options.didParseCell
-          })
+        })
+        finalY = (doc as any).lastAutoTable.finalY;
     });
 
     this.openPrintDialog(doc);
