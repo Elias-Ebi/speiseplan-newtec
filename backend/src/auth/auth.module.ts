@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { environment } from '../environment';
 import { Profile } from '../data/entitites/profile.entity';
 import { EmailService } from 'src/shared/email/email.service';
+import { HashService } from 'src/shared/hash/hash.service';
 
 @Module({
   imports: [
@@ -17,10 +18,10 @@ import { EmailService } from 'src/shared/email/email.service';
     JwtModule.register({
       secret: environment.jwtSecretKey
     }),
-    TypeOrmModule.forFeature([User, Profile])
+    TypeOrmModule.forFeature([User, Profile]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService, HashService],
   exports: [AuthService]
 })
 export class AuthModule {

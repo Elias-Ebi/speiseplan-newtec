@@ -45,8 +45,8 @@ export class AuthService {
     this.router.navigateByUrl('/');
   }
 
-  resetPassword(email: string): Promise<boolean> {
-    const response = this.httpClient.get<boolean>(`${environment.apiUrl}/auth/reset-password/${email}`);
+  resetPassword(email: string): Promise<string> {
+    const response = this.httpClient.get<string>(`${environment.apiUrl}/auth/reset-password/${email}`);
     return lastValueFrom(response);
   }
 

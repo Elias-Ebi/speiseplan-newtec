@@ -13,12 +13,15 @@ import {JwtPayload} from './models/jwt-payload';
 import {AuthUser} from './models/AuthUser';
 import {Profile} from '../data/entitites/profile.entity';
 import { EmailService } from 'src/shared/email/email.service';
+import { Temporal } from '@js-temporal/polyfill';
+import { HashService } from 'src/shared/hash/hash.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private emailService: EmailService,
+    private hashService: HashService,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile) private profileRepository: Repository<Profile>
   ) {
@@ -71,12 +74,19 @@ export class AuthService {
     const result = await this.userRepository.findOne(options);
 
     if(!result) {
-      return false;
+      return "";
     }
+
+    const time_stamp: string = Temporal.Now.plainDateISO().toString();
+    const password: string = result.password;
+    const hashstr: string = time_stamp + password;
+
+    const secret: string = this.hashService.encrypt(hashstr, 1, "hex");
+    const token: string = this.jwtService.sign({email, secret}, {expiresIn: '30m'});
+
+    this.emailService.sendResetPasswordMail(email, token);
     
-    this.emailService.sendResetPasswordMail(email);
-    
-    return true;
+    return token;
   }
 
   async getUser(email: string): Promise<User>{
