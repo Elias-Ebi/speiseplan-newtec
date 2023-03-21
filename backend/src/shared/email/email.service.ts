@@ -44,12 +44,14 @@ export class EmailService {
         )
     }
 
-    sendResetPasswordMail(email: string) {
+    sendResetPasswordMail(email: string, token: string) {
+        const resetPasswordLink = `http://localhost:3000/auth/reset/${email}/${token}`;
+
         const mailOptions = {
             from: this.email,
             to: email,
             subject: 'Passwort zurücksetzen',
-            html: this.resetPasswordText()
+            html: this.resetPasswordText(resetPasswordLink)
         };
 
         this.client.sendMail(mailOptions, (error) => {
@@ -59,7 +61,26 @@ export class EmailService {
         });
     }
 
-    private resetPasswordText(): string {
-        return "Passwort zurücksetzen!";
+    sendTempPasswordMail(email: string, tempPassword: string) {
+        const mailOptions = {
+            from: this.email,
+            to: email,
+            subject: 'Passwort zurücksetzen',
+            html: this.resetPasswordText(tempPassword)
+        };
+
+        this.client.sendMail(mailOptions, (error) => {
+            if(error) {
+                this.logger.log(error);
+            }
+        });
+    }
+
+    private resetPasswordText(resetLink: string): string {
+        return "Passwort zurücksetzen! " + resetLink;
+    }
+
+    private tempPasswordText(tempPassword: string): string {
+        return `Ihr neues Passwort lautet: <label style="color: green">${tempPassword}</label>. Ändern Sie bitte nach der Anmeldung Ihr Passwort.`;
     }
 }

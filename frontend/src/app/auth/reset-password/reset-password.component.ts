@@ -32,6 +32,7 @@ export class ResetPasswordComponent {
       try {
         const email = this.form.value;
         const resetPasswordResult = await this.authService.resetPassword(email.email);
+
         if(resetPasswordResult) {
           alert('Passwort zurücksetzen angefordert');
           this.router.navigateByUrl('/auth/login');

@@ -1,0 +1,21 @@
+<form [formGroup]="form" class="main-layout">
+  <h2>NewTec Speiseplan</h2>
+
+  <mat-form-field>
+    <mat-label>Passwort</mat-label>
+    <input formControlName="password" matInput required [type]="getInputType()">
+    <button (click)="toggleHide()" mat-icon-button matSuffix>
+      <mat-icon class="clr-primary">{{getVisibilityIcon()}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Passwort bestätigen</mat-label>
+    <input formControlName="password-confirm" matInput required [type]="getInputType()">
+    <button (click)="toggleHide()" mat-icon-button matSuffix>
+      <mat-icon class="clr-primary">{{getVisibilityIcon()}}</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <button (click)="onSubmit()" class="login-button" color="primary" mat-flat-button>Abschicken</button>
+</form>
