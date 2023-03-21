@@ -10,6 +10,7 @@ import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Meal} from "../../../shared/models/meal";
 import {Profile} from "../../../shared/models/profile";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {Order} from "../../../shared/models/order";
 
 @Component({
   selector: 'app-overview-inform-dialog',
@@ -19,14 +20,13 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
   styleUrls: ['./overview-inform-dialog.component.scss']
 })
 export class OverviewInformDialogComponent {
-  userSelection= new FormControl<Profile[]>([]);
+  userSelection= new FormControl<Order[]>([]);
   allSelected = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
-      meal: Meal,
-      users: Profile[],
+      meals: Order[]
     },
     private dialogRef: MatDialogRef<OverviewInformDialogComponent>
   ) {
@@ -35,7 +35,7 @@ export class OverviewInformDialogComponent {
 
   selectAll(){
     this.allSelected = !this.allSelected;
-    const selectedUsers = this.allSelected ? this.data.users.map(user => user) : [];
+    const selectedUsers = this.allSelected ? this.data.meals.map(user => user) : [];
     this.userSelection.setValue(selectedUsers);
   }
 

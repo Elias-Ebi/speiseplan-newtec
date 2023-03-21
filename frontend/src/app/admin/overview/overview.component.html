@@ -3,30 +3,31 @@
     <section class="section">
       <div class="section-headline-container">
         <h2>Tagesbestellungen - {{day | weekdayName}} </h2>
-        <button (click)="downloadDayAsCsv(day)" color="primary" mat-flat-button>
+        <button color="primary" mat-flat-button>
           <mat-icon>picture_as_pdf</mat-icon>
           Exportieren
         </button>
       </div>
       <hr class="bg-neutral"/>
       <mat-accordion displayMode="flat" multi="true">
-        <mat-expansion-panel *ngFor="let order of dataMap.get(day)">
+        <mat-expansion-panel *ngFor="let sameMealOrders of dataMap.get(day)">
           <mat-expansion-panel-header>
             <mat-panel-title class="panel-header">
               <div class="icon-with-text">
                 <mat-icon>restaurant</mat-icon>
-                <p>{{order.meal.name}}</p>
+                <p>{{sameMealOrders[0].meal.name}}</p>
               </div>
-              <p>{{order.total}}</p>
-              <button (click)="onClickInform($event, order)" color="primary" mat-flat-button>
+              <p>{{sameMealOrders.length}}</p>
+              <button (click)="onClickInform($event, sameMealOrders)" color="primary" mat-flat-button>
                 <mat-icon>no_meals</mat-icon>
                 Absagen
               </button>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div *ngFor="let user of order.users" class="icon-with-text">
+          <div *ngFor="let order of sameMealOrders" class="icon-with-text">
             <mat-icon>person</mat-icon>
-            <p>{{user.name}}</p>
+            <p *ngIf="order.guestName">{{order.profile.name}} für {{order.guestName}}</p>
+            <p *ngIf="!order.guestName">{{order.profile.name}}</p>
           </div>
         </mat-expansion-panel>
       </mat-accordion>

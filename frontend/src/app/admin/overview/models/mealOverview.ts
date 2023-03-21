@@ -5,4 +5,11 @@ export interface MealOverview {
   meal: Meal;
   total: number;
   users: Profile[];
+  guests: Map<string, Profile>;
 }
+
+/*
+interface GuestTree {
+  user: string;
+  guests?: string[]
+}*/

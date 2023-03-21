@@ -264,8 +264,7 @@ export class OrderService {
     try {
       const time = Temporal.Now.plainDateTimeISO();
       for (const order of orderIds) {
-        ordersChanged.push(await this.get(order));
-        await this.delete(time, order, user);
+        ordersChanged.push(await this.delete(time, order, user));
       }
       return ordersChanged;
     } catch (errors) {
