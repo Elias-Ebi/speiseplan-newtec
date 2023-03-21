@@ -3,9 +3,9 @@
     <section class="section">
       <div class="section-headline-container">
         <h2>Tagesbestellungen - {{day | weekdayName}} </h2>
-        <button color="primary" mat-flat-button>
+        <button (click)="exportAsPDF(day)" color="primary" mat-flat-button>
           <mat-icon>picture_as_pdf</mat-icon>
-          Exportieren
+          Als Pdf Exportieren
         </button>
       </div>
       <hr class="bg-neutral"/>
@@ -24,11 +24,22 @@
               </button>
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div *ngFor="let order of sameMealOrders" class="icon-with-text">
-            <mat-icon>person</mat-icon>
-            <p *ngIf="order.guestName">{{order.profile.name}} für {{order.guestName}}</p>
-            <p *ngIf="!order.guestName">{{order.profile.name}}</p>
+          <div *ngFor="let order of sameMealOrders">
+            <div class="grid">
+                <mat-icon class="span-1">person</mat-icon>
+                <p *ngIf="!order.guestName" class="span-6">{{order.profile.name}}</p>
+                <p *ngIf="!order.guestName" class="span-6"></p>
+                <p *ngIf="order.guestName" class="span-6">{{order.guestName}}</p>
+                <p *ngIf="order.guestName" class="span-6">(Gast von {{order.profile.name}})</p>
+            </div>
           </div>
+          <!--
+            <div *ngFor="let order of sameMealOrders" class="icon-with-text">
+              <mat-icon>person</mat-icon>
+              <p *ngIf="order.guestName">{{order.profile.name}} für {{order.guestName}}</p>
+              <p *ngIf="!order.guestName">{{order.profile.name}}</p>
+            </div>
+          -->
         </mat-expansion-panel>
       </mat-accordion>
     </section>
