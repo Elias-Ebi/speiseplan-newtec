@@ -18,7 +18,6 @@ import {MatTreeModule} from "@angular/material/tree";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { UserOptions } from 'jspdf-autotable';
-import { Styles } from 'jspdf-autotable';
 
 
 interface jsPDFWithPlugin extends jsPDF {
@@ -100,7 +99,7 @@ export class OverviewComponent implements OnInit {
     const fontSize = 10;
     const lineHeight = 15;
     const doc = new jsPDF('portrait', 'px', 'a4') as jsPDFWithPlugin;
-    const title = 'Tagesübersicht vom ' + day.toLocaleString();
+    const title = 'Tagesübersicht  -  ' + day.toLocaleString();
     doc.text(title, indentationLeft, 50);
     doc.setDrawColor(86,86,86);
     doc.line(indentationLeft, 65, 415, 65);
@@ -112,17 +111,17 @@ export class OverviewComponent implements OnInit {
 
     const dayData = this.dataMap.get(day);
 
-    
-    console.log('daydata: ', dayData);
     let body: string[][] = []
+    let tableCounter = 0;
     dayData?.forEach(d => {
         let tableSum = 0;
         // fill table entries for current meal
         d.forEach((entry) => {
           let buyer = entry.guestName? (entry.guestName+ ' (Gast von ' +  entry.profile.name + ')') : entry.profile.name;
-          body.push([entry.meal.name, buyer, '' + entry.meal.total + ' €'])
+          body.push(['', buyer,  '' + entry.meal.total.toFixed(2) + ' €' ])
           // add sum row
           tableSum = tableSum + entry.meal.total;
+          tableCounter ++;
         })
 
 
@@ -140,42 +139,33 @@ export class OverviewComponent implements OnInit {
             if (data.column.index === data.table.columns.length - 1) {
               data.cell.styles = { align: "right" };
             }
+
+            if (data.cell.raw === 'Summe:   ') {
+              console.log('SUMMEN-Zelle')
+              data.cell.styles = { halign: "right" };
+            }
           },
           
         };
+
         // draw table
         doc.autoTable({
           theme: 'plain',
-          headStyles: {
-            borderBottom: 1 // Eine untere Linie für die Tabellenkopfzeile festlegen
-          } as Partial<Styles>,
-          startY: 80 + lineHeight,
-          head: [['Gericht', 'Besteller', 'Preis' ]],
+          startY: 80 + (tableCounter * lineHeight),
+          head: [[d[0].meal.name, 'Besteller', 'Preis' ]],
           body: body,
-          foot: [['', 'Summe:', tableSum + ' €']],
-          // didParseCell: options.didParseCell
+          foot: [['', 'Summe:   ', tableSum.toFixed(2) + ' €']],
+          didParseCell: options.didParseCell
           })
     });
-    
-    console.log('body: ', body);
-
-    let timestamp = Temporal.Now.instant().toString();
-    // removing spaces from string does not work for some reason
-    let filename = timestamp.replace(/\s+/g, '');
 
     this.openPrintDialog(doc);
-    // doc.save(filename + '.pdf');
   }
 
   public openPrintDialog(pdf: any): void {
     const blob = new Blob([pdf.output('blob')], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const printWindow = window.open(url, '_blank', 'fullscreen=yes');
-    /*if (printWindow) {
-      console.log('Print')
-      printWindow.focus();
-      printWindow.print();
-    }*/
   }
 
 }
