@@ -19,7 +19,8 @@
 
     <h2>{{ currentlyDisplayedWeek.span }}</h2>
 
-    <button (click)="getNextCalendarWeek()" [disabled]="this.calendarWeekIndex == MAX_FOLLOWING_WEEKS" class="arrow-button"
+    <button (click)="getNextCalendarWeek()" [disabled]="this.calendarWeekIndex == MAX_FOLLOWING_WEEKS"
+            class="arrow-button"
             mat-icon-button>
       <mat-icon class="arrow-forward">arrow_forward</mat-icon>
     </button>
@@ -63,7 +64,7 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
+                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
                 <button (click)="delete(element)" class="icon-button" mat-icon-button>
@@ -127,7 +128,7 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined">
+                <button class="icon-button-outlined" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
                 <button (click)="delete(element)" class="icon-button" mat-icon-button>
@@ -191,7 +192,7 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
+                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
                 <button (click)="delete(element)" class="icon-button" mat-icon-button>
@@ -255,7 +256,7 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
+                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
                 <button (click)="delete(element)" class="icon-button" mat-icon-button>
@@ -319,7 +320,7 @@
             </th>
             <td *matCellDef="let element" mat-cell>
               <div class="action-buttons">
-                <button mat-icon-button class="icon-button-outlined" (click)="edit(element)">
+                <button (click)="edit(element)" class="icon-button-outlined" mat-icon-button>
                   <mat-icon>edit</mat-icon>
                 </button>
                 <button (click)="delete(element)" class="icon-button" mat-icon-button>

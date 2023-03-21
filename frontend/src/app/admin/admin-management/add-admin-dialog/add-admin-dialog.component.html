@@ -1,0 +1,31 @@
+<div class="dialog-container list-container-wide">
+  <h2>Admin hinzufügen</h2>
+
+  <mat-form-field>
+    <mat-label>Nutzer auswählen</mat-label>
+    <input
+      [formControl]="inputControl"
+      [matAutocomplete]="auto"
+      matInput
+      placeholder="E-Mail eingeben"
+    >
+    <mat-autocomplete #auto>
+      <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user.email">
+        {{user.email}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <div class="dialog-action-button-container">
+    <button (click)="closeDialog()" mat-stroked-button>Abbrechen</button>
+
+    <button
+      (click)="add()"
+      [disabled]="invalidInput$ | async"
+      color="primary"
+      mat-flat-button
+    >
+      Bestätigen
+    </button>
+  </div>
+</div>

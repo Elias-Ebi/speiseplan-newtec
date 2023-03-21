@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthService } from './auth.service';
-import { SkipAuth } from './decorators/skip-auth.decorator';
-import { Profile } from '../data/entitites/profile.entity';
-import { AuthUser } from './models/AuthUser';
+import {Body, Controller, Get, Param, Post, Put, Request, UseGuards} from '@nestjs/common';
+import {LocalAuthGuard} from './guards/local-auth.guard';
+import {AuthService} from './auth.service';
+import {SkipAuth} from './decorators/skip-auth.decorator';
+import {Profile} from '../data/entitites/profile.entity';
+import {AuthUser} from './models/AuthUser';
+import {AdminOnly} from './decorators/admin-only.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -32,5 +33,45 @@ export class AuthController {
   getProfile(@Request() req): Promise<Profile> {
     const user = req.user as AuthUser;
     return this.authService.getProfile(user.email);
+  }
+
+  @Put('change-name')
+  changeName(@Request() req, @Body('name') name: string): Promise<Profile> {
+    const user = req.user as AuthUser;
+    return this.authService.changeName(user, name);
+  }
+
+  @Put('change-password')
+  changePassword(
+      @Request() req,
+      @Body('currentPassword') currentPassword: string,
+      @Body('newPassword') newPassword: string
+  ) {
+    const user = req.user as AuthUser;
+    return this.authService.changePassword(user, currentPassword, newPassword);
+  }
+
+  @Get('profiles')
+  @AdminOnly()
+  getAllProfiles(): Promise<Profile[]> {
+    return this.authService.getAllProfiles();
+  }
+
+  @Get('admin-profiles')
+  @AdminOnly()
+  getAllAdminProfiles(): Promise<Profile[]> {
+    return this.authService.getAllAdminProfiles();
+  }
+
+  @Get('non-admin-profiles')
+  @AdminOnly()
+  getAllNonAdminProfiles(): Promise<Profile[]> {
+    return this.authService.getAllNonAdminProfiles();
+  }
+
+  @Put('change-admin-access/:email')
+  @AdminOnly()
+  toggleAdminAccess(@Param('email') email: string): Promise<Profile> {
+    return this.authService.toggleAdminAccess(email);
   }
 }

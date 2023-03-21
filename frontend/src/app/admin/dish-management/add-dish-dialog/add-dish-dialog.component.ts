@@ -83,15 +83,15 @@ export class AddDishDialogComponent implements OnInit {
     this.maxDate.setDate(this.deliveryDate.getDate() - 1);
   }
 
+  get dialogTitle() {
+    return this.data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"
+  }
+
   async ngOnInit() {
     const defaultValues = await this.api.getDefaultValues();
     this.total = defaultValues.total;
     this.deliveryTime = defaultValues.deliveryTime;
     this.orderTime = defaultValues.orderableTime;
-  }
-
-  get dialogTitle() {
-    return this.data.mealToEdit ? "Gericht bearbeiten" : "Neues Gericht erstellen"
   }
 
   setOrderableDate() {
@@ -178,6 +178,7 @@ export class AddDishDialogComponent implements OnInit {
 
   validate() {
     // TODO:check dates & time
+    this.isTemplateValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
     this.isFormValid = (this.name.length != 0) && (this.description.length != 0) && (this.categoryId.length != 0);
     this.validateTemplate();
     this.validateDate();
