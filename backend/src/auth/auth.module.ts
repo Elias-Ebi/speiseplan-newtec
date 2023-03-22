@@ -11,6 +11,8 @@ import { environment } from '../environment';
 import { Profile } from '../data/entitites/profile.entity';
 import { EmailService } from 'src/shared/email/email.service';
 import { HashService } from 'src/shared/hash/hash.service';
+import { ResetPasswordToken } from 'src/data/entitites/reset-password-token.entity';
+import { DataCleanupService } from 'src/shared/cleanup/data-cleanup.service';
 
 @Module({
   imports: [
@@ -18,10 +20,10 @@ import { HashService } from 'src/shared/hash/hash.service';
     JwtModule.register({
       secret: environment.jwtSecretKey
     }),
-    TypeOrmModule.forFeature([User, Profile]),
+    TypeOrmModule.forFeature([User, Profile, ResetPasswordToken]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService, HashService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService, HashService, DataCleanupService],
   exports: [AuthService]
 })
 export class AuthModule {
