@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { BinaryToTextEncoding, createHash } from "crypto";
 
-
 @Injectable()
 export class HashService {
     

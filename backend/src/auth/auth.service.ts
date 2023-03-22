@@ -15,6 +15,8 @@ import {Profile} from '../data/entitites/profile.entity';
 import { EmailService } from 'src/shared/email/email.service';
 import { Temporal } from '@js-temporal/polyfill';
 import { HashService } from 'src/shared/hash/hash.service';
+import { ResetPasswordToken } from 'src/data/entitites/reset-password-token.entity';
+import { DataCleanupService } from 'src/shared/cleanup/data-cleanup.service';
 
 @Injectable()
 export class AuthService {
@@ -22,8 +24,10 @@ export class AuthService {
     private jwtService: JwtService,
     private emailService: EmailService,
     private hashService: HashService,
+    private dataCleanupService: DataCleanupService,
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Profile) private profileRepository: Repository<Profile>
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
+    @InjectRepository(ResetPasswordToken) private resetPasswordTokenRepository: Repository<ResetPasswordToken>
   ) {
   }
 
@@ -74,19 +78,20 @@ export class AuthService {
     const result = await this.userRepository.findOne(options);
 
     if(!result) {
-      return "";
+      return false;
     }
 
-    const time_stamp: string = Temporal.Now.plainDateISO().toString();
+    const time_stamp: string = Temporal.Now.plainDateTimeISO().toString();
     const password: string = result.password;
     const hashstr: string = time_stamp + password;
 
     const secret: string = this.hashService.encrypt(hashstr, 1, "hex");
-    const token: string = this.jwtService.sign({email, secret}, {expiresIn: '30m'});
 
-    this.emailService.sendResetPasswordMail(email, token);
+    this.resetPasswordTokenRepository.save({email: email, token: secret, updatedAt: Temporal.Now.plainDateTimeISO().toString()});
+
+    this.emailService.sendResetPasswordMail(email, secret);
     
-    return token;
+    return true;
   }
 
   async getUser(email: string): Promise<User>{

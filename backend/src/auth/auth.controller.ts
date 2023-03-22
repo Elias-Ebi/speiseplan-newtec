@@ -77,7 +77,7 @@ export class AuthController {
 
   @SkipAuth()
   @Get('reset-password/:email')
-  resetPassword(@Param('email') email: string): Promise<string> {
+  resetPassword(@Param('email') email: string): Promise<boolean> {
     return this.authService.resetPassword(email);
   }
 }
