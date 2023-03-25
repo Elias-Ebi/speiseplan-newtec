@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatIconModule} from "@angular/material/icon";
-import {Router, RouterLink} from "@angular/router";
+import {Router, RouterLink, RouterLinkActive} from "@angular/router";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {Observable} from "rxjs";
 import {StateService} from "../../../../shared/services/state.service";
@@ -13,11 +13,12 @@ import {ChangePasswordDialogComponent} from "./change-password-dialog/change-pas
 @Component({
   selector: 'app-user-navigation',
   standalone: true,
-  imports: [CommonModule, MatIconModule, RouterLink, MatMenuModule],
+  imports: [CommonModule, MatIconModule, RouterLink, MatMenuModule, RouterLinkActive],
   templateUrl: './user-navigation.component.html',
   styleUrls: ['./user-navigation.component.scss']
 })
 export class UserNavigationComponent {
+  isActive: boolean = false;
   isAdmin$: Observable<boolean>;
 
   constructor(private authService: AuthService, private router: Router, private stateService: StateService, private dialog: MatDialog) {
@@ -31,6 +32,7 @@ export class UserNavigationComponent {
   navigateToOrderPage() {
     this.stateService.setSelectedOrderDate(null);
     this.router.navigateByUrl('/bestellen');
+    this.isActive = true;
   }
 
   changeName() {

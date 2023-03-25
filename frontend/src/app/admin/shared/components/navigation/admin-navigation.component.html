@@ -3,24 +3,27 @@
     <!-- Logo and User Area-->
     <div class="logo-container">
       <img alt="NewTec Speiseplan Admin Logo" class="logo" routerLink="/admin" src="/assets/logo-admin.svg">
-      <p class="nav-link" routerLink="/">Nutzer-Bereich</p>
+      <div class="profile-change" routerLink="/">
+        <p>Zu Nutzer wechseln</p>
+        <mat-icon class="change">cached</mat-icon>
+      </div>
     </div>
 
     <!-- Links -->
     <ul class="links-container">
-      <li routerLink="/admin/meal-management">
-        <p>Gerichte</p>
-      </li>
+        <li routerLinkActive="selected" routerLink="/admin/meal-management">
+            <p>Gerichte</p>
+        </li>
 
-      <li routerLink="/admin/order-management">
+      <li routerLinkActive="selected" routerLink="/admin/order-management">
         <p>Bestellungen</p>
       </li>
 
-      <li routerLink="/admin/month-overview">
+      <li routerLinkActive="selected" routerLink="/admin/month-overview">
         <p>Monatsübersicht</p>
       </li>
 
-      <li routerLink="/admin/admin-management">
+      <li routerLinkActive="selected" routerLink="/admin/admin-management">
         <p>Admins</p>
       </li>
 
