@@ -27,8 +27,11 @@
         <p>Admins</p>
       </li>
 
-      <li (click)="logout()">
-        <p>Logout</p>
+      <li>
+        <mat-icon [matMenuTriggerFor]="accMenu" class="account-icon">account_circle</mat-icon>
+        <mat-menu #accMenu>
+          <button (click)="logout()" mat-menu-item>Logout</button>
+        </mat-menu>
       </li>
     </ul>
   </div>

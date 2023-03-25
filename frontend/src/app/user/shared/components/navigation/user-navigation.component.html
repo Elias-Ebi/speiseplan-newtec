@@ -3,8 +3,8 @@
     <!-- Logo and Admin Area-->
     <div (click)="isActive = false" class="logo-container">
       <img alt="NewTec Speiseplan Logo" class="logo" routerLink="/" src="/assets/logo.svg">
-      <div class="profile-change">
-        <p *ngIf="isAdmin$ | async" routerLink="/admin">Zu Admin wechseln</p>
+      <div *ngIf="isAdmin$ | async" routerLink="/admin" class="profile-change">
+        <p>Zu Admin wechseln</p>
         <mat-icon class="change">cached</mat-icon>
       </div>
     </div>

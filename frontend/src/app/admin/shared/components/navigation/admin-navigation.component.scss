@@ -71,7 +71,7 @@ nav {
     background: var(--clrBackground);
   }
 
-  li:hover {
+  li:not(:last-child):hover {
     &::after {
       content: "";
       position: absolute;
@@ -84,6 +84,14 @@ nav {
       transition: width 150ms ease-in-out;
     }
   }
+
+  li:last-child:hover {
+    color: var(--clrLightGrey);
+  }
+}
+
+.account-icon {
+  scale: 1.25;
 }
 
 @keyframes rotate {
