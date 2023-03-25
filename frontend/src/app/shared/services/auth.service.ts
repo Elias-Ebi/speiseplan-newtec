@@ -45,8 +45,18 @@ export class AuthService {
     this.router.navigateByUrl('/');
   }
 
-  resetPassword(email: string): Promise<boolean> {
+  // This function sends a request to the reset-password endpoint
+  // with the email address of the user who is requesting a password reset.
+  // The endpoint will then send an email with a link to the user
+  // to allow them to reset their password.
+  // The function returns a promise that resolves to true if the request was successful.
+  async resetPassword(email: string): Promise<boolean> {
     const response = this.httpClient.get<boolean>(`${environment.apiUrl}/auth/reset-password/${email}`);
+    return lastValueFrom(response);
+  }
+
+  async setNewPasswordFromResetToken(token: string, newPassword: string) {
+    const response = this.httpClient.put(`${environment.apiUrl}/auth/set-password`, {token, newPassword});
     return lastValueFrom(response);
   }
 

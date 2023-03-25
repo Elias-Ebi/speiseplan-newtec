@@ -75,23 +75,57 @@ export class AuthService {
       where: { email }
     };
 
-    const result = await this.userRepository.findOne(options);
+    const user = await this.userRepository.findOne(options);
 
-    if(!result) {
+    if(!user) {
       return false;
     }
 
+    // create a hash with the current time_stamp and user password
     const time_stamp: string = Temporal.Now.plainDateTimeISO().toString();
-    const password: string = result.password;
+    const password: string = user.password;
     const hashstr: string = time_stamp + password;
 
+    // create a hash to be used as a token
     const secret: string = this.hashService.encrypt(hashstr, 1, "hex");
 
+    // save the token in the database
     this.resetPasswordTokenRepository.save({email: email, token: secret, updatedAt: Temporal.Now.plainDateTimeISO().toString()});
 
+    // send email to the user
     this.emailService.sendResetPasswordMail(email, secret);
     
     return true;
+  }
+
+  async setPasswordFromToken(token: string, newPassword: string) {
+    const reset_options: FindOneOptions<ResetPasswordToken> = {
+      where: { token }
+    };
+
+    const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
+
+    if(!resetPasswordToken) {
+      throw new NotFoundException();
+    }
+
+    const user_options: FindOneOptions<User> = {
+      where: { email: resetPasswordToken.email }
+    };
+
+    const user: User = await this.userRepository.findOne(user_options);
+
+    if(!user) {
+      throw new NotFoundException();
+    }
+
+    if(!this.hashService.timeSafeEqual(user.password, newPassword)) {
+      throw new BadRequestException("The new password must be different from the old one");
+    }
+
+    user.password = newPassword;
+
+    await this.userRepository.save(user);
   }
 
   async getUser(email: string): Promise<User>{

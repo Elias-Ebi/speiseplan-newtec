@@ -44,34 +44,52 @@ export class EmailService {
         )
     }
 
+    /**
+     * Send an email to the user with a link to reset their password.
+     *
+     * @param email The email address of the user.
+     * @param token The token that will be used to verify the request.
+     */
     sendResetPasswordMail(email: string, token: string) {
-        const resetPasswordLink = `http://localhost:3000/auth/reset/${email}/${token}`;
-
+        // Create a link to the reset password page with the token as a query parameter.
+        const resetPasswordLink = `http://localhost:4200/auth/reset/${token}`;
+        // Create the options for the email.
         const mailOptions = {
             from: this.email,
             to: email,
             subject: 'Passwort zurücksetzen',
             html: this.resetPasswordText(resetPasswordLink)
         };
-
-        this.client.sendMail(mailOptions, (error) => {
+        // Send the email.
+        this.client.sendMail(mailOptions, (error: Error) => {
             if(error) {
                 this.logger.log(error);
+            } else {
+                this.logger.log('Reset password email sent to ' + email);
             }
         });
     }
 
+    /**
+     * Sends a mail to the given email address with a temporary password.
+     * @param email The email address to send the mail to.
+     * @param tempPassword The temporary password to be sent in the mail.
+     */
     sendTempPasswordMail(email: string, tempPassword: string) {
+        // Set the email options
         const mailOptions = {
             from: this.email,
             to: email,
             subject: 'Passwort zurücksetzen',
             html: this.resetPasswordText(tempPassword)
         };
-
-        this.client.sendMail(mailOptions, (error) => {
+        // Send the email
+        this.client.sendMail(mailOptions, (error: Error, info: any) => {
+            // If an error occurred, log it
             if(error) {
                 this.logger.log(error);
+            } else {
+                this.logger.log('Email sent: ' + info.response);
             }
         });
     }
@@ -96,6 +114,8 @@ export class EmailService {
     }
 
     private tempPasswordText(tempPassword: string): string {
-        return (`Ihr neues Passwort lautet: <label style="color: green">${tempPassword}</label>. Ändern Sie bitte nach der Anmeldung Ihr Passwort.`);
+        return (
+            `Ihr neues Passwort lautet: <label style="color: #00629F">${tempPassword}</label>. Ändern Sie bitte nach der Anmeldung Ihr Passwort.`
+            );
     }
 }

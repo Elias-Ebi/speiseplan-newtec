@@ -80,4 +80,10 @@ export class AuthController {
   resetPassword(@Param('email') email: string): Promise<boolean> {
     return this.authService.resetPassword(email);
   }
+
+  @SkipAuth()
+  @Put('set-password')
+  setPasswordFromToken(@Body('token') token: string, @Body('newPassword') newPassword: string) {
+    return this.authService.setPasswordFromToken(token, newPassword);
+  }
 }
