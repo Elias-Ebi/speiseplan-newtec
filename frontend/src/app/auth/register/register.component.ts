@@ -33,7 +33,7 @@ export class RegisterComponent {
   onSubmit() {
     if (this.form.valid) {
       const {email, name, password} = this.form.value;
-      this.authService.register(email, name, password).then(() => {
+      this.authService.register(email.toLowerCase(), name, password).then(() => {
           alert('Account erfolgreich erstellt!');
           this.router.navigateByUrl('/auth/login');
         }

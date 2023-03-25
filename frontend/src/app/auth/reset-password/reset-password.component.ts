@@ -30,8 +30,8 @@ export class ResetPasswordComponent {
   async onSubmit() {
     if (this.form.valid) {
       try {
-        const email = this.form.value;
-        const resetPasswordResult = await this.authService.resetPassword(email.email.toLowerCase());
+        const { email } = this.form.value;
+        const resetPasswordResult = await this.authService.resetPassword(email.toLowerCase());
 
         if(resetPasswordResult) {
           alert('Passwort zurücksetzen angefordert');

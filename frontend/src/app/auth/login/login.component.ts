@@ -31,7 +31,7 @@ export class LoginComponent {
   onSubmit() {
     if (this.form.valid) {
       const {email, password} = this.form.value;
-      this.authService.login(email, password).catch(() => {
+      this.authService.login(email.toLowerCase(), password).catch(() => {
         alert('Login nicht möglich')
       })
     }
