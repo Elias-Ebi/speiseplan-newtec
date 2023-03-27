@@ -28,7 +28,10 @@
 
   <div class="dishes--week-tabs-container">
     <mat-tab-group #tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="currentTab" animationDuration="0ms">
-      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0" label="Montag">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0">
+        <ng-template mat-tab-label>
+          <span [matBadge]="weekCounter[0] > 0 ? weekCounter[0] : ''" matBadgePosition="after" matBadgeOverlap="false" matBadgeSize="medium" matBadgeColor="primary">Montag</span>
+        </ng-template>
         <table [dataSource]="dataSource" class="bg-background" id="table-monday" mat-table>
           <ng-container matColumnDef="title">
             <th *matHeaderCellDef mat-header-cell style="width: 20%">
@@ -89,7 +92,10 @@
           Gericht hinzufügen
         </button>
       </mat-tab>
-      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex  > 1" label="Dienstag">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex  > 1">
+        <ng-template mat-tab-label>
+          <span [matBadge]="weekCounter[1] > 0 ? weekCounter[1] : ''" matBadgePosition="after" matBadgeOverlap="false" matBadgeSize="medium" matBadgeColor="primary">Dienstag</span>
+        </ng-template>
         <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
@@ -150,7 +156,10 @@
           Gericht hinzufügen
         </button>
       </mat-tab>
-      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 2" label="Mittwoch">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 2">
+        <ng-template mat-tab-label>
+          <span [matBadge]="weekCounter[2] > 0 ? weekCounter[2] : ''" matBadgePosition="after" matBadgeOverlap="false" matBadgeSize="medium" matBadgeColor="primary">Mittwoch</span>
+        </ng-template>
         <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
@@ -211,7 +220,10 @@
           Gericht hinzufügen
         </button>
       </mat-tab>
-      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 3" label="Donnerstag">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 3">
+        <ng-template mat-tab-label>
+          <span [matBadge]="weekCounter[3] > 0 ? weekCounter[3] : ''" matBadgePosition="after" matBadgeOverlap="false" matBadgeSize="medium" matBadgeColor="primary">Donnerstag</span>
+        </ng-template>
         <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
@@ -272,7 +284,10 @@
           Gericht hinzufügen
         </button>
       </mat-tab>
-      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 4" label="Freitag">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 4">
+        <ng-template mat-tab-label>
+          <span [matBadge]="weekCounter[4] > 0 ? weekCounter[4] : ''" matBadgePosition="after" matBadgeOverlap="false" matBadgeSize="medium" matBadgeColor="primary">Freitag</span>
+        </ng-template>
         <table [dataSource]="dataSource" class="bg-background dish-table" mat-table>
           <ng-container matColumnDef="title">
             <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 20%">
