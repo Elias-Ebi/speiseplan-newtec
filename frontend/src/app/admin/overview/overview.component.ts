@@ -17,8 +17,7 @@ import {OverviewInformDialogComponent} from "./overview-inform-dialog/overview-i
 import {MatTreeModule} from "@angular/material/tree";
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { UserOptions } from 'jspdf-autotable';
-import DocHandler from 'jspdf-autotable'
+import { Styles, UserOptions } from 'jspdf-autotable';
 
 
 interface jsPDFWithPlugin extends jsPDF {
@@ -114,7 +113,7 @@ export class OverviewComponent implements OnInit {
     console.log('daydata: ', dayData);
     let body: string[][] = []
     let tableCounter = 0;
-    let finalY = 0;
+    let finalY = 80;
     console.log('start table loop')
     dayData?.forEach(d => {
       let body: string[][] = []
@@ -152,8 +151,13 @@ export class OverviewComponent implements OnInit {
 
         // draw table
         doc.autoTable({
+          columnStyles: {
+            0: {columnWidth: 120} as Partial<Styles>,
+            1: {columnWidth: 200} as Partial<Styles>,
+            2: {columnWidth: 50} as Partial<Styles>
+          },
           theme: 'plain',
-          startY: finalY + 200, //80 + (tableCounter * lineHeight),
+          startY: finalY + 50, //80 + (tableCounter * lineHeight),
           head: [[d[0].meal.name, 'Besteller', 'Preis' ]],
           body: body,
           foot: [['', 'Summe:   ', tableSum.toFixed(2) + ' €']],
