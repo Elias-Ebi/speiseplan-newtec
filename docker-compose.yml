@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - "5432:5432"
+      - "9000:5432"
 
   frontend:
     container_name: frontend
@@ -25,7 +25,7 @@ services:
     container_name: backend
     build: ./backend
     ports:
-      - "3000:3000"
+      - "8443:3000"
     env_file:
       - backend/.env
     depends_on:
@@ -40,7 +40,7 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     ports:
-      - "5050:80"
+      - "8000:80"
 
 volumes:
   postgres:
