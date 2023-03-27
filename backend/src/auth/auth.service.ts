@@ -42,7 +42,9 @@ export class AuthService {
       throw new ConflictException('E-Mail already registered');
     }
 
-    const newUser: User = { email, password };
+    const password_encrypted: string = this.hashService.encrypt(password, 1, "hex");
+
+    const newUser: User = { email: email, password: password_encrypted };
     const newProfile: Profile = { email, name, isAdmin: false };
     await Promise.all([this.userRepository.save(newUser), this.profileRepository.save(newProfile)]);
 
@@ -50,8 +52,10 @@ export class AuthService {
   }
 
   validateUser(email: string, password: string): Promise<User | null> {
+    const password_encrypted: string = this.hashService.encrypt(password, 1, "hex");
+
     const options: FindOneOptions<User> = {
-      where: { email, password }
+      where: { email, password: password_encrypted }
     };
 
     return this.userRepository.findOne(options);
@@ -123,7 +127,7 @@ export class AuthService {
       throw new BadRequestException("The new password must be different from the old one");
     }
 
-    user.password = newPassword;
+    user.password = this.hashService.encrypt(newPassword, 1, "hex");
 
     await this.userRepository.save(user);
   }
@@ -191,7 +195,7 @@ export class AuthService {
     }
     */
 
-    user.password = newPassword;
+    user.password = this.hashService.encrypt(newPassword, 1, "hex");
 
     await this.userRepository.save(user);
     await this.resetPasswordTokenRepository.delete(resetPasswordToken);
@@ -238,17 +242,20 @@ export class AuthService {
   }
 
   async changePassword(authUser: AuthUser, current: string, newPassword: string) {
-    if (!newPassword) {
+    const newPassword_encrypted = this.hashService.encrypt(newPassword, 1, "hex");
+    const current_encrypted = this.hashService.encrypt(current, 1, "hex");
+
+    if (!newPassword_encrypted) {
       throw new BadRequestException("New Password must not be empty");
     }
 
     const user = await this.getUser(authUser.email);
 
-    if (user.password !== current) {
+    if (user.password !== current_encrypted) {
       throw new BadRequestException('Wrong password');
     }
 
-    user.password = newPassword;
+    user.password = newPassword_encrypted;
 
     await this.userRepository.save(user);
   }

@@ -4,6 +4,7 @@ import {environment} from "../../environment";
 import {BehaviorSubject, lastValueFrom, map, Observable} from "rxjs";
 import {Router} from "@angular/router";
 import {Profile} from "../models/profile";
+import { HashService } from './hash.service';
 
 export const ACCESS_TOKEN_KEY = 'access_token';
 
