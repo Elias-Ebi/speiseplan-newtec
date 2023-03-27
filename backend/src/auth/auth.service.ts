@@ -194,6 +194,7 @@ export class AuthService {
     user.password = newPassword;
 
     await this.userRepository.save(user);
+    await this.resetPasswordTokenRepository.delete(resetPasswordToken);
 
     return true;
   }
