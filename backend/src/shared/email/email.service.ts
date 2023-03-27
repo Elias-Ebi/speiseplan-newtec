@@ -150,15 +150,19 @@ export class EmailService {
             
             wir haben eine Anfrage erhalten, um Ihr Passwort zurückzusetzen. 
             <br>
-            Ihr Verifizierungscode lautet: ${code}. 
+            Ihr Verifizierungscode lautet: 
             <br><br>
-            Bitte beachten Sie, dass dieser Code nur für begrenzte Zeit gültig ist. Sollten Sie ihn nicht innerhalb von 24 Stunden verwenden, wird er automatisch ablaufen. In diesem Fall müssen Sie den Zurücksetzungsvorgang erneut durchführen.
+            ${code} 
+            <br><br>
+            Bitte beachten Sie, dass dieser Code nur für begrenzte Zeit gültig ist. Sollten Sie ihn nicht innerhalb von 24 Stunden verwenden, wird er automatisch ablaufen. 
+            <br>
+            In diesem Fall müssen Sie den Zurücksetzungsvorgang erneut durchführen.
             <br>
             Wenn Sie diese Anfrage nicht selbst gestellt haben oder sich unsicher sind, kontaktieren Sie uns bitte umgehend.
             
             <br><br>
             Guten Hunger<br>
-            Euer Speiseplan-Team ;)`
+            Ihr Speiseplan-Team ;)`
         );
     }
 }
