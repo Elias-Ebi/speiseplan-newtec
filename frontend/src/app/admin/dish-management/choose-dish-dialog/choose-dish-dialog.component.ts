@@ -1,6 +1,10 @@
-import { Component, Inject, OnInit, ViewChild, } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef, } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -12,8 +16,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { Category, CategoryService } from 'src/app/shared/services/category.service';
-
+import {
+  Category,
+  CategoryService,
+} from 'src/app/shared/services/category.service';
 
 @Component({
   selector: 'app-choose-dish-dialog',
@@ -53,7 +59,7 @@ export class ChooseDishDialogComponent implements OnInit {
     readonly data: { name: string; description: string; categoryId: string },
     private matDialogRef: MatDialogRef<ChooseDishDialogComponent>,
     private api: ApiService,
-    private categoryService: CategoryService,
+    private categoryService: CategoryService
   ) {
     this.dishes = [];
     this.categories = this.categoryService.getAllCategories();
@@ -100,6 +106,17 @@ export class ChooseDishDialogComponent implements OnInit {
   onClickApply(clicked: Set<MealTemplate>) {
     let mealTemplate: MealTemplate = clicked.keys().next().value;
     this.matDialogRef.close(mealTemplate);
+  }
+
+  selectRow(row: any) {
+    if (this.clickedRows.has(row)) {
+      this.clickedRows.clear();
+    } else if (this.clickedRows.size === 0) {
+      this.clickedRows.add(row);
+    } else {
+      this.clickedRows.clear();
+      this.clickedRows.add(row);
+    }
   }
 
   async onClickDelete(row: any) {

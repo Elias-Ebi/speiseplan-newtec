@@ -22,6 +22,7 @@ import { DeleteDishDialogComponent } from './delete-dish-dialog/delete-dish-dial
 import { DefaultSettingsDialogComponent } from './default-settings-dialog/default-settings-dialog.component';
 import { CategoryService } from "../../shared/services/category.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
+import {MatBadgeModule} from '@angular/material/badge';
 
 @Component({
   selector: 'app-dish-management',
@@ -41,6 +42,7 @@ import { SnackbarService } from "../../shared/services/snackbar.service";
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatBadgeModule
   ],
   styleUrls: ['./dishes.component.scss'],
 })
@@ -57,6 +59,7 @@ export class DishesComponent implements OnInit {
   currentTab: number = 0;
   calendarWeekIndex = 0;
   maxPossibleTabIndex = 0;
+  weekCounter = [0,0,0,0,0];
 
   constructor(
     public dialog: MatDialog,
@@ -227,6 +230,11 @@ export class DishesComponent implements OnInit {
 
   async updateTableSource() {
     this.dataSource.data = await this.api.getMealsOn(this.currentlyDisplayedWeek[this.weekdayProperty].date);
+    await this.updateBadgesForCalendarWeek();
+  }
+
+  async updateBadgesForCalendarWeek() {
+    this.weekCounter = await this.api.getMealCountForWeek(this.currentlyDisplayedWeek.monday.date);
   }
 
   async disableImpossibleTabs() {

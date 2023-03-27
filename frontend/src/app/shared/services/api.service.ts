@@ -139,6 +139,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getMealCountForWeek(mondayDate: PlainDate): Promise<number[]> {
+    const response = this.httpClient.get<number[]>(`${environment.apiUrl}/meals/meal-counter/${mondayDate.toString()}`);
+    return lastValueFrom(response);
+  }
+  
   async getDefaultValues(): Promise<DefaultValues> {
     const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);

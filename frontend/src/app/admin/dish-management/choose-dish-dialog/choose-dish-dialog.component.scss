@@ -12,13 +12,25 @@
     text-align: right;
   }
 
-  td, th {
+  td,
+  th {
     padding: 0.5rem 0;
     vertical-align: middle;
   }
 
   th {
     border-bottom: 1px solid var(--clrNeutral);
+  }
+
+  /* Adding some space so the selected row won't overline with the border of the content*/
+  td:first-child,
+  th:first-child {
+    padding-left: 0.5rem;
+  }
+
+  td:last-child,
+  th:last-child {
+    padding-right: 0.5rem;
   }
 
   .mat-mdc-row {
@@ -47,4 +59,3 @@
 .action-column {
   text-align: right;
 }
-
