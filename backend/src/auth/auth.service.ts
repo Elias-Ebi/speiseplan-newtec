@@ -90,7 +90,7 @@ export class AuthService {
     const secret: string = this.hashService.encrypt(hashstr, 1, "hex");
 
     // save the token in the database
-    this.resetPasswordTokenRepository.save({email: email, token: secret, updatedAt: Temporal.Now.plainDateTimeISO().toString()});
+    this.resetPasswordTokenRepository.save({email: email, token: secret, code: "-", updatedAt: Temporal.Now.plainDateTimeISO().toString()});
 
     // send email to the user
     this.emailService.sendResetPasswordMail(email, secret);
@@ -126,6 +126,76 @@ export class AuthService {
     user.password = newPassword;
 
     await this.userRepository.save(user);
+  }
+
+  async resetPasswordWithCode(email: string) {
+    const options: FindOneOptions<User> = {
+      where: { email }
+    };
+
+    const user = await this.userRepository.findOne(options);
+
+    if(!user) {
+      return false;
+    }
+
+    const code: string = this.hashService.createCustomLengthVerificationCode(6);
+
+    // save the code in the database
+    this.resetPasswordTokenRepository.save({email: email, token: "-", code: code, updatedAt: Temporal.Now.plainDateTimeISO().toString()});
+
+    // send email to the user
+    this.emailService.sendVerificationMail(email, code);
+    
+    return true;
+  }
+
+  async checkVerificationCode(code: string) {
+    const reset_options: FindOneOptions<ResetPasswordToken> = {
+      where: { code }
+    };
+
+    const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
+
+    if(!resetPasswordToken) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async setPasswordFromVerificationCode(code: string, newPassword: string) {
+    const reset_options: FindOneOptions<ResetPasswordToken> = {
+      where: { code }
+    };
+
+    const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
+
+    if(!resetPasswordToken) {
+      throw new NotFoundException();
+    }
+
+    const user_options: FindOneOptions<User> = {
+      where: { email: resetPasswordToken.email }
+    };
+
+    const user: User = await this.userRepository.findOne(user_options);
+
+    if(!user) {
+      throw new NotFoundException();
+    }
+
+    /*
+    if(!this.hashService.timeSafeEqual(user.password, newPassword)) {
+      throw new BadRequestException("The new password must be different from the old one");
+    }
+    */
+
+    user.password = newPassword;
+
+    await this.userRepository.save(user);
+
+    return true;
   }
 
   async getUser(email: string): Promise<User>{

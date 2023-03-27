@@ -27,6 +27,7 @@ export class ResetPasswordComponent {
     })
   }
 
+  /*
   async onSubmit() {
     if (this.form.valid) {
       try {
@@ -36,6 +37,25 @@ export class ResetPasswordComponent {
         if(resetPasswordResult) {
           alert('Passwort zurücksetzen angefordert');
           this.router.navigateByUrl('/auth/login');
+        } else {
+          alert('Passwort zurücksetzen Anfrage konnte nicht verarbeitet werden!');
+        }
+      } catch(error: any) {
+        alert(error.message);
+      }
+    }
+  }
+  */
+
+  async onSubmit() {
+    if (this.form.valid) {
+      try {
+        const { email } = this.form.value;
+        const resetPasswordResult = await this.authService.resetPasswordWithCode(email.toLowerCase());
+
+        if(resetPasswordResult) {
+          alert('Passwort zurücksetzen angefordert');
+          this.router.navigateByUrl('/auth/verify-code');
         } else {
           alert('Passwort zurücksetzen Anfrage konnte nicht verarbeitet werden!');
         }

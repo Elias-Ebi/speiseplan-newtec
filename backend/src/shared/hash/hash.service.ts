@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { BinaryToTextEncoding, createHash, timingSafeEqual } from "crypto";
+import { BinaryToTextEncoding, createHash, timingSafeEqual, randomBytes } from "crypto";
 
 @Injectable()
 export class HashService {
@@ -24,5 +24,10 @@ export class HashService {
 
     public timeSafeEqual(data1: string, data2: string): boolean {
         return timingSafeEqual(Buffer.from(data1), Buffer.from(data2));
+    }
+
+    public createCustomLengthVerificationCode(length: number): string {
+        const real_length = length / 2;
+        return randomBytes(real_length).toString("hex");
     }
 }

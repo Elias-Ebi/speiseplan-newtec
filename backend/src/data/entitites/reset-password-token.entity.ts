@@ -13,5 +13,9 @@ export class ResetPasswordToken {
     
     @Column()
     @IsNotEmpty()
+    code: string;
+    
+    @Column()
+    @IsNotEmpty()
     updatedAt: string;
 }

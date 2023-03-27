@@ -6,6 +6,12 @@
 
   border: 0.0625rem solid var(--clrLine);
   border-radius: 1rem;
+
+  gap: 2rem;
+
+  .layout {
+    display: grid;
+  }
 }
 
 h2 {
@@ -19,6 +25,16 @@ p {
   text-align: left;
 }
 
-.reset-button {
+.verify-button {
   margin-top: 1rem;
+}
+
+.set-password-button {
+  margin-top: 1rem;
+}
+
+.button:disabled {
+  .icon {
+    color: var(--clrDisabled);
+  }
 }

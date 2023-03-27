@@ -71,6 +71,30 @@ export class EmailService {
     }
 
     /**
+     * Send an email to the user with a verification code to reset their password.
+     *
+     * @param email The email address of the user.
+     * @param code The code that will be used to verify the request.
+     */
+    sendVerificationMail(email: string, code: string) {
+        // Create the options for the email.
+        const mailOptions = {
+            from: this.email,
+            to: email,
+            subject: 'Passwort zurücksetzen',
+            html: this.verificationText(code)
+        };
+        // Send the email.
+        this.client.sendMail(mailOptions, (error: Error) => {
+            if(error) {
+                this.logger.log(error);
+            } else {
+                this.logger.log('Reset password email sent to ' + email);
+            }
+        });
+    }
+
+    /**
      * Sends a mail to the given email address with a temporary password.
      * @param email The email address to send the mail to.
      * @param tempPassword The temporary password to be sent in the mail.
@@ -117,5 +141,24 @@ export class EmailService {
         return (
             `Ihr neues Passwort lautet: <label style="color: #00629F">${tempPassword}</label>. Ändern Sie bitte nach der Anmeldung Ihr Passwort.`
             );
+    }
+
+    private verificationText(code: string): string {
+        return (
+            `Sehr geehrter Nutzer, 
+            <br><br>
+            
+            wir haben eine Anfrage erhalten, um Ihr Passwort zurückzusetzen. 
+            <br>
+            Ihr Verifizierungscode lautet: ${code}. 
+            <br><br>
+            Bitte beachten Sie, dass dieser Code nur für begrenzte Zeit gültig ist. Sollten Sie ihn nicht innerhalb von 24 Stunden verwenden, wird er automatisch ablaufen. In diesem Fall müssen Sie den Zurücksetzungsvorgang erneut durchführen.
+            <br>
+            Wenn Sie diese Anfrage nicht selbst gestellt haben oder sich unsicher sind, kontaktieren Sie uns bitte umgehend.
+            
+            <br><br>
+            Guten Hunger<br>
+            Euer Speiseplan-Team ;)`
+        );
     }
 }

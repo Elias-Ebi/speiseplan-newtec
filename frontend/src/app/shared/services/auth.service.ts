@@ -55,8 +55,23 @@ export class AuthService {
     return lastValueFrom(response);
   }
 
+  async resetPasswordWithCode(email: string): Promise<boolean> {
+    const response = this.httpClient.get<boolean>(`${environment.apiUrl}/auth/reset-password-vcode/${email}`);
+    return lastValueFrom(response);
+  }
+
   async setNewPasswordFromResetToken(token: string, newPassword: string) {
     const response = this.httpClient.put(`${environment.apiUrl}/auth/set-password`, {token, newPassword});
+    return lastValueFrom(response);
+  }
+
+  async checkVerificationCode(code: string): Promise<boolean> {
+    const response = this.httpClient.get<boolean>(`${environment.apiUrl}/auth/check-vcode/${code}`);
+    return lastValueFrom(response);
+  }
+
+  async setNewPasswordFromVerificationCode(code: string, newPassword: string) {
+    const response = this.httpClient.put(`${environment.apiUrl}/auth/set-password-vcode`, {code, newPassword});
     return lastValueFrom(response);
   }
 

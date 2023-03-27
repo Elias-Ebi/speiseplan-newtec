@@ -23,6 +23,7 @@ export class HashService {
     }
 
     public timeSafeEqual(data1: string, data2: string): boolean {
+        console.log(data1 + ", " + data2);
         return timingSafeEqual(Buffer.from(data1), Buffer.from(data2));
     }
 }
