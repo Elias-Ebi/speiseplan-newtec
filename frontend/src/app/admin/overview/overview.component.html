@@ -9,8 +9,8 @@
         </button>
       </div>
       <hr class="bg-neutral"/>
-      <mat-accordion displayMode="flat" multi="true" style="width: 100%">
-        <mat-expansion-panel *ngFor="let sameMealOrders of dataMap.get(day)">
+      <mat-accordion displayMode="flat" multi="true" style="width: 100%;">
+        <mat-expansion-panel *ngFor="let sameMealOrders of dataMap.get(day)" style="background: var(--clrBackground)">
           <mat-expansion-panel-header>
             <mat-panel-title class="panel-header">
               <div class="icon-with-text" style="display: flex; gap: 0.65rem">
@@ -25,7 +25,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <div *ngFor="let order of sameMealOrders; last as last" style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%">
-            <div style="display: flex; width: 100%; flex-direction: row;">
+            <div style="display: flex; width: 100%; flex-direction: row; padding-top: 0.25rem; padding-bottom: 0.25rem;">
               <div style="display: flex; width: 33%; gap: 0.65rem; position: relative; top: 0.25rem">
                 <mat-icon>person</mat-icon>
                 <p *ngIf="!order.guestName" class="span-2">{{order.profile.name}}</p>
@@ -33,7 +33,7 @@
                   <p *ngIf="order.guestName" class="span-2">{{order.guestName}}</p>
                 </div>
               </div>
-              <div style="width: 33%;">
+              <div style="width: 33%; position: relative; top: 0.25rem">
                 <p *ngIf="order.guestName" class="span-2">(Gast von {{order.profile.name}})</p>
               </div>
             </div>
