@@ -57,15 +57,17 @@ nav {
     &::after {
       content: "";
       position: absolute;
-      width: 0;
+      width: 100%;
+      transform: scale(0,1);
       height: 2px;
+      transition: transform 100ms ease-in-out;
     }
   }
 
   li:is(.selected)::after {
     content: "";
     position: absolute;
-    width: 100%;
+    transform: scale(1,1);
     height: 2px;
     bottom: 0;
     background: var(--clrBackground);
@@ -76,12 +78,11 @@ nav {
       content: "";
       position: absolute;
       display: flex;
-      width: 100%;
+      transform: scale(1, 1);
       height: 2px;
       bottom: 0;
       background: var(--clrBackground);
       cursor: pointer;
-      transition: width 150ms ease-in-out;
     }
   }
 
