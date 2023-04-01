@@ -13,9 +13,10 @@ import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import * as _ from "lodash";
 import { MatIconModule } from '@angular/material/icon';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
-import { SnackbarService } from "../../../shared/services/snackbar.service";
+import { SnackbarService } from "../../../../shared/services/snackbar.service";
 import { Meal } from 'src/app/shared/models/meal';
 import { Temporal } from '@js-temporal/polyfill';
+import { DateService } from 'src/app/shared/services/date.service';
 
 @Component({
   selector: 'app-add-dish-dialog',
@@ -61,7 +62,8 @@ export class AddMealDialogComponent implements OnInit {
     private api: ApiService,
     private categoryService: CategoryService,
     private dateAdapter: DateAdapter<any>,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private dateService: DateService
   ) {
     this.dateAdapter.setLocale('de');
     this.categories = this.categoryService.getAllCategories();
@@ -96,15 +98,31 @@ export class AddMealDialogComponent implements OnInit {
   }
 
   setOrderableDate() {
+    let date = new Date(this.deliveryDate.getFullYear(), this.deliveryDate.getMonth(), this.deliveryDate.getDate());
+    let temporal = this.dateService.dateToTemporal(date);
+    if(this.data.weekday === 'monday') {
+      temporal = this.dateService.getDayBefore(temporal, 3);
+      date = this.dateService.temporalToDate(temporal);
+    } else {
+      temporal = this.dateService.getDayBefore(temporal);
+      date = this.dateService.temporalToDate(temporal);
+    }
+    return date;
+
+    /*
     let date = new Date();
     date.setFullYear(this.deliveryDate.getFullYear());
     date.setMonth(this.deliveryDate.getMonth());
     if (this.data.weekday === 'monday') {
       date.setDate(this.deliveryDate.getDate() - 3);
+      if(date.getDate() > this.deliveryDate.getDate()) {
+        date.setMonth(this.deliveryDate.getMonth() - 1);
+      }
     } else {
       date.setDate(this.deliveryDate.getDate() - 1);
     }
     return date;
+    */
   }
 
   closeDialog() {

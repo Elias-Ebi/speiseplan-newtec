@@ -66,6 +66,10 @@ th {
   text-align: right;
 }
 
-.icon-button {
+.arrow-button:has(.icon-button) {
   scale: 1.25;
+}
+
+.meal-tab {
+
 }

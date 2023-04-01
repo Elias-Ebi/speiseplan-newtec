@@ -1,32 +1,34 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Temporal } from '@js-temporal/polyfill';
 import { MonthNamePipe } from '../../shared/pipes/month-name.pipe';
 import { JsonPipe } from '@angular/common';
 import { WeekdayNamePipe } from '../../shared/pipes/weekday-name.pipe';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ChooseMealDialogComponent } from './choose-meal-dialog/choose-meal-dialog.component';
+import { ChooseMealDialogComponent } from './dialogs/choose-meal-dialog/choose-meal-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
 import { Meal } from 'src/app/shared/models/meal';
 import { CalendarWeek } from 'src/app/shared/models/calendar-week';
-import { AddMealDialogComponent } from './add-meal-dialog/add-meal-dialog.component';
+import { AddMealDialogComponent } from './dialogs/add-meal-dialog/add-meal-dialog.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DeleteMealDialogComponent } from './delete-meal-dialog/delete-meal-dialog.component';
-import { DefaultSettingsDialogComponent } from './default-settings-dialog/default-settings-dialog.component';
+import { DeleteMealDialogComponent } from './dialogs/delete-meal-dialog/delete-meal-dialog.component';
+import { DefaultSettingsDialogComponent } from './dialogs/default-settings-dialog/default-settings-dialog.component';
 import { CategoryService } from "../../shared/services/category.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
+import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
 
 @Component({
   selector: 'app-dish-management',
   standalone: true,
   templateUrl: './meal-management.component.html',
+  styleUrls: ['./meal-management.component.scss'],
   imports: [
     MonthNamePipe,
     JsonPipe,
@@ -41,15 +43,19 @@ import { SnackbarService } from "../../shared/services/snackbar.service";
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-  ],
-  styleUrls: ['./meal-management.component.scss'],
+    MealTabComponent
+  ]
 })
 export class MealManagementComponent implements OnInit {
-  @ViewChild('tabs', {static: false}) tabGroup!: MatTabGroup;
+  @Output()
+  tabChangeEvent = new EventEmitter<number>();
+
+  @ViewChild('tabs', { static: false }) tabGroup!: MatTabGroup;
+  @ViewChildren(MealTabComponent) mealTabComponents!: QueryList<MealTabComponent>;
 
   MAX_FOLLOWING_WEEKS = 2;
-  displayedColumns: string[] = ['title', 'description', 'category', 'action'];
-  dataSource = new MatTableDataSource<Meal>();
+  // displayedColumns: string[] = ['title', 'description', 'category', 'action']; //REMOVE THIS LATER
+  // dataSource = new MatTableDataSource<Meal>();
   weekdayProperty = 'monday';
   currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(
     Temporal.Now.plainDateISO()
@@ -76,7 +82,7 @@ export class MealManagementComponent implements OnInit {
       checkDate.getDay() === 6
     ) {
       this.currentlyDisplayedWeek = await this.getCalenderWeek(
-        Temporal.Now.plainDateISO().add({days: 7})
+        Temporal.Now.plainDateISO().add({ days: 7 })
       );
     } else {
       this.currentlyDisplayedWeek = await this.getCalenderWeek(
@@ -84,13 +90,22 @@ export class MealManagementComponent implements OnInit {
       );
     }
 
-    await this.updateTableSource();
+    //await this.updateTableSource();
+    let index = this.tabGroup.selectedIndex ? this.tabGroup.selectedIndex : 0;
+    let selectedMatTab = this.tabGroup._tabs.toArray()[index];
+    //this.mealTabComponents.get(index)?.setCurrentlyDisplayedWeek(this.currentlyDisplayedWeek);
+    await this.onTabChange({ index: index, tab: selectedMatTab});
   }
 
+  //REMOVE THIS LATER
+  /*
   getCategoryName(id: string): string | undefined {
     return this.categoryService.getCategory(id)?.name;
   }
+  */
 
+  // REMOVE THIS LATER
+  /*
   create(selectedMealTemplate?: MealTemplate, mealToEdit?: Meal) {
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
     let currentDay =
@@ -138,14 +153,19 @@ export class MealManagementComponent implements OnInit {
         }
       });
   }
+  */
 
+  // REMOVE THIS LATER
+  /*
   edit(meal: Meal) {
     this.create(undefined, meal)
   }
+  */
 
+  /*
   delete(meal: Meal) {
     const dialogRef = this.dialog.open(DeleteMealDialogComponent, {
-      data: {name: meal.name},
+      data: { name: meal.name },
     });
 
     dialogRef
@@ -165,16 +185,27 @@ export class MealManagementComponent implements OnInit {
         await this.updateTableSource();
       });
   }
+  */
 
   editDefaultSettings() {
-    this.dialog.open(DefaultSettingsDialogComponent, {autoFocus: false});
+    this.dialog.open(DefaultSettingsDialogComponent, { autoFocus: false });
   }
 
+  async onTabChange(event: MatTabChangeEvent) {
+    console.log('Tab geändert:', event);
+    this.mealTabComponents.get(event.index)?.onTabChange(event)
+  }
+
+
+  /*
   async onTabChange(event: any) {
+    console.log("tab changed, event.index ", event.index);
     this.currentTab = Number.parseInt(event.index);
+    console.log(this.currentTab);
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
     await this.updateTableSource();
   }
+  */
 
   async getNextCalendarWeek() {
     if (this.calendarWeekIndex < this.MAX_FOLLOWING_WEEKS) {
@@ -186,7 +217,7 @@ export class MealManagementComponent implements OnInit {
         followingWeekDate
       );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-      await this.updateTableSource();
+      //await this.updateTableSource();
     }
   }
 
@@ -200,18 +231,19 @@ export class MealManagementComponent implements OnInit {
         precedingWeekDate
       );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-      if(this.calendarWeekIndex == 0) {
+      if (this.calendarWeekIndex == 0) {
         this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
       }
-      await this.updateTableSource();
+      //await this.updateTableSource();
     }
   }
 
   async getCalenderWeek(date: Temporal.PlainDate): Promise<CalendarWeek> {
-    await this.disableImpossibleTabs();
+    // await this.disableImpossibleTabs();
     return new CalendarWeek(date);
   }
 
+  // REMOVE THIS LATER
   getWeekdayPropertyFromIndex(index: number): string {
     //TODO:handle else case better
     if (index == 0) {
@@ -227,18 +259,21 @@ export class MealManagementComponent implements OnInit {
     }
   }
 
+  // REMOVE THIS LATER
+  /*
   async updateTableSource() {
     this.dataSource.data = await this.api.getMealsOn(this.currentlyDisplayedWeek[this.weekdayProperty].date);
   }
+  */
 
   async disableImpossibleTabs() {
     if (this.calendarWeekIndex === 0) {
       let currentDate = Temporal.Now.plainDateISO();
       /*
       compare(one, two)
-        −1 if one comes before two (this can never be the case here)
-        0 if one and two are the same date when projected into the ISO 8601 calendar
-        1 if one comes after two
+      −1 if one comes before two (this can never be the case here)
+      0 if one and two are the same date when projected into the ISO 8601 calendar
+      1 if one comes after two
       */
       const isMondayInThePast = Temporal.PlainDate.compare(
         currentDate,
@@ -255,14 +290,14 @@ export class MealManagementComponent implements OnInit {
           this.currentTab
         );
         this.maxPossibleTabIndex = this.currentTab;
-        await this.updateTableSource();
+        //await this.updateTableSource();
         // the monday is in the past, disable every tab before the current tab
       } else if (isMondayInThePast === 1) {
         this.weekdayProperty = this.getWeekdayPropertyFromIndex(
           this.currentTab
         );
         this.maxPossibleTabIndex = this.currentTab;
-        await this.updateTableSource();
+        //await this.updateTableSource();
       }
     }
   }
