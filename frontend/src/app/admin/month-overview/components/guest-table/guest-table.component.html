@@ -13,7 +13,7 @@
       <h2>Besteller</h2>
     </th>
     <td *matCellDef="let element" mat-cell>
-      <p>{{element.profile.name}}</p>
+      <p>{{element.orderer}}</p>
     </td>
   </ng-container>
 
@@ -22,17 +22,10 @@
       <h2>Betrag</h2>
     </th>
     <td *matCellDef="let element" mat-cell>
+      <p>{{element.total}}</p>
     </td>
   </ng-container>
 
-  <ng-container matColumnDef="day">
-    <th *matHeaderCellDef mat-header-cell>
-      <h2>Tag</h2>
-    </th>
-    <td *matCellDef="let element" mat-cell>
-      <p>{{element.date}}</p>
-    </td>
-  </ng-container>
 
   <tr *matHeaderRowDef="displayedGuestTableColumns" mat-header-row></tr>
   <tr *matRowDef="let row; columns: displayedGuestTableColumns" mat-row></tr>

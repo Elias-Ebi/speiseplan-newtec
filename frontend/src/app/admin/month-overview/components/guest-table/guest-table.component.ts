@@ -6,10 +6,14 @@ import {EuroPipe} from "../../../../shared/pipes/euro.pipe";
 import {ApiService} from "../../../../shared/services/api.service";
 import {OrderMonth} from "../../../../shared/models/order-month";
 import {Order} from "../../../../shared/models/order";
+import {forEach} from "lodash";
 
 
-interface OrdersByMonth {
-  [yearMonth: string]: Order[];
+interface GuestOrders{
+  guestName: string;
+  orderer: string;
+  days: string[];
+  total: number;
 }
 
 @Component({
@@ -29,9 +33,9 @@ export class GuestTableComponent implements OnInit{
   //@ts-ignore
   public _month: MonthOverviewMonth;
 
-  displayedGuestTableColumns = ['guest', 'user', 'sum', 'day'];
+  displayedGuestTableColumns = ['guest', 'user', 'sum'];
   //@ts-ignore
-  datasource: MatTableDataSource<Order>;
+  datasource: MatTableDataSource<GuestOrders>;
 constructor(private apiService: ApiService) {
 }
 
@@ -42,10 +46,27 @@ constructor(private apiService: ApiService) {
 
   private async generateGuestData(){
     let ordersWithGuests = await this.apiService.getGuestMonthOverview();
-    console.log(ordersWithGuests)
-    console.log(ordersWithGuests);
     ordersWithGuests = ordersWithGuests.filter((order) => order.date.startsWith(this._month.yearMonth.toString()));
-    console.log(ordersWithGuests)
-    this.datasource = new MatTableDataSource<Order>(ordersWithGuests);
+    let guestOrders: GuestOrders[]= [];
+    ordersWithGuests.forEach(order => {
+      const existingGuestOrder = guestOrders.find(guestOrder =>
+        guestOrder.guestName === order.guestName && guestOrder.orderer === order.profile.name
+      );
+
+      if (existingGuestOrder) {
+        existingGuestOrder.days.push(order.date);
+        existingGuestOrder.total += order.meal.total;
+      } else {
+        const newGuestOrder: GuestOrders = {
+          guestName: order.guestName,
+          orderer: order.profile.name,
+          days: [order.date],
+          total: order.meal.total
+        };
+        guestOrders.push(newGuestOrder);
+      }
+    });
+
+    this.datasource = new MatTableDataSource<GuestOrders>(guestOrders);
   }
 }
