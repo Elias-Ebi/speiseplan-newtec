@@ -23,17 +23,17 @@ import { SnackbarService } from 'src/app/shared/services/snackbar.service';
   templateUrl: './meal-tab.component.html',
   styleUrls: ['./meal-tab.component.scss']
 })
-export class MealTabComponent implements OnInit, AfterViewInit {
+export class MealTabComponent implements OnInit, OnChanges {
   @Input()
-  public calendarWeekIndex: number = 0;
+  public calendarWeekIndex!: number;
   @Input()
-  public maxPossibleTabIndex: number = 0;
+  public maxPossibleTabIndex!: number;
   @Input()
-  public currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(Temporal.Now.plainDateISO());
+  public currentlyDisplayedWeek!: CalendarWeek;
   @Input()
-  public weekdayProperty = 'monday';
+  public weekdayProperty!: string;
   @Input()
-  public currentTab: number = 0;
+  public currentTab!: number;
 
   @ViewChild('tabs') tabs!: MatTabGroup;
 
@@ -48,18 +48,53 @@ export class MealTabComponent implements OnInit, AfterViewInit {
   ) {
   }
 
-  async ngOnInit() {
-    await this.onTabChange({index: 0, tab: this.tabs._tabs.toArray()[0]});
+  async ngOnChanges(changes: SimpleChanges) {
+    let current;
+    try {
+      current = await changes['currentlyDisplayedWeek'].currentValue;
+    } finally {
+      await this.updateTableSource();
+    }
+
+    try {
+      if(changes.hasOwnProperty('calendarWeekIndex')) {
+        if(changes['calendarWeekIndex'].firstChange) {
+          this.calendarWeekIndex = changes['calendarWeekIndex'].currentValue;
+        }
+      }
+    } catch (error) {
+      console.log("couldn't get calendarWeekIndex");
+    } finally {
+      await this.updateTableSource();
+    }
   }
 
-  async ngAfterViewInit() {
-    await this.onTabChange({index: 0, tab: this.tabs._tabs.toArray()[0]});
+  async ngOnInit() {
+    let date: Temporal.PlainDate = Temporal.Now.plainDateISO();
+    switch(date.dayOfWeek) {
+      case 5:
+        this.currentlyDisplayedWeek = await this.getCalenderWeek(Temporal.Now.plainDateISO().add({ days: 7 }));
+        break;
+      case 6:
+        this.currentlyDisplayedWeek = await this.getCalenderWeek(Temporal.Now.plainDateISO().add({ days: 7 }));
+        break;
+      case 7:
+        this.currentlyDisplayedWeek = await this.getCalenderWeek(Temporal.Now.plainDateISO().add({ days: 7 }));
+        break;
+      default:
+        this.currentlyDisplayedWeek = new CalendarWeek(date);
+        break;
+    }
+    await this.updateTableSource();
+  }
+
+  async getCalenderWeek(date: Temporal.PlainDate): Promise<CalendarWeek> {
+    return new CalendarWeek(date);
   }
 
   async onTabChange(event: MatTabChangeEvent) {
     this.currentTab = event.index;
     this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-    console.log('ITS MY TIME TO SHINE! - I AM ', event.tab.textLabel)
     await this.updateTableSource();
   }
 
@@ -143,7 +178,6 @@ export class MealTabComponent implements OnInit, AfterViewInit {
   }
 
   getWeekdayPropertyFromIndex(index: number): string {
-    //TODO:handle else case better
     if (index == 0) {
       return 'monday';
     } else if (index == 1) {
@@ -152,13 +186,18 @@ export class MealTabComponent implements OnInit, AfterViewInit {
       return 'wednesday';
     } else if (index == 3) {
       return 'thursday';
-    } else {
+    } else if (index == 4) {
       return 'friday';
+    } else {
+      throw new Error('Unknown index');
     }
   }
 
   async updateTableSource() {
-    console.log(this.currentlyDisplayedWeek[this.weekdayProperty]['date'].toString());
-    this.dataSource.data = await this.api.getMealsOn(this.currentlyDisplayedWeek[this.weekdayProperty].date);
+    try {
+      this.dataSource.data = await this.api.getMealsOn(this.currentlyDisplayedWeek[this.weekdayProperty].date);
+    } catch (error) {
+      this.snackbarService.error('Could not load meals');
+    }
   }
 }

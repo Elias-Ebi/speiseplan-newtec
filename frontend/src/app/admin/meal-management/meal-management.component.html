@@ -29,19 +29,19 @@
   <div class="dishes--week-tabs-container">
     <mat-tab-group data-cy="tab-group" #tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="currentTab" animationDuration="0ms">
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0" label="Montag">
-        <app-meal-tab [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="monday" [currentTab]="0" class="meal-tab"></app-meal-tab>
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="monday" [currentTab]="0" class="meal-tab"></app-meal-tab>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 1" label="Dienstag">
-        <app-meal-tab [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="tuesday" [currentTab]="1" class="meal-tab"></app-meal-tab>
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="tuesday" [currentTab]="1" class="meal-tab"></app-meal-tab>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 2" label="Mittwoch">
-        <app-meal-tab [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="wednesday" [currentTab]="2" class="meal-tab"></app-meal-tab>
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="wednesday" [currentTab]="2" class="meal-tab"></app-meal-tab>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 3" label="Donnerstag">
-        <app-meal-tab [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="thursday" [currentTab]="3" class="meal-tab"></app-meal-tab>
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="thursday" [currentTab]="3" class="meal-tab"></app-meal-tab>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 4" label="Freitag">
-        <app-meal-tab [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="friday" [currentTab]="4" class="meal-tab"></app-meal-tab>
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="friday" [currentTab]="4" class="meal-tab"></app-meal-tab>
       </mat-tab>
 
 

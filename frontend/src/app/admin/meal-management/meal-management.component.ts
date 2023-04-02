@@ -89,12 +89,11 @@ export class MealManagementComponent implements OnInit {
         Temporal.Now.plainDateISO()
       );
     }
-
     //await this.updateTableSource();
-    let index = this.tabGroup.selectedIndex ? this.tabGroup.selectedIndex : 0;
-    let selectedMatTab = this.tabGroup._tabs.toArray()[index];
-    //this.mealTabComponents.get(index)?.setCurrentlyDisplayedWeek(this.currentlyDisplayedWeek);
-    await this.onTabChange({ index: index, tab: selectedMatTab});
+    //let index = this.tabGroup.selectedIndex ? this.tabGroup.selectedIndex : 0;
+    //let selectedMatTab = this.tabGroup._tabs.toArray()[index];
+    //this.mealTabComponents.get(index)?.setWeek(this.currentlyDisplayedWeek);
+    //await this.onTabChange({ index: index, tab: selectedMatTab});
   }
 
   //REMOVE THIS LATER
@@ -231,19 +230,22 @@ export class MealManagementComponent implements OnInit {
         precedingWeekDate
       );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
+      let lastIndex = this.tabGroup.selectedIndex ? this.tabGroup.selectedIndex : this.currentTab;
       if (this.calendarWeekIndex == 0) {
-        this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
+        if(lastIndex <= this.maxPossibleTabIndex) {
+          this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
+        }
+        //this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
       }
       //await this.updateTableSource();
     }
   }
 
   async getCalenderWeek(date: Temporal.PlainDate): Promise<CalendarWeek> {
-    // await this.disableImpossibleTabs();
+    await this.disableImpossibleTabs();
     return new CalendarWeek(date);
   }
 
-  // REMOVE THIS LATER
   getWeekdayPropertyFromIndex(index: number): string {
     //TODO:handle else case better
     if (index == 0) {
@@ -254,17 +256,11 @@ export class MealManagementComponent implements OnInit {
       return 'wednesday';
     } else if (index == 3) {
       return 'thursday';
-    } else {
+    } else if (index == 4) {
       return 'friday';
     }
+    return "";
   }
-
-  // REMOVE THIS LATER
-  /*
-  async updateTableSource() {
-    this.dataSource.data = await this.api.getMealsOn(this.currentlyDisplayedWeek[this.weekdayProperty].date);
-  }
-  */
 
   async disableImpossibleTabs() {
     if (this.calendarWeekIndex === 0) {
