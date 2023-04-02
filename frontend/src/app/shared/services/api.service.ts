@@ -49,6 +49,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getGuestMonthOverview(): Promise<Order[]>{
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/order-month/guest-month-overview`);
+    return lastValueFrom(response);
+  }
+
   async changePaymentStatus(id: string): Promise<OrderMonth> {
     const response = this.httpClient.put<OrderMonth>(`${environment.apiUrl}/order-month/payment-status/${id}`, {});
     return lastValueFrom(response);
@@ -143,7 +148,7 @@ export class ApiService {
     const response = this.httpClient.get<number[]>(`${environment.apiUrl}/meals/meal-counter/${mondayDate.toString()}`);
     return lastValueFrom(response);
   }
-  
+
   async getDefaultValues(): Promise<DefaultValues> {
     const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);

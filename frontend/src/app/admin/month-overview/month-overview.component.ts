@@ -16,11 +16,12 @@ import { MonthOverviewMonth, MonthOverviewOrderMonth } from "./month-overview.mo
 import { groupBy, sortByYearMonth } from "../../user/shared/utils";
 import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import PlainYearMonth = Temporal.PlainYearMonth;
+import {GuestTableComponent} from "./components/guest-table/guest-table.component";
 
 @Component({
   selector: 'app-month-overview',
   standalone: true,
-  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule, MatTabsModule, MatButtonToggleModule],
+  imports: [CommonModule, MatIconModule, EuroPipe, WeekdayNamePipe, MonthNamePipe, MatButtonModule, MatInputModule, FormsModule, MatTableModule, MatTabsModule, MatButtonToggleModule, GuestTableComponent],
   templateUrl: './month-overview.component.html',
   styleUrls: ['./month-overview.component.scss']
 })

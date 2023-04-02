@@ -27,10 +27,14 @@
 
           <mat-button-toggle-group [(ngModel)]="guestMode" class="span-6 justify-self-end">
             <mat-button-toggle [value]="false">Mitarbeiter</mat-button-toggle>
-            <mat-button-toggle [value]="true" disabled>Gäste</mat-button-toggle>
+            <mat-button-toggle [value]="true">Gäste</mat-button-toggle>
           </mat-button-toggle-group>
         </div>
 
+        <div *ngIf="guestMode">
+          <app-guest-table [month]="month"></app-guest-table>
+        </div>
+        <div *ngIf="!guestMode">
         <table [dataSource]="month.dataSource" mat-table>
           <ng-container matColumnDef="customer">
             <th *matHeaderCellDef mat-header-cell>
@@ -94,6 +98,7 @@
           <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
           <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
         </table>
+        </div>
       </section>
     </mat-tab>
   </mat-tab-group>
