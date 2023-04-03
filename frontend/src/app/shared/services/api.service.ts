@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { Meal } from "../models/meal";
-import { environment } from "../../environment";
-import { lastValueFrom } from "rxjs";
-import { Order } from "../models/order";
-import { Temporal } from "@js-temporal/polyfill";
-import { OrderMonth } from "../models/order-month";
-import { MealTemplate } from '../models/meal-template';
-import { DefaultValues } from '../models/default-values';
-import { Profile } from "../models/profile";
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {Meal} from "../models/meal";
+import {environment} from "../../environment";
+import {lastValueFrom} from "rxjs";
+import {Order} from "../models/order";
+import {Temporal} from "@js-temporal/polyfill";
+import {OrderMonth} from "../models/order-month";
+import {MealTemplate} from '../models/meal-template';
+import {DefaultValues} from '../models/default-values';
+import {Profile} from "../models/profile";
 import PlainDate = Temporal.PlainDate;
 
 @Injectable({
@@ -139,6 +139,11 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getMealCountForWeek(mondayDate: PlainDate): Promise<number[]> {
+    const response = this.httpClient.get<number[]>(`${environment.apiUrl}/meals/meal-counter/${mondayDate.toString()}`);
+    return lastValueFrom(response);
+  }
+  
   async getDefaultValues(): Promise<DefaultValues> {
     const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);
@@ -172,6 +177,16 @@ export class ApiService {
 
   async toggleAdminAccess(email: string): Promise<Profile> {
     const response = this.httpClient.put<Profile>(`${environment.apiUrl}/auth/change-admin-access/${email}`, {});
+    return lastValueFrom(response);
+  }
+
+  async changeName(name: string): Promise<Profile> {
+    const response = this.httpClient.put<Profile>(`${environment.apiUrl}/auth/change-name`, {name});
+    return lastValueFrom(response);
+  }
+
+  async changePassword(currentPassword: string, newPassword: string) {
+    const response = this.httpClient.put(`${environment.apiUrl}/auth/change-password`, {currentPassword, newPassword});
     return lastValueFrom(response);
   }
 }
