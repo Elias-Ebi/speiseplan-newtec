@@ -108,13 +108,9 @@ export class OverviewComponent implements OnInit {
     doc.text(text, indentationLeft, 80);
 
     const dayData = this.dataMap.get(day);
-
-
-    console.log('daydata: ', dayData);
     let body: string[][] = []
     let tableCounter = 0;
     let finalY = 80;
-    console.log('start table loop')
     dayData?.forEach(d => {
       let body: string[][] = []
       let tableSum = 0;
@@ -129,21 +125,11 @@ export class OverviewComponent implements OnInit {
 
         var options = {
           didParseCell: function(data: any) {
-            console.log(data)
-            // Wenn die aktuelle Zelle in der letzten Zeile ist,
-            // setzen Sie den Schriftstil auf fett
-            /*
-            if(data.row.index === data.row.length - 1) {
-              console.log('make it bold')
-              data.cell.styles.fontStyle = "bold";
-            }
-            */
             if (data.column.index === data.table.columns.length - 1) {
               data.cell.styles = { align: "right" };
             }
 
             if (data.cell.raw === 'Summe:   ') {
-              console.log('SUMMEN-Zelle')
               data.cell.styles = { halign: "right" };
             }
           },
