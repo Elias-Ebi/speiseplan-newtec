@@ -21,6 +21,25 @@ nav {
   gap: 4rem;
 }
 
+.profile-change {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.profile-change:hover {
+  background: var(--clrLightGrey);
+
+  .change {
+    animation: rotate 2s linear infinite;
+  }
+}
+
 .logo {
   height: 3.75rem;
   cursor: pointer;
@@ -29,4 +48,58 @@ nav {
 .links-container {
   display: flex;
   gap: 2rem;
+  height: 100%;
+  align-items: center;
+
+  li {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      transform: scale(0,1);
+      height: 2px;
+      transition: transform 100ms ease-in-out;
+    }
+  }
+
+  li:is(.selected)::after {
+    content: "";
+    position: absolute;
+    transform: scale(1,1);
+    height: 2px;
+    bottom: 0;
+    background: var(--clrBackground);
+  }
+
+  li:not(:last-child):hover {
+    &::after {
+      content: "";
+      position: absolute;
+      display: flex;
+      transform: scale(1, 1);
+      height: 2px;
+      bottom: 0;
+      background: var(--clrBackground);
+      cursor: pointer;
+    }
+  }
+
+  li:last-child:hover {
+    color: var(--clrLightGrey);
+  }
+}
+
+.account-icon {
+  scale: 1.25;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
 }

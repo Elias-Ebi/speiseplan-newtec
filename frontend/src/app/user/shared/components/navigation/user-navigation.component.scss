@@ -26,11 +26,79 @@ nav {
   cursor: pointer;
 }
 
+.profile-change {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.profile-change:hover {
+  background: var(--clrLightGrey);
+
+  .change {
+    animation: rotate 2s linear infinite;
+  }
+}
+
 .links-container {
   display: flex;
   gap: 2rem;
+  height: 100%;
+  align-items: center;
+
+  li {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+    }
+  }
+
+  li:is(.selected)::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: 0;
+    background: var(--clrBackground);
+  }
+
+  li:not(:last-child):hover {
+    &::after {
+      content: "";
+      position: absolute;
+      display: flex;
+      width: 100%;
+      height: 2px;
+      bottom: 0;
+      background: var(--clrBackground);
+      cursor: pointer;
+      transition: width 150ms ease-in-out;
+    }
+  }
+
+  li:last-child:hover {
+    color: var(--clrLightGrey);
+  }
 }
 
 .account-icon {
   scale: 1.25;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
 }
