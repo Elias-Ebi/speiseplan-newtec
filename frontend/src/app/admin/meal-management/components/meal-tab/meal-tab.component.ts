@@ -49,9 +49,8 @@ export class MealTabComponent implements OnInit, OnChanges {
   }
 
   async ngOnChanges(changes: SimpleChanges) {
-    let current;
     try {
-      current = await changes['currentlyDisplayedWeek'].currentValue;
+      this.currentlyDisplayedWeek = await changes['currentlyDisplayedWeek'].currentValue;
     } finally {
       await this.updateTableSource();
     }

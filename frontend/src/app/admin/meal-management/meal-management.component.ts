@@ -54,8 +54,6 @@ export class MealManagementComponent implements OnInit {
   @ViewChildren(MealTabComponent) mealTabComponents!: QueryList<MealTabComponent>;
 
   MAX_FOLLOWING_WEEKS = 2;
-  // displayedColumns: string[] = ['title', 'description', 'category', 'action']; //REMOVE THIS LATER
-  // dataSource = new MatTableDataSource<Meal>();
   weekdayProperty = 'monday';
   currentlyDisplayedWeek: CalendarWeek = new CalendarWeek(
     Temporal.Now.plainDateISO()
@@ -89,102 +87,7 @@ export class MealManagementComponent implements OnInit {
         Temporal.Now.plainDateISO()
       );
     }
-    //await this.updateTableSource();
-    //let index = this.tabGroup.selectedIndex ? this.tabGroup.selectedIndex : 0;
-    //let selectedMatTab = this.tabGroup._tabs.toArray()[index];
-    //this.mealTabComponents.get(index)?.setWeek(this.currentlyDisplayedWeek);
-    //await this.onTabChange({ index: index, tab: selectedMatTab});
   }
-
-  //REMOVE THIS LATER
-  /*
-  getCategoryName(id: string): string | undefined {
-    return this.categoryService.getCategory(id)?.name;
-  }
-  */
-
-  // REMOVE THIS LATER
-  /*
-  create(selectedMealTemplate?: MealTemplate, mealToEdit?: Meal) {
-    this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-    let currentDay =
-      this.currentlyDisplayedWeek[this.weekdayProperty].date.toString();
-
-    const dialogRef = this.dialog.open(AddMealDialogComponent, {
-      data: {
-        weekday: this.weekdayProperty,
-        deliveryDate: new Date(currentDay),
-        selectedMealTemplate,
-        mealToEdit,
-      },
-      autoFocus: false,
-    });
-
-    dialogRef
-      .afterClosed()
-      .subscribe(async (mealData: { mealToAdd: any; useTemplate: boolean }) => {
-        if (JSON.stringify(mealData) !== '{}') {
-          if (mealData.useTemplate) {
-            const dialogRef = this.dialog.open(ChooseMealDialogComponent, {
-              data: {},
-              autoFocus: false,
-            });
-
-            dialogRef
-              .afterClosed()
-              .subscribe(async (selectedMealTemplate: any) => {
-                if (JSON.stringify(selectedMealTemplate) !== '{}') {
-                  this.create(selectedMealTemplate, mealToEdit);
-                }
-              });
-          } else {
-            if (!mealToEdit) {
-              this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(
-                mealData.mealToAdd
-              );
-              await this.api.addMeal(mealData.mealToAdd);
-            } else {
-              mealData.mealToAdd.id = mealToEdit.id;
-              await this.api.updateMeal(mealData.mealToAdd);
-            }
-            await this.updateTableSource();
-          }
-        }
-      });
-  }
-  */
-
-  // REMOVE THIS LATER
-  /*
-  edit(meal: Meal) {
-    this.create(undefined, meal)
-  }
-  */
-
-  /*
-  delete(meal: Meal) {
-    const dialogRef = this.dialog.open(DeleteMealDialogComponent, {
-      data: { name: meal.name },
-    });
-
-    dialogRef
-      .afterClosed()
-      .subscribe(async (data: { isDeletingDishConfirmed: boolean }) => {
-        if (!data.isDeletingDishConfirmed) {
-          return;
-        }
-
-        await this.api.deleteMeal(meal.id)
-          .then(() => {
-            this.snackbarService.success('Gericht erfolgreich gelöscht!');
-          })
-          .catch(() => {
-            this.snackbarService.error('Gericht konnte nicht gelöscht werden.');
-          });
-        await this.updateTableSource();
-      });
-  }
-  */
 
   editDefaultSettings() {
     this.dialog.open(DefaultSettingsDialogComponent, { autoFocus: false });
@@ -194,17 +97,6 @@ export class MealManagementComponent implements OnInit {
     console.log('Tab geändert:', event);
     this.mealTabComponents.get(event.index)?.onTabChange(event)
   }
-
-
-  /*
-  async onTabChange(event: any) {
-    console.log("tab changed, event.index ", event.index);
-    this.currentTab = Number.parseInt(event.index);
-    console.log(this.currentTab);
-    this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-    await this.updateTableSource();
-  }
-  */
 
   async getNextCalendarWeek() {
     if (this.calendarWeekIndex < this.MAX_FOLLOWING_WEEKS) {
@@ -216,7 +108,6 @@ export class MealManagementComponent implements OnInit {
         followingWeekDate
       );
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
-      //await this.updateTableSource();
     }
   }
 
@@ -235,9 +126,7 @@ export class MealManagementComponent implements OnInit {
         if(lastIndex <= this.maxPossibleTabIndex) {
           this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
         }
-        //this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
       }
-      //await this.updateTableSource();
     }
   }
 
@@ -259,7 +148,7 @@ export class MealManagementComponent implements OnInit {
     } else if (index == 4) {
       return 'friday';
     }
-    return "";
+    throw new Error('Unknown index');
   }
 
   async disableImpossibleTabs() {
@@ -286,14 +175,12 @@ export class MealManagementComponent implements OnInit {
           this.currentTab
         );
         this.maxPossibleTabIndex = this.currentTab;
-        //await this.updateTableSource();
         // the monday is in the past, disable every tab before the current tab
       } else if (isMondayInThePast === 1) {
         this.weekdayProperty = this.getWeekdayPropertyFromIndex(
           this.currentTab
         );
         this.maxPossibleTabIndex = this.currentTab;
-        //await this.updateTableSource();
       }
     }
   }
