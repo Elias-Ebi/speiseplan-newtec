@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTab, MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -35,13 +35,17 @@ export class MealTabComponent implements OnInit, OnChanges {
   @Input()
   public currentTab!: number;
 
+  @Output() weekCounterEmitter = new EventEmitter<number[]>();
+
+  weekCounter: number[] = [0, 0, 0, 0, 0];
+
   @ViewChild('tabs') tabs!: MatTabGroup;
 
   dataSource = new MatTableDataSource<Meal>();
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
 
-  MAX_DESC_LENGTH = 70;
-  MAX_MEAL_LENGTH = 30;
+  MAX_DESC_LENGTH = 100;
+  MAX_MEAL_LENGTH = 20;
 
   constructor(
     private categoryService: CategoryService,
@@ -59,8 +63,8 @@ export class MealTabComponent implements OnInit, OnChanges {
     }
 
     try {
-      if(changes.hasOwnProperty('calendarWeekIndex')) {
-        if(changes['calendarWeekIndex'].firstChange) {
+      if (changes.hasOwnProperty('calendarWeekIndex')) {
+        if (changes['calendarWeekIndex'].firstChange) {
           this.calendarWeekIndex = changes['calendarWeekIndex'].currentValue;
         }
       }
@@ -73,7 +77,7 @@ export class MealTabComponent implements OnInit, OnChanges {
 
   async ngOnInit() {
     let date: Temporal.PlainDate = Temporal.Now.plainDateISO();
-    switch(date.dayOfWeek) {
+    switch (date.dayOfWeek) {
       case 5:
         this.currentlyDisplayedWeek = await this.getCalenderWeek(Temporal.Now.plainDateISO().add({ days: 7 }));
         break;
@@ -198,9 +202,15 @@ export class MealTabComponent implements OnInit, OnChanges {
   async updateTableSource() {
     try {
       this.dataSource.data = await this.api.getMealsOn(this.currentlyDisplayedWeek[this.weekdayProperty].date);
+      await this.updateBadgesForCalendarWeek();
     } catch (error) {
       this.snackbarService.error('Could not load meals');
     }
+  }
+
+  async updateBadgesForCalendarWeek() {
+    this.weekCounter = await this.api.getMealCountForWeek(this.currentlyDisplayedWeek.monday.date);
+    this.weekCounterEmitter.emit(this.weekCounter);
   }
 
   minimalize(description: string, max_length: number): string {
@@ -211,12 +221,12 @@ export class MealTabComponent implements OnInit, OnChanges {
 
   extend(description: string, max_length: number): string {
     let normalizedDescription = '';
-    if(description.length > max_length) {
-      if(description.includes(" ")) {
+    if (description.length > max_length) {
+      if (description.includes(" ")) {
         normalizedDescription = description.replace(" ", "\n");
       } else {
-        for(let i = 0; i < description.length; i++) {
-          if(i % max_length === 0 && i != 0) {
+        for (let i = 0; i < description.length; i++) {
+          if (i % max_length === 0 && i != 0) {
             normalizedDescription += description[i] + "\n";
           } else {
             normalizedDescription += description[i];
