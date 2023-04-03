@@ -17,6 +17,7 @@ import {groupBy, sortByYearMonth} from "../../user/shared/utils";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import PlainYearMonth = Temporal.PlainYearMonth;
 import {GuestTableComponent} from "./components/guest-table/guest-table.component";
+import {Order} from "../../shared/models/order";
 
 @Component({
   selector: 'app-month-overview',
@@ -60,6 +61,11 @@ export class MonthOverviewComponent implements OnInit {
   resetSearchTerm(month: MonthOverviewMonth) {
     month.searchTerm = '';
     this.search(month);
+  }
+
+  countWithoutGuestOrders(orders: Order[]){
+    const filteredOrders = orders.filter((order) => order.guestName === null);
+    return filteredOrders.length;
   }
 
   private async generateEmployeeData() {

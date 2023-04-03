@@ -56,7 +56,7 @@
               <h2>Anzahl</h2>
             </th>
             <td *matCellDef="let element" mat-cell>
-              <p>{{element.orders.length}}</p>
+              <p>{{countWithoutGuestOrders(element.orders)}}</p>
             </td>
           </ng-container>
 
