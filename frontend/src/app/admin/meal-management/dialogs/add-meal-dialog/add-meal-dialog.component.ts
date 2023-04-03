@@ -108,21 +108,6 @@ export class AddMealDialogComponent implements OnInit {
       date = this.dateService.temporalToDate(temporal);
     }
     return date;
-
-    /*
-    let date = new Date();
-    date.setFullYear(this.deliveryDate.getFullYear());
-    date.setMonth(this.deliveryDate.getMonth());
-    if (this.data.weekday === 'monday') {
-      date.setDate(this.deliveryDate.getDate() - 3);
-      if(date.getDate() > this.deliveryDate.getDate()) {
-        date.setMonth(this.deliveryDate.getMonth() - 1);
-      }
-    } else {
-      date.setDate(this.deliveryDate.getDate() - 1);
-    }
-    return date;
-    */
   }
 
   closeDialog() {
