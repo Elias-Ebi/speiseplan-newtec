@@ -1,5 +1,9 @@
 import {Injectable, Logger} from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import {Profile} from "../../data/entitites/profile.entity";
+import {Temporal} from "@js-temporal/polyfill";
+import PlainYearMonth = Temporal.PlainYearMonth;
+import {MonthOverviewOrderMonth} from "../../data/other-models/month-overview.models";
 
 @Injectable()
 export class EmailService {
@@ -32,6 +36,22 @@ export class EmailService {
         });
     }
 
+    sendNewPaymentReminder(monthOverviewOrderMonth: MonthOverviewOrderMonth[])  {
+        monthOverviewOrderMonth.forEach((orderMonth) => {
+            const mailOptions = {
+                from: this.email,
+                to: orderMonth.profile.email,
+                subject: `Offene Rechnung ${orderMonth.yearMonth}`,
+                html: this.paymentReminderMailText(orderMonth.profile.name, orderMonth.yearMonth, orderMonth.total)
+            };
+            this.client.sendMail(mailOptions, (error) => {
+                if (error) {
+                    this.logger.log(error);
+                }
+            });
+        });
+    }
+
     private banditPlateMailText(mealName: string): string {
         return (
             `Hallo liebe Mensafreunde,
@@ -41,6 +61,17 @@ export class EmailService {
             <br><br>
             Guten Hunger<br>
             Euer Speiseplan-Team ;)`
+        )
+    }
+
+    private paymentReminderMailText(recipientName: string, yearMonth: string, total: number): string {
+        return (
+            `Hallo ${recipientName},
+            <br><br>
+            du hast für den ${yearMonth} noch eine Rechnung von ${parseFloat(total.toString()).toFixed(2)} € offen.<br>
+            <br><br>
+            Mit freundlichen Grüßen<br>
+            Euer Speiseplan-Team`
         )
     }
 }

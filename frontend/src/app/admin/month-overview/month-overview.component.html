@@ -6,7 +6,13 @@
           <h2>Monatsübersicht - {{Headline}}</h2>
 
           <div *ngIf="!guestMode" class="headline-buttons">
-            <button color="primary" disabled mat-flat-button>
+            <button color="primary" (click)="sendPaymentReminder(month)" mat-flat-button>
+              <mat-icon>notifications_active</mat-icon>
+              Zahlungserinnerung
+            </button>
+          </div>
+          <div *ngIf="guestMode" class="headline-buttons" style="opacity: 0">
+            <button color="primary"  disabled mat-flat-button>
               <mat-icon>notifications_active</mat-icon>
               Zahlungserinnerung
             </button>
