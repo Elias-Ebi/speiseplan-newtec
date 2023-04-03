@@ -3,35 +3,41 @@
     <section class="section">
       <div class="section-headline-container">
         <h2>Tagesbestellungen - {{day | weekdayName}} </h2>
-        <button (click)="downloadDayAsCsv(day)" color="primary" mat-flat-button>
+        <button (click)="exportAsPDF(day)" color="primary" mat-flat-button>
           <mat-icon>picture_as_pdf</mat-icon>
-          Exportieren
+          Als Pdf Exportieren
         </button>
       </div>
-
       <hr class="bg-neutral"/>
-
-      <mat-accordion displayMode="flat" multi="true">
-        <mat-expansion-panel *ngFor="let order of dataMap.get(day)">
+      <mat-accordion displayMode="flat" multi="true" style="width: 100%;">
+        <mat-expansion-panel *ngFor="let sameMealOrders of dataMap.get(day)" style="background: var(--clrBackground)">
           <mat-expansion-panel-header>
             <mat-panel-title class="panel-header">
-              <div class="icon-with-text">
+              <div class="icon-with-text" style="display: flex; gap: 0.65rem">
                 <mat-icon>restaurant</mat-icon>
-                <p>{{order.meal.name}}</p>
+                <p>{{sameMealOrders[0].meal.name}}</p>
               </div>
-
-              <p>{{order.total}}</p>
-
-              <button (click)="$event.stopPropagation()" color="primary" mat-flat-button>
+              <p>{{sameMealOrders.length}}</p>
+              <button (click)="onClickInform($event, sameMealOrders)" color="primary" mat-flat-button>
                 <mat-icon>no_meals</mat-icon>
                 Absagen
               </button>
             </mat-panel-title>
           </mat-expansion-panel-header>
-
-          <div *ngFor="let user of order.users" class="icon-with-text">
-            <mat-icon>person</mat-icon>
-            <p>{{user.name}}</p>
+          <div *ngFor="let order of sameMealOrders; last as last" style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%">
+            <div style="display: flex; width: 100%; flex-direction: row; padding-top: 0.25rem; padding-bottom: 0.25rem;">
+              <div style="display: flex; width: 33%; gap: 0.65rem; position: relative; top: 0.25rem">
+                <mat-icon>person</mat-icon>
+                <p *ngIf="!order.guestName" class="span-2">{{order.profile.name}}</p>
+                <div>
+                  <p *ngIf="order.guestName" class="span-2">{{order.guestName}}</p>
+                </div>
+              </div>
+              <div style="width: 33%; position: relative; top: 0.25rem">
+                <p *ngIf="order.guestName" class="span-2">(Gast von {{order.profile.name}})</p>
+              </div>
+            </div>
+            <mat-divider [inset]="false" *ngIf="!last"></mat-divider>
           </div>
         </mat-expansion-panel>
       </mat-accordion>
