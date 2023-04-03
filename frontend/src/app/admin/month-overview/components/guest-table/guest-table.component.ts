@@ -11,7 +11,7 @@ import {forEach} from "lodash";
 
 interface GuestOrders{
   guestName: string;
-  orderer: string;
+  orderer: string[];
   days: string[];
   total: number;
 }
@@ -50,16 +50,19 @@ constructor(private apiService: ApiService) {
     let guestOrders: GuestOrders[]= [];
     ordersWithGuests.forEach(order => {
       const existingGuestOrder = guestOrders.find(guestOrder =>
-        guestOrder.guestName === order.guestName && guestOrder.orderer === order.profile.name
+        guestOrder.guestName === order.guestName //&& guestOrder.orderer === order.profile.name
       );
 
       if (existingGuestOrder) {
         existingGuestOrder.days.push(order.date);
         existingGuestOrder.total += order.meal.total;
+        existingGuestOrder.orderer.push(order.profile.name);
+        //remove duplicate orderers
+        existingGuestOrder.orderer = Array.from(new Set(existingGuestOrder.orderer));
       } else {
         const newGuestOrder: GuestOrders = {
           guestName: order.guestName,
-          orderer: order.profile.name,
+          orderer: [order.profile.name],
           days: [order.date],
           total: order.meal.total
         };

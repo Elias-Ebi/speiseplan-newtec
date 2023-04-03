@@ -13,7 +13,7 @@
       <h2>Besteller</h2>
     </th>
     <td *matCellDef="let element" mat-cell>
-      <p>{{element.orderer}}</p>
+      <p>{{element.orderer.join(", ")}}</p>
     </td>
   </ng-container>
 
