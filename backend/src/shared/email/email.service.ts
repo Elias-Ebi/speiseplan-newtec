@@ -1,5 +1,6 @@
 import {Injectable, Logger} from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import {Order} from "../../data/entitites/order.entity";
 
 @Injectable()
 export class EmailService {
@@ -32,6 +33,23 @@ export class EmailService {
         });
     }
 
+    sendNewOrderCanceledMail(orders: Order[]) {
+        orders.forEach((order) => {
+            const mailOptions = {
+                from: this.email,
+                to: order.profile.email,
+                subject: `Bestellung ${order.meal.name} storniert`,
+                html: this.orderCancelledMailText(order)
+            };
+
+            this.client.sendMail(mailOptions, (error) => {
+                if (error) {
+                    this.logger.log(error);
+                }
+            });
+        });
+    }
+
     private banditPlateMailText(mealName: string): string {
         return (
             `Hallo liebe Mensafreunde,
@@ -42,5 +60,28 @@ export class EmailService {
             Guten Hunger<br>
             Euer Speiseplan-Team ;)`
         )
+    }
+
+    private orderCancelledMailText(order: Order): string {
+        if (!order.guestName) {
+
+            return (
+                `Hallo ${order.profile.name},
+                <br><br>
+                leider musste deine Bestellung <u>${order.meal.name}</u> am ${order.date.toString()} storniert werden.
+                <br><br>
+                Viele Grüße<br>
+                Dein Speiseplan-Team`
+            )
+        } else {
+            return (
+                `Hallo ${order.profile.name},
+                <br><br>
+                leider musste die Bestellung <u>${order.meal.name}</u> für deinen Gast ${order.guestName} am ${order.date.toString()} storniert werden.
+                <br><br>
+                Viele Grüße<br>
+                Dein Speiseplan-Team`
+            )
+        }
     }
 }

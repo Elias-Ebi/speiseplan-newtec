@@ -5,11 +5,12 @@ import {Order} from '../../data/entitites/order.entity';
 import {Temporal} from '@js-temporal/polyfill';
 import {AdminOnly} from '../../auth/decorators/admin-only.decorator';
 import PlainDate = Temporal.PlainDate;
+import {EmailService} from '../../shared/email/email.service';
 
 
 @Controller('orders')
 export class OrderController {
-  constructor(private orderService: OrderService) {
+  constructor(private orderService: OrderService, private emailService: EmailService) {
   }
 
   @Get('banditplates')
@@ -79,6 +80,15 @@ export class OrderController {
   async deleteMultipleOrdersAdmin( @Request() req): Promise<boolean> {
     const user = req.user as AuthUser;
     return this.orderService.deleteMultipleOrdersByAdmin(req.body.orders as Order[], user);
+  }
+
+  @Post('multiple-orders/deleteByIdAndInform')
+  @AdminOnly()
+  async deleteMultipleOrdersByIdAndInform(@Request() req): Promise<Order[]> {
+    const user = req.user as AuthUser;
+    const deletedOrders = await this.orderService.deleteMultipleOrdersById(req.body.ordersId as string[], user);
+    this.emailService.sendNewOrderCanceledMail(deletedOrders);
+    return deletedOrders;
   }
 
   @Delete(':id')
