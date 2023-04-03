@@ -22,6 +22,67 @@
     border-bottom: 1px solid var(--clrNeutral);
   }
 
+
+  /*
+  * Tabe Content Style
+  */
+  .mat-column-title {
+    padding: 0.5rem 0;
+    flex: none;
+
+    .extended-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .show-hide-text {
+      color: var(--clrPrimary);
+      cursor: pointer;
+    }
+
+    .show-hide-text:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .mat-column-description {
+    padding: 0.5rem 0;
+    vertical-align: top;
+    flex: none;
+    width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+
+    .extended-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .show-hide-text {
+      color: var(--clrPrimary);
+      cursor: pointer;
+    }
+
+    .show-hide-text:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .mat-column-category {
+    padding: 0.5rem 0;
+    vertical-align: top;
+    flex: none;
+    width: 25%;
+  }
+
+  .mat-column-action {
+    padding: 0.5rem 0;
+    vertical-align: top;
+    flex: none;
+    width: 5%;
+  }
+
   /*
   * Button Style
   */

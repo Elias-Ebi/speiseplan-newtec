@@ -4,7 +4,13 @@
       <th *matHeaderCellDef mat-header-cell style="width: 20%">
         <h2>Gericht</h2>
       </th>
-      <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+      <td *matCellDef="let element" mat-cell>
+        <div class="meal-content">
+          <p *ngIf="element.name.length <= MAX_MEAL_LENGTH">{{ element.name }}</p>
+          <p *ngIf="element.name.length > MAX_MEAL_LENGTH && !element.showMore">{{minimalize(element.name, MAX_MEAL_LENGTH)}}<span class="show-hide-text" (click)="toggleShowMore(element)"><br>mehr anzeigen</span></p>
+          <p *ngIf="element.name.length > MAX_MEAL_LENGTH && element.showMore" class="extended-text">{{extend(element.name, MAX_MEAL_LENGTH)}}<span class="show-hide-text" (click)="toggleShowMore(element)">weniger anzeigen</span></p>
+        </div>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="description">
@@ -12,7 +18,11 @@
         <h2>Beschreibung</h2>
       </th>
       <td *matCellDef="let element" mat-cell>
-        {{ element.description }}
+        <div class="desc-content">
+          <p *ngIf="element.description.length <= MAX_DESC_LENGTH">{{ element.description }}</p>
+          <p *ngIf="element.description.length > MAX_DESC_LENGTH && !element.showMore">{{minimalize(element.description, MAX_DESC_LENGTH)}}<span class="show-hide-text" (click)="toggleShowMore(element)"><br>mehr anzeigen</span></p>
+          <p *ngIf="element.description.length > MAX_DESC_LENGTH && element.showMore" class="extended-text">{{extend(element.description, MAX_DESC_LENGTH)}}<span class="show-hide-text" (click)="toggleShowMore(element)">weniger anzeigen</span></p>
+        </div>
       </td>
     </ng-container>
 

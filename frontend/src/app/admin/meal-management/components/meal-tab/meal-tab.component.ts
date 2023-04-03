@@ -40,6 +40,9 @@ export class MealTabComponent implements OnInit, OnChanges {
   dataSource = new MatTableDataSource<Meal>();
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
 
+  MAX_DESC_LENGTH = 70;
+  MAX_MEAL_LENGTH = 30;
+
   constructor(
     private categoryService: CategoryService,
     private dialog: MatDialog,
@@ -198,5 +201,35 @@ export class MealTabComponent implements OnInit, OnChanges {
     } catch (error) {
       this.snackbarService.error('Could not load meals');
     }
+  }
+
+  minimalize(description: string, max_length: number): string {
+    return description.length > max_length
+      ? description.substring(0, max_length - 4) + ' ...'
+      : description;
+  }
+
+  extend(description: string, max_length: number): string {
+    let normalizedDescription = '';
+    if(description.length > max_length) {
+      if(description.includes(" ")) {
+        normalizedDescription = description.replace(" ", "\n");
+      } else {
+        for(let i = 0; i < description.length; i++) {
+          if(i % max_length === 0 && i != 0) {
+            normalizedDescription += description[i] + "\n";
+          } else {
+            normalizedDescription += description[i];
+          }
+        }
+      }
+    } else {
+      normalizedDescription = description;
+    }
+    return normalizedDescription;
+  }
+
+  toggleShowMore(element: any): boolean {
+    return (element.showMore = !element.showMore);
   }
 }

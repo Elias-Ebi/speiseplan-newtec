@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Temporal } from '@js-temporal/polyfill';
 import { MonthNamePipe } from '../../shared/pipes/month-name.pipe';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { WeekdayNamePipe } from '../../shared/pipes/weekday-name.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
@@ -23,6 +23,7 @@ import { DefaultSettingsDialogComponent } from './dialogs/default-settings-dialo
 import { CategoryService } from "../../shared/services/category.service";
 import { SnackbarService } from "../../shared/services/snackbar.service";
 import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-dish-management',
@@ -30,6 +31,7 @@ import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
   templateUrl: './meal-management.component.html',
   styleUrls: ['./meal-management.component.scss'],
   imports: [
+    CommonModule,
     MonthNamePipe,
     JsonPipe,
     WeekdayNamePipe,
@@ -43,7 +45,8 @@ import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MealTabComponent
+    MealTabComponent,
+    MatBadgeModule
   ]
 })
 export class MealManagementComponent implements OnInit {
@@ -61,12 +64,11 @@ export class MealManagementComponent implements OnInit {
   currentTab: number = 0;
   calendarWeekIndex = 0;
   maxPossibleTabIndex = 0;
+  weekCounter = [0,0,0,0,0];
 
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
-    private snackbarService: SnackbarService,
-    private categoryService: CategoryService
   ) {
   }
 
@@ -149,6 +151,10 @@ export class MealManagementComponent implements OnInit {
       return 'friday';
     }
     throw new Error('Unknown index');
+  }
+
+  async updateBadgesForCalendarWeek() {
+    this.weekCounter = await this.api.getMealCountForWeek(this.currentlyDisplayedWeek.monday.date);
   }
 
   async disableImpossibleTabs() {
