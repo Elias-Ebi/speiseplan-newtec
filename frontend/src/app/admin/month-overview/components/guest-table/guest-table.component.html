@@ -22,7 +22,7 @@
       <h2>Betrag</h2>
     </th>
     <td *matCellDef="let element" mat-cell>
-      <p>{{element.total}}</p>
+      <p>{{element.total | euro}}</p>
     </td>
   </ng-container>
 
