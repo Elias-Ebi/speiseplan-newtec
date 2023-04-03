@@ -9,17 +9,17 @@ import { MatInputModule } from '@angular/material/input';
   selector: 'app-delete-dish-dialog',
   standalone: true,
   imports: [CommonModule, MatIconModule, MatButtonModule, MatInputModule],
-  templateUrl: './delete-dish-dialog.component.html',
-  styleUrls: ['./delete-dish-dialog.component.scss']
+  templateUrl: './delete-meal-dialog.component.html',
+  styleUrls: ['./delete-meal-dialog.component.scss']
 })
-export class DeleteDishDialogComponent {
+export class DeleteMealDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
       name: string,
       id: string,
     },
-    private dialogRef: MatDialogRef<DeleteDishDialogComponent>
+    private dialogRef: MatDialogRef<DeleteMealDialogComponent>
   ) {
   }
 

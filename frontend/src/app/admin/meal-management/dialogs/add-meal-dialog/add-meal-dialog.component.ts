@@ -13,8 +13,10 @@ import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import * as _ from "lodash";
 import { MatIconModule } from '@angular/material/icon';
 import { Category, CategoryService } from 'src/app/shared/services/category.service';
-import { SnackbarService } from "../../../shared/services/snackbar.service";
+import { SnackbarService } from "../../../../shared/services/snackbar.service";
 import { Meal } from 'src/app/shared/models/meal';
+import { Temporal } from '@js-temporal/polyfill';
+import { DateService } from 'src/app/shared/services/date.service';
 
 @Component({
   selector: 'app-add-dish-dialog',
@@ -31,10 +33,10 @@ import { Meal } from 'src/app/shared/models/meal';
     MatNativeDateModule,
     MatIconModule,
   ],
-  templateUrl: './add-dish-dialog.component.html',
-  styleUrls: ['./add-dish-dialog.component.scss'],
+  templateUrl: './add-meal-dialog.component.html',
+  styleUrls: ['./add-meal-dialog.component.scss'],
 })
-export class AddDishDialogComponent implements OnInit {
+export class AddMealDialogComponent implements OnInit {
   MAX_LENGTH: number = 70;
   orderTime: string = '00:00';
   deliveryTime: string = '00:00';
@@ -56,11 +58,12 @@ export class AddDishDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined, mealToEdit: Meal | undefined },
-    private matDialogRef: MatDialogRef<AddDishDialogComponent>,
+    private matDialogRef: MatDialogRef<AddMealDialogComponent>,
     private api: ApiService,
     private categoryService: CategoryService,
     private dateAdapter: DateAdapter<any>,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private dateService: DateService
   ) {
     this.dateAdapter.setLocale('de');
     this.categories = this.categoryService.getAllCategories();
@@ -95,11 +98,14 @@ export class AddDishDialogComponent implements OnInit {
   }
 
   setOrderableDate() {
-    let date = new Date();
-    if (this.data.weekday === 'monday') {
-      date.setDate(this.deliveryDate.getDate() - 3);
+    let date = new Date(this.deliveryDate.getFullYear(), this.deliveryDate.getMonth(), this.deliveryDate.getDate());
+    let temporal = this.dateService.dateToTemporal(date);
+    if(this.data.weekday === 'monday') {
+      temporal = this.dateService.getDayBefore(temporal, 3);
+      date = this.dateService.temporalToDate(temporal);
     } else {
-      date.setDate(this.deliveryDate.getDate() - 1);
+      temporal = this.dateService.getDayBefore(temporal);
+      date = this.dateService.temporalToDate(temporal);
     }
     return date;
   }

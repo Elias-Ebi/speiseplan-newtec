@@ -37,10 +37,10 @@ import {
     FormsModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './choose-dish-dialog.component.html',
-  styleUrls: ['./choose-dish-dialog.component.scss'],
+  templateUrl: './choose-meal-dialog.component.html',
+  styleUrls: ['./choose-meal-dialog.component.scss'],
 })
-export class ChooseDishDialogComponent implements OnInit {
+export class ChooseMealDialogComponent implements OnInit {
   displayedData: string[] = ['title', 'description', 'category', 'action'];
   dataSource: MatTableDataSource<MealTemplate>;
   dishes: MealTemplate[];
@@ -57,7 +57,7 @@ export class ChooseDishDialogComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA)
     readonly data: { name: string; description: string; categoryId: string },
-    private matDialogRef: MatDialogRef<ChooseDishDialogComponent>,
+    private matDialogRef: MatDialogRef<ChooseMealDialogComponent>,
     private api: ApiService,
     private categoryService: CategoryService
   ) {

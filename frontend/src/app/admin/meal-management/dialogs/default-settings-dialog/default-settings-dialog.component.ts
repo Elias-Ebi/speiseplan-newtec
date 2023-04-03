@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { DefaultValues } from 'src/app/shared/models/default-values';
 import { MatDialogRef, } from '@angular/material/dialog';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { SnackbarService } from "../../../shared/services/snackbar.service";
+import { SnackbarService } from "../../../../shared/services/snackbar.service";
 
 @Component({
   selector: 'app-default-settings-dialogRef',
