@@ -8,3 +8,10 @@
     justify-self: left;
   }
 }
+
+.order-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 8fr 8fr;
+  align-items: flex-start;
+}

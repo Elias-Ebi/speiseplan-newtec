@@ -12,13 +12,22 @@ import {FindManyOptions, FindOneOptions, Repository} from 'typeorm';
 import {JwtPayload} from './models/jwt-payload';
 import {AuthUser} from './models/AuthUser';
 import {Profile} from '../data/entitites/profile.entity';
+import { EmailService } from 'src/shared/email/email.service';
+import { Temporal } from '@js-temporal/polyfill';
+import { HashService } from 'src/shared/hash/hash.service';
+import { ResetPasswordToken } from 'src/data/entitites/reset-password-token.entity';
+import { DataCleanupService } from 'src/shared/cleanup/data-cleanup.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
+    private emailService: EmailService,
+    private hashService: HashService,
+    private dataCleanupService: DataCleanupService,
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Profile) private profileRepository: Repository<Profile>
+    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
+    @InjectRepository(ResetPasswordToken) private resetPasswordTokenRepository: Repository<ResetPasswordToken>
   ) {
   }
 
@@ -33,7 +42,9 @@ export class AuthService {
       throw new ConflictException('E-Mail already registered');
     }
 
-    const newUser: User = { email, password };
+    const password_encrypted: string = this.hashService.encrypt(password, 1, "hex");
+
+    const newUser: User = { email: email, password: password_encrypted };
     const newProfile: Profile = { email, name, isAdmin: false };
     await Promise.all([this.userRepository.save(newUser), this.profileRepository.save(newProfile)]);
 
@@ -41,8 +52,10 @@ export class AuthService {
   }
 
   validateUser(email: string, password: string): Promise<User | null> {
+    const password_encrypted: string = this.hashService.encrypt(password, 1, "hex");
+
     const options: FindOneOptions<User> = {
-      where: { email, password }
+      where: { email, password: password_encrypted }
     };
 
     return this.userRepository.findOne(options);
@@ -59,6 +72,131 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign(payload)
     };
+  }
+
+  async resetPassword(email: string) {
+    const options: FindOneOptions<User> = {
+      where: { email }
+    };
+
+    const user = await this.userRepository.findOne(options);
+
+    if(!user) {
+      return false;
+    }
+
+    // create a hash with the current time_stamp and user password
+    const time_stamp: string = Temporal.Now.plainDateTimeISO().toString();
+    const password: string = user.password;
+    const hashstr: string = time_stamp + password;
+
+    // create a hash to be used as a token
+    const secret: string = this.hashService.encrypt(hashstr, 1, "hex");
+
+    // save the token in the database
+    await this.resetPasswordTokenRepository.save({email: email, token: secret, code: "-", updatedAt: Temporal.Now.plainDateTimeISO().toString()});
+
+    // send email to the user
+    this.emailService.sendResetPasswordMail(email, secret);
+    
+    return true;
+  }
+
+  async setPasswordFromToken(token: string, newPassword: string) {
+    const reset_options: FindOneOptions<ResetPasswordToken> = {
+      where: { token }
+    };
+
+    const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
+
+    if(!resetPasswordToken) {
+      throw new NotFoundException();
+    }
+
+    const user_options: FindOneOptions<User> = {
+      where: { email: resetPasswordToken.email }
+    };
+
+    const user: User = await this.userRepository.findOne(user_options);
+
+    if(!user) {
+      throw new NotFoundException();
+    }
+
+    if(!this.hashService.timeSafeEqual(user.password, newPassword)) {
+      throw new BadRequestException("The new password must be different from the old one");
+    }
+
+    user.password = this.hashService.encrypt(newPassword, 1, "hex");
+
+    await this.userRepository.save(user);
+  }
+
+  async resetPasswordWithCode(email: string) {
+    const options: FindOneOptions<User> = {
+      where: { email }
+    };
+
+    const user = await this.userRepository.findOne(options);
+
+    if(!user) {
+      return false;
+    }
+
+    const code: string = this.hashService.createCustomLengthVerificationCode(6);
+
+    // save the code in the database
+    await this.resetPasswordTokenRepository.save({email: email, token: "-", code: code, updatedAt: Temporal.Now.plainDateTimeISO().toString()});
+
+    // send email to the user
+    this.emailService.sendVerificationMail(email, code);
+    
+    return true;
+  }
+
+  async checkVerificationCode(code: string) {
+    const reset_options: FindOneOptions<ResetPasswordToken> = {
+      where: { code }
+    };
+
+    const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
+
+    return resetPasswordToken ? true : false;
+  }
+
+  async setPasswordFromVerificationCode(code: string, newPassword: string) {
+    const reset_options: FindOneOptions<ResetPasswordToken> = {
+      where: { code }
+    };
+
+    const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
+
+    if(!resetPasswordToken) {
+      throw new NotFoundException();
+    }
+
+    const user_options: FindOneOptions<User> = {
+      where: { email: resetPasswordToken.email }
+    };
+
+    const user: User = await this.userRepository.findOne(user_options);
+
+    if(!user) {
+      throw new NotFoundException();
+    }
+
+    /*
+    if(!this.hashService.timeSafeEqual(user.password, newPassword)) {
+      throw new BadRequestException("The new password must be different from the old one");
+    }
+    */
+
+    user.password = this.hashService.encrypt(newPassword, 1, "hex");
+
+    await this.userRepository.save(user);
+    await this.resetPasswordTokenRepository.delete(resetPasswordToken);
+
+    return true;
   }
 
   async getUser(email: string): Promise<User>{
@@ -100,17 +238,20 @@ export class AuthService {
   }
 
   async changePassword(authUser: AuthUser, current: string, newPassword: string) {
-    if (!newPassword) {
+    const newPassword_encrypted = this.hashService.encrypt(newPassword, 1, "hex");
+    const current_encrypted = this.hashService.encrypt(current, 1, "hex");
+
+    if (!newPassword_encrypted) {
       throw new BadRequestException("New Password must not be empty");
     }
 
     const user = await this.getUser(authUser.email);
 
-    if (user.password !== current) {
+    if (user.password !== current_encrypted) {
       throw new BadRequestException('Wrong password');
     }
 
-    user.password = newPassword;
+    user.password = newPassword_encrypted;
 
     await this.userRepository.save(user);
   }

@@ -10,6 +10,7 @@ import {MealTemplate} from '../models/meal-template';
 import {DefaultValues} from '../models/default-values';
 import {Profile} from "../models/profile";
 import PlainDate = Temporal.PlainDate;
+import {MonthOverviewOrderMonth} from "../../admin/month-overview/month-overview.models";
 
 @Injectable({
   providedIn: 'root'
@@ -49,8 +50,18 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async getGuestMonthOverview(): Promise<Order[]> {
+    const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/order-month/guest-month-overview`);
+    return lastValueFrom(response);
+  }
+
   async changePaymentStatus(id: string): Promise<OrderMonth> {
     const response = this.httpClient.put<OrderMonth>(`${environment.apiUrl}/order-month/payment-status/${id}`, {});
+    return lastValueFrom(response);
+  }
+
+  async sendPaymentReminders(monthOverviewOrderMonth: MonthOverviewOrderMonth[]) {//: Promise<Order> {
+    const response = this.httpClient.put(`${environment.apiUrl}/order-month/payment-reminder`, {monthOverviewOrderMonth});
     return lastValueFrom(response);
   }
 
@@ -143,7 +154,7 @@ export class ApiService {
     const response = this.httpClient.get<number[]>(`${environment.apiUrl}/meals/meal-counter/${mondayDate.toString()}`);
     return lastValueFrom(response);
   }
-  
+
   async getDefaultValues(): Promise<DefaultValues> {
     const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);
@@ -157,6 +168,12 @@ export class ApiService {
   async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
     const body = {orders: orders}
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delete/admin/`, body)
+    return lastValueFrom(response);
+  }
+
+  async deleteMultipleOrdersByIdAndInform(ordersId: string[]): Promise<Order[]> {
+    const body = {ordersId: ordersId};
+    const response = this.httpClient.post<Order[]>(`${environment.apiUrl}/orders/multiple-orders/deleteByIdAndInform`, body);
     return lastValueFrom(response);
   }
 

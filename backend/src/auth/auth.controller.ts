@@ -74,4 +74,34 @@ export class AuthController {
   toggleAdminAccess(@Param('email') email: string): Promise<Profile> {
     return this.authService.toggleAdminAccess(email);
   }
+
+  @SkipAuth()
+  @Get('reset-password/:email')
+  resetPassword(@Param('email') email: string): Promise<boolean> {
+    return this.authService.resetPassword(email);
+  }
+
+  @SkipAuth()
+  @Get('reset-password-vcode/:email')
+  resetPasswordWithCode(@Param('email') email: string): Promise<boolean> {
+    return this.authService.resetPasswordWithCode(email);
+  }
+
+  @SkipAuth()
+  @Get('check-vcode/:code')
+  checkVerificationCode(@Param('code') code: string): Promise<boolean> {
+    return this.authService.checkVerificationCode(code);
+  }
+
+  @SkipAuth()
+  @Put('set-password')
+  setPasswordFromToken(@Body('token') token: string, @Body('newPassword') newPassword: string) {
+    return this.authService.setPasswordFromToken(token, newPassword);
+  }
+
+  @SkipAuth()
+  @Put('set-password-vcode')
+  setPasswordFromVerificationCode(@Body('code') code: string, @Body('newPassword') newPassword: string) {
+    return this.authService.setPasswordFromVerificationCode(code, newPassword);
+  }
 }

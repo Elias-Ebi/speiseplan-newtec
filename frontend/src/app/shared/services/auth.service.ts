@@ -28,7 +28,6 @@ export class AuthService {
     );
   }
 
-
   register(email: string, name: string, password: string): Promise<Profile> {
     const payload = {email, name, password};
     const response$ = this.httpClient.post<Profile>(`${environment.apiUrl}/auth/register`, payload);
@@ -43,7 +42,27 @@ export class AuthService {
     localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
     await this.getAndSetProfile();
 
-    this.router.navigateByUrl('/');
+    await this.router.navigateByUrl('/');
+  }
+
+  async resetPasswordWithCode(email: string): Promise<boolean> {
+    const response = this.httpClient.get<boolean>(`${environment.apiUrl}/auth/reset-password-vcode/${email}`);
+    return lastValueFrom(response);
+  }
+
+  async setNewPasswordFromResetToken(token: string, newPassword: string) {
+    const response = this.httpClient.put(`${environment.apiUrl}/auth/set-password`, {token, newPassword});
+    return lastValueFrom(response);
+  }
+
+  async checkVerificationCode(code: string): Promise<boolean> {
+    const response = this.httpClient.get<boolean>(`${environment.apiUrl}/auth/check-vcode/${code}`);
+    return lastValueFrom(response);
+  }
+
+  async setNewPasswordFromVerificationCode(code: string, newPassword: string) {
+    const response = this.httpClient.put(`${environment.apiUrl}/auth/set-password-vcode`, {code, newPassword});
+    return lastValueFrom(response);
   }
 
   logout(): void {

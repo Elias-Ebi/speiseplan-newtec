@@ -1,0 +1,32 @@
+<table [dataSource]="datasource" mat-table>
+  <ng-container matColumnDef="guest">
+    <th *matHeaderCellDef mat-header-cell>
+      <h2>Gast</h2>
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <p>{{element.guestName}}</p>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="user">
+    <th *matHeaderCellDef mat-header-cell>
+      <h2>Besteller</h2>
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <p>{{element.orderer.join(", ")}}</p>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="sum">
+    <th *matHeaderCellDef mat-header-cell>
+      <h2>Betrag</h2>
+    </th>
+    <td *matCellDef="let element" mat-cell>
+      <p>{{element.total | euro}}</p>
+    </td>
+  </ng-container>
+
+
+  <tr *matHeaderRowDef="displayedGuestTableColumns" mat-header-row></tr>
+  <tr *matRowDef="let row; columns: displayedGuestTableColumns" mat-row></tr>
+</table>

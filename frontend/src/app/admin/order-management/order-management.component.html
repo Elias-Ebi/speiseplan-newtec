@@ -63,6 +63,7 @@
       <mat-calendar
         (selectedChange)="filterOrdersByDate($event)"
         *ngIf="!useDateInterval"
+        [selected]="filter.dateFilter.startDate"
       >
       </mat-calendar>
 
@@ -73,10 +74,10 @@
       >
       </mat-calendar>
 
-      <div (click)="removeDateFilter()" *ngIf="dateSelected" class="icon-with-text filter-button">
+      <button (click)="removeDateFilter()" *ngIf="dateSelected" class="icon-with-text" mat-stroked-button color="primary">
         <mat-icon>close</mat-icon>
         <p>Datumsfilter entfernen</p>
-      </div>
+      </button>
 
     </div>
   </mat-drawer>
@@ -85,13 +86,14 @@
     <section>
       <!-- UI above table -->
       <div class="ui-container">
-        <div (click)="toggleFilter()" class="icon-with-text filter-button">
-          <mat-icon>filter_alt</mat-icon>
-          <p>Filter</p>
-        </div>
-
         <div class="list-container">
+          <button (click)="toggleFilter()" class="icon-with-text" mat-flat-button color="primary">
+            <mat-icon>filter_alt</mat-icon>
+            <p>Filter</p>
+          </button>
+
           <mat-slide-toggle
+            class="slide"
             (change)="toggleEditMode()"
             [checked]="editMultipleOrders"
             color="primary"
@@ -99,18 +101,19 @@
           >
             Mehrere Stornieren
           </mat-slide-toggle>
-
-          <button
-            (click)="openCancelMultipleDialog()"
-            *ngIf="editMultipleOrders"
-            [disabled]="checkedOrders.length === 0"
-            color="primary"
-            mat-flat-button
-          >
-            <mat-icon>edit</mat-icon>
-            Markierte stornieren
-          </button>
         </div>
+
+        <button
+          class="edit-button"
+          (click)="openCancelMultipleDialog()"
+          [class.active]="editMultipleOrders"
+          [disabled]="checkedOrders.length === 0"
+          color="primary"
+          mat-flat-button
+        >
+          <mat-icon>edit</mat-icon>
+          Markierte stornieren
+        </button>
       </div>
 
       <table [dataSource]="dataSource" class="bg-background" mat-table>
