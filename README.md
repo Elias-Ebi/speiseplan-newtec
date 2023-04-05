@@ -2,6 +2,7 @@
 
 ## Setup
 ***This is not a final release! Be aware that some components might use default passwords!***
+- In `frontend/src/app/environment.ts` you have to replace *localhost* in the apiUrl with the ip of your server.
 
 ### On Windows
 - Install Docker Desktop with WSL enabled
@@ -15,7 +16,7 @@
 
 ### PgAdmin-Configuration
 *These steps might have to be repeated when stopping and starting containers. This is a dev-setup and will be solved differently in the final release!*
-- In the demo-build you can login using the default credentials for pgadmin in the docker-compose.yml
+- In the demo-build you can log in using the default credentials for pgadmin in the docker-compose.yml
 - Add a new server:
   - In the General-Tab, choose a name to your liking
   - In the Connection Tab, you have to add the ip-address of the postgresql-docker container. To obtain it, open a terminal and enter `docker inspect database`. The last 'IPAddress' value in the response is the correct Host name/address.
