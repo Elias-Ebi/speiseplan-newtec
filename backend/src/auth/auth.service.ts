@@ -161,7 +161,7 @@ export class AuthService {
 
     const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
 
-    return resetPasswordToken;
+    return resetPasswordToken ? true : false;
   }
 
   async setPasswordFromVerificationCode(code: string, newPassword: string) {
