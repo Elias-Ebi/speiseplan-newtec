@@ -10,8 +10,8 @@ services:
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
-    ports:
-      - "9000:5432"
+    networks:
+      - web
 
   frontend:
     container_name: frontend
@@ -20,6 +20,12 @@ services:
       - "4200:4200"
     depends_on:
       - backend
+    networks:
+      - web
+    labels:
+      - "traefik.http.routers.frontend.rule=Host(`XXXXXX`) && PathPrefix(`/`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=4200"
+
 
   backend:
     container_name: backend
@@ -30,6 +36,29 @@ services:
       - backend/.env
     depends_on:
       - postgres
+    networks:
+      - web
+
+  traefik:
+    container_name: traefik
+    image: traefik
+    command:
+      - "--api=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web-secure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=youremail@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./letsencrypt:/letsencrypt
+    networks:
+      - web
 
   pgadmin:
     container_name: pgadmin
@@ -42,6 +71,12 @@ services:
     ports:
       - "8000:80"
 
+networks:
+  web:
+    driver: bridge
+
 volumes:
   postgres:
   pgadmin:
+  letsencrypt:
+    driver: local

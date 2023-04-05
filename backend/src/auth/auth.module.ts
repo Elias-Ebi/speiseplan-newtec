@@ -9,16 +9,21 @@ import { User } from '../data/entitites/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { environment } from '../environment';
 import { Profile } from '../data/entitites/profile.entity';
+import {ResetPasswordToken} from "../data/entitites/reset-password-token.entity";
+import {EmailService} from "../shared/email/email.service";
+import {HashService} from "../shared/hash/hash.service";
+import {DataCleanupService} from "../shared/cleanup/data-cleanup.service";
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
       secret: environment.jwtSecretKey
-    }),    TypeOrmModule.forFeature([User, Profile])
+    }),
+    TypeOrmModule.forFeature([User, Profile, ResetPasswordToken])
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService, HashService, DataCleanupService],
   exports: [AuthService]
 })
 export class AuthModule {

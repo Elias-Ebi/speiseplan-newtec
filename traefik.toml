@@ -1,0 +1,13 @@
+[providers.docker]
+  exposedByDefault = false
+
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+  [entryPoints.web-secure]
+    address = ":443"
+
+[certificatesResolvers.myresolver.acme]
+  email = "youremail@example.com"
+  storage = "/letsencrypt/acme.json"
+  [certificatesResolvers.myresolver.acme.tlsChallenge]
