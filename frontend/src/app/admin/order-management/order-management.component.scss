@@ -3,25 +3,13 @@
 */
 .ui-container {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: start;
-
-  -webkit-transition: margin 300ms ease-in-out;
-  -moz-transition: margin 300ms ease-in-out;
-  -o-transition: margin 300ms ease-in-out;
-  transition: margin 300ms ease-in-out;
+  align-items: center;
 }
 
-@supports not(-moz-appearance: none) {
-  .ui-container:has(.edit-button.active) {
-    margin-bottom: 2em;
-  }
-}
-
-@supports (-moz-appearance: none) {
-  .ui-container {
-    margin-bottom: 2em;
-  }
+.ui-container {
+  margin-bottom: 2em;
 }
 
 /*
@@ -71,15 +59,9 @@ th {
 /*
 * Multiple Selection Style
 */
-.list-container {
+
+.ui-container {
   position: relative;
-  width: 100%;
-
-
-  .slide {
-    position: absolute;
-    right: 0;
-  }
 
   .edit-button {
     position: absolute;
@@ -91,12 +73,26 @@ th {
   .edit-button.active {
     position: absolute;
     right: 0;
-    top: 2.25rem;
+    top: 2.5rem;
     opacity: 1;
-    -webkit-transition: opacity 100ms ease-in-out 250ms;
-    -moz-transition: opacity 100ms ease-in-out 250ms;
-    -o-transition: opacity 100ms ease-in-out 250ms;
-    transition: opacity 100ms ease-in-out 250ms;
+    -webkit-transition: opacity 200ms ease-in-out;
+    -moz-transition: opacity 200ms ease-in-out;
+    -o-transition: opacity 200ms ease-in-out;
+    transition: opacity 200ms ease-in-out;
+  }
+
+  .list-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+
+    .slide {
+      position: absolute;
+      right: 0;
+    }
+
   }
 }
 
