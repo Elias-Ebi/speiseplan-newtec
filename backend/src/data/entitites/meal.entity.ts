@@ -15,10 +15,6 @@ export class Meal {
 
   @Column({ type: 'timestamptz', transformer: new DateTimeTransformer() })
   @IsDateString()
-  delivery: string;
-
-  @Column({ type: 'timestamptz', transformer: new DateTimeTransformer() })
-  @IsDateString()
   @Index()
   orderable: string;
 
