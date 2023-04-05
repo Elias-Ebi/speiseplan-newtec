@@ -132,7 +132,6 @@ export class MealManagementComponent implements OnInit {
   }
 
   getWeekdayPropertyFromIndex(index: number): string {
-    //TODO:handle else case better
     if (index == 0) {
       return 'monday';
     } else if (index == 1) {
