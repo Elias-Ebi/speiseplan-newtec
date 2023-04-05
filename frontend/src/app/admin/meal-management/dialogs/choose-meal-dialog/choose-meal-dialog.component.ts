@@ -54,8 +54,6 @@ export class ChooseMealDialogComponent implements OnInit {
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  // @ts-ignore
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -71,9 +69,11 @@ export class ChooseMealDialogComponent implements OnInit {
 
   async ngOnInit() {
     this.dishes = await this.api.getMealTemplate();
+    this.dishes.sort((a,b) => {
+      return a.name.localeCompare(b.name);
+    });
     this.dataSource = new MatTableDataSource(this.dishes);
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   getCategoryName(id: string): string | undefined {
@@ -125,9 +125,11 @@ export class ChooseMealDialogComponent implements OnInit {
   async onClickDelete(row: any) {
     await this.api.deleteMealTemplate(row.id);
     this.dishes = await this.api.getMealTemplate();
+    this.dishes.sort((a,b) => {
+      return a.name.localeCompare(b.name);
+    });
     this.dataSource = new MatTableDataSource(this.dishes);
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   minimalize(description: string, max_length: number): string {
