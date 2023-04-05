@@ -175,7 +175,7 @@ export class MealTabComponent implements OnInit, OnChanges {
 
         await this.api.deleteMeal(meal.id)
           .then(() => {
-            this.snackbarService.error('Gericht erfolgreich gelöscht!');
+            this.snackbarService.success('Gericht erfolgreich gelöscht!');
           })
           .catch(() => {
             this.snackbarService.error('Gericht konnte nicht gelöscht werden.');
