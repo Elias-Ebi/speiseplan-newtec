@@ -3,9 +3,9 @@
     <section class="section">
       <div class="section-headline-container">
         <h2>Tagesbestellungen - {{day | weekdayName}} </h2>
-        <button (click)="exportAsPDF(day)" color="primary" mat-flat-button>
+        <button [disabled]="dataMap.get(day)?.length === 0" (click)="exportAsPDF(day)" color="primary" mat-flat-button>
           <mat-icon>picture_as_pdf</mat-icon>
-          Als Pdf Exportieren
+          Als PDF Exportieren
         </button>
       </div>
       <hr class="bg-neutral"/>
