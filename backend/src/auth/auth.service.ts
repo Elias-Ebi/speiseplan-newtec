@@ -94,7 +94,7 @@ export class AuthService {
     const secret: string = this.hashService.encrypt(hashstr, 1, "hex");
 
     // save the token in the database
-    this.resetPasswordTokenRepository.save({email: email, token: secret, code: "-", updatedAt: Temporal.Now.plainDateTimeISO().toString()});
+    await this.resetPasswordTokenRepository.save({email: email, token: secret, code: "-", updatedAt: Temporal.Now.plainDateTimeISO().toString()});
 
     // send email to the user
     this.emailService.sendResetPasswordMail(email, secret);
@@ -146,7 +146,7 @@ export class AuthService {
     const code: string = this.hashService.createCustomLengthVerificationCode(6);
 
     // save the code in the database
-    this.resetPasswordTokenRepository.save({email: email, token: "-", code: code, updatedAt: Temporal.Now.plainDateTimeISO().toString()});
+    await this.resetPasswordTokenRepository.save({email: email, token: "-", code: code, updatedAt: Temporal.Now.plainDateTimeISO().toString()});
 
     // send email to the user
     this.emailService.sendVerificationMail(email, code);
@@ -161,11 +161,7 @@ export class AuthService {
 
     const resetPasswordToken: ResetPasswordToken = await this.resetPasswordTokenRepository.findOne(reset_options);
 
-    if(!resetPasswordToken) {
-      return false;
-    }
-
-    return true;
+    return resetPasswordToken;
   }
 
   async setPasswordFromVerificationCode(code: string, newPassword: string) {
