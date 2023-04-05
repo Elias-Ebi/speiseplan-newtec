@@ -104,4 +104,10 @@ export class AuthController {
   setPasswordFromVerificationCode(@Body('code') code: string, @Body('newPassword') newPassword: string) {
     return this.authService.setPasswordFromVerificationCode(code, newPassword);
   }
+
+  @Get('notify-users')
+  @AdminOnly()
+  async notifyUsers(): Promise<Profile[]> {
+    return await this.authService.notifyUsers();
+  }
 }

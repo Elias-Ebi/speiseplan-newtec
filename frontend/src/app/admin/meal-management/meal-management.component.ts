@@ -9,13 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ApiService } from 'src/app/shared/services/api.service';
 import { CalendarWeek } from 'src/app/shared/models/calendar-week';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { DefaultSettingsDialogComponent } from './dialogs/default-settings-dialog/default-settings-dialog.component';
 import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
 import { MatBadgeModule } from '@angular/material/badge';
+import { SnackbarService } from 'src/app/shared/services/snackbar.service';
+import { AuthService } from 'src/app/shared/services/auth.service';
 
 @Component({
   selector: 'app-dish-management',
@@ -60,6 +61,8 @@ export class MealManagementComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
+    private authService: AuthService,
+    private snackBarService: SnackbarService
   ) {
   }
 
@@ -88,6 +91,15 @@ export class MealManagementComponent implements OnInit {
 
   editDefaultSettings() {
     this.dialog.open(DefaultSettingsDialogComponent, { autoFocus: false });
+  }
+
+  async notifyUsers() {
+    const notify = await this.authService.notifyUsers();
+    if(notify) {
+      this.snackBarService.success('Benachrichtigung erfolgreich versendet');
+    } else {
+      this.snackBarService.error('Benachrichtigung konnte nicht versendet werden');
+    }
   }
 
   async onTabChange(event: MatTabChangeEvent) {
