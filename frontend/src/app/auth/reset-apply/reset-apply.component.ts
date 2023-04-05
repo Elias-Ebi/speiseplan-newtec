@@ -24,7 +24,6 @@ import { AuthService } from 'src/app/shared/services/auth.service';
 export class ResetApplyComponent implements OnInit {
   form: FormGroup = this.initializeForm();
   hidePw: boolean = true;
-  PASSWORD_LENGTH: number = 8;
   token: string = "";
 
   constructor(
@@ -59,30 +58,6 @@ export class ResetApplyComponent implements OnInit {
             this.router.navigateByUrl('/auth/login');
           });
       }
-    }
-  }
-
-  shortenPassword(password: string, len: number): string {
-    let resultPassword = '';
-    if (password.length > len) {
-      for (let i = 0; i < len; i++) {
-        if (i < password.length) {
-          resultPassword += password.charAt(i);
-        }
-      }
-      return resultPassword;
-    } else {
-      return password;
-    }
-  }
-
-  shortenPasswordRec(password: string, len: number): string {
-    if (len <= 0) {
-      throw new Error('Length must be greater than 0');
-    } else if (len >= password.length) {
-      return password;
-    } else {
-      return this.shortenPasswordRec(password.slice(0, -1), len);
     }
   }
 

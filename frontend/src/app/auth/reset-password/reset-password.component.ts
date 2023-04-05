@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Router } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -27,26 +26,6 @@ export class ResetPasswordComponent {
     })
   }
 
-  /*
-  async onSubmit() {
-    if (this.form.valid) {
-      try {
-        const { email } = this.form.value;
-        const resetPasswordResult = await this.authService.resetPassword(email.toLowerCase());
-
-        if(resetPasswordResult) {
-          alert('Passwort zurücksetzen angefordert');
-          this.router.navigateByUrl('/auth/login');
-        } else {
-          alert('Passwort zurücksetzen Anfrage konnte nicht verarbeitet werden!');
-        }
-      } catch(error: any) {
-        alert(error.message);
-      }
-    }
-  }
-  */
-
   async onSubmit() {
     if (this.form.valid) {
       try {
@@ -55,7 +34,7 @@ export class ResetPasswordComponent {
 
         if(resetPasswordResult) {
           alert('Passwort zurücksetzen angefordert');
-          this.router.navigateByUrl('/auth/verify-code');
+          await this.router.navigateByUrl('/auth/verify-code');
         } else {
           alert('Passwort zurücksetzen Anfrage konnte nicht verarbeitet werden!');
         }
