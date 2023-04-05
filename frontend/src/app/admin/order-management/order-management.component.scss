@@ -6,11 +6,22 @@
   justify-content: space-between;
   align-items: start;
 
+  -webkit-transition: margin 300ms ease-in-out;
+  -moz-transition: margin 300ms ease-in-out;
+  -o-transition: margin 300ms ease-in-out;
   transition: margin 300ms ease-in-out;
 }
 
-.ui-container:has(.edit-button.active) {
-  margin-bottom: 2rem;
+@supports not(-moz-appearance: none) {
+  .ui-container:has(.edit-button.active) {
+    margin-bottom: 2em;
+  }
+}
+
+@supports (-moz-appearance: none) {
+  .ui-container {
+    margin-bottom: 2em;
+  }
 }
 
 /*
@@ -82,6 +93,9 @@ th {
     right: 0;
     top: 2.25rem;
     opacity: 1;
+    -webkit-transition: opacity 100ms ease-in-out 250ms;
+    -moz-transition: opacity 100ms ease-in-out 250ms;
+    -o-transition: opacity 100ms ease-in-out 250ms;
     transition: opacity 100ms ease-in-out 250ms;
   }
 }
