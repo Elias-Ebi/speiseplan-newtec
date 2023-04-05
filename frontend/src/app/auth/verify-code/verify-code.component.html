@@ -1,0 +1,36 @@
+<div class="main-layout">
+  <form [formGroup]="form" class="layout">
+    <h2>NewTec Speiseplan</h2>
+
+    <p class="clr-primary">
+      Geben Sie bitte Ihren Verifikationscode an. Anschließend können Sie Ihr Passwort neu setzen.
+    </p>
+
+    <mat-form-field>
+      <mat-label>Verifikationscode</mat-label>
+      <input formControlName="code" matInput required>
+    </mat-form-field>
+
+    <button [disabled]="!isNotVerified" (click)="verify()" class="verify-button" color="primary" mat-flat-button>Verifizieren</button>
+  </form>
+
+  <form [formGroup]="form2" class="layout">
+    <mat-form-field>
+      <mat-label>Passwort</mat-label>
+      <input formControlName="password" matInput required [type]="getInputType()">
+      <button [disabled]="isNotVerified" class="button" type="button" (click)="toggleHide()" mat-icon-button matSuffix>
+        <mat-icon class="clr-primary icon">{{getVisibilityIcon()}}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Passwort bestätigen</mat-label>
+      <input formControlName="password_confirm" matInput required [type]="getInputType()">
+      <button [disabled]="isNotVerified" class="button" type="button" (click)="toggleHide()" mat-icon-button matSuffix>
+        <mat-icon class="clr-primary icon">{{getVisibilityIcon()}}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button [disabled]="isNotVerified" (click)="onSubmit()" class="set-password-button" color="primary" mat-flat-button>Passwort setzen</button>
+  </form>
+</div>
