@@ -138,12 +138,12 @@ export class OverviewComponent implements OnInit {
         // draw table
         doc.autoTable({
           columnStyles: {
-            0: {columnWidth: 120} as Partial<Styles>,
-            1: {columnWidth: 200} as Partial<Styles>,
-            2: {columnWidth: 50} as Partial<Styles>
+            0: {cellWidth: 120} as Partial<Styles>,
+            1: {cellWidth: 200} as Partial<Styles>,
+            2: {cellWidth: 50} as Partial<Styles>
           },
           theme: 'plain',
-          startY: finalY + 50, //80 + (tableCounter * lineHeight),
+          startY: finalY + 50,
           head: [[d[0].meal.name, 'Besteller', 'Preis' ]],
           body: body,
           foot: [['', 'Summe:   ', tableSum.toFixed(2) + ' €']],
