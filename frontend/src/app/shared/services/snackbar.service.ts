@@ -28,19 +28,4 @@ export class SnackbarService {
       //panelClass: 'error-snackbar'
     });
   }
-
-  /*
-  success(message: string) {
-    this.snackBar.open(''+message, '', {
-      duration: this.duration,
-      panelClass: 'success-snackbar'
-    });
-  }
-
-  error(message: string) {
-    this.snackBar.open(message, '', {
-      duration: this.duration
-    });
-  }
-  */
 }
