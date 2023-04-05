@@ -83,6 +83,6 @@
 
   <div class="dialog-action-button-container">
     <button (click)="onClickCancel()" color="primary" mat-stroked-button>Abbrechen</button>
-    <button (click)="onClickApply(clickedRows)" color="primary" mat-flat-button>Bestätigen</button>
+    <button [disabled]="clickedRows.size === 0" (click)="onClickApply(clickedRows)" color="primary" mat-flat-button>Bestätigen</button>
   </div>
 </div>
