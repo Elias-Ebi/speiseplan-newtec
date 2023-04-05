@@ -10,7 +10,7 @@ export class DefaultValues {
     @IsNotEmpty({ message: 'Total must not be empty.' })
     total: number;
 
-    @Column('varchar', {default: '12:00'})
+    @Column('varchar', {default: '00:00'})
     @IsNotEmpty({ message: 'DeliveryTime must not be empty.' })
     deliveryTime: string;
 

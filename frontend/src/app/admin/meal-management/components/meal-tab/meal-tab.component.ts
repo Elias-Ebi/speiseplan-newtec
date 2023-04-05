@@ -62,7 +62,6 @@ export class MealTabComponent implements OnInit, OnChanges {
         }
       }
     } catch (error) {
-      console.log("couldn't get calendarWeekIndex");
     } finally {
       await this.updateTableSource();
     }
@@ -115,7 +114,7 @@ export class MealTabComponent implements OnInit, OnChanges {
       },
       autoFocus: false,
     });
-
+    
     dialogRef
       .afterClosed()
       .subscribe(async (mealData: { mealToAdd: any; useTemplate: boolean }) => {

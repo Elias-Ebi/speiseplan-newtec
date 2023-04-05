@@ -94,7 +94,6 @@ export class MealManagementComponent implements OnInit {
   }
 
   async onTabChange(event: MatTabChangeEvent) {
-    console.log('Tab geändert:', event);
     this.mealTabComponents.get(event.index)?.onTabChange(event)
   }
 

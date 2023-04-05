@@ -39,15 +39,10 @@
       <input [value]="total.toString()" disabled matInput>
     </mat-form-field>
 
-    <div class="date-time-row">
-      <mat-form-field>
+    <div>
+      <mat-form-field class="full-width-field">
         <mat-label>Lieferdatum</mat-label>
         <input id="meal-delivery-date" [value]="deliveryDate.toLocaleDateString()" disabled matInput>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Liefer-Uhrzeit</mat-label>
-        <input [(ngModel)]="deliveryTime" matInput type="time">
       </mat-form-field>
     </div>
 
