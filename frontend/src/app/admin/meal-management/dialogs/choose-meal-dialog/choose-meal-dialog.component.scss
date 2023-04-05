@@ -1,0 +1,130 @@
+.choose-dish-container {
+  width: 100vw;
+}
+
+.textfield-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.table-container {
+  table {
+    text-align: right;
+  }
+
+  td,
+  th {
+    padding: 0.5rem 0;
+    vertical-align: middle;
+  }
+
+  th {
+    border-bottom: 1px solid var(--clrNeutral);
+  }
+
+  /* Adding some space so the selected row won't overline with the border of the content*/
+  td:first-child,
+  th:first-child {
+    padding-left: 0.5rem;
+  }
+
+  td:last-child,
+  th:last-child {
+    padding-right: 0.5rem;
+  }
+
+  .mat-mdc-row {
+    cursor: pointer;
+  }
+
+  .mat-mdc-row:hover {
+    background-color: var(--clrLightGrey);
+  }
+}
+
+.is-selected {
+  background-color: var(--clrLightBlue);
+}
+
+.no-data {
+  padding-top: 1rem;
+}
+
+/*
+* Table Content Style
+*/
+.mat-column-title {
+  padding: 0.5rem 0;
+  flex: none;
+  vertical-align: middle;
+
+  .extended-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .show-hide-text {
+    color: var(--clrPrimary);
+    cursor: pointer;
+  }
+
+  .show-hide-text:hover {
+    text-decoration: underline;
+  }
+
+  p {
+    max-width: 95%;
+  }
+}
+
+.mat-column-description {
+  padding: 0.5rem 0;
+  flex: none;
+  vertical-align: middle;
+  width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+
+  .extended-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .show-hide-text {
+    color: var(--clrPrimary);
+    cursor: pointer;
+  }
+
+  .show-hide-text:hover {
+    text-decoration: underline;
+  }
+
+  p {
+    max-width: 95%;
+  }
+}
+
+.mat-column-category {
+  padding: 0.5rem 0;
+  vertical-align: middle;
+  flex: none;
+  width: 15%;
+}
+
+.mat-column-action {
+  padding: 0.5rem 0;
+  vertical-align: middle;
+  flex: none;
+  width: 5%;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.action-column {
+  text-align: right;
+}

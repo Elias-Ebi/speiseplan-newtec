@@ -171,6 +171,12 @@ export class ApiService {
     return lastValueFrom(response);
   }
 
+  async deleteMultipleOrdersByIdAndInform(ordersId: string[]): Promise<Order[]> {
+    const body = {ordersId: ordersId};
+    const response = this.httpClient.post<Order[]>(`${environment.apiUrl}/orders/multiple-orders/deleteByIdAndInform`, body);
+    return lastValueFrom(response);
+  }
+
   async getAllChangeableOrders(): Promise<Order[]> {
     const response = this.httpClient.get<Order[]>(`${environment.apiUrl}/orders/admin/changeable`);
     return lastValueFrom(response);

@@ -123,6 +123,15 @@ button {
   }
 }
 
+.error-snackbar {
+  color: white;
+  --mdc-snackbar-container-color: var(--clrError);
+
+  button {
+    background: var(--clrError);
+    color: white !important;
+  }
+}
 
 app-order-card {
   background-color: white;

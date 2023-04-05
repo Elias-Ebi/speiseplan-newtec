@@ -1,0 +1,89 @@
+.main-content {
+  .top-button-group {
+    display: flex;
+    gap: 0.5rem;
+
+    .standard-settings-button {
+      width: fit-content;
+    }
+
+    .notify-user-button {
+      width: fit-content;
+    }
+  }
+}
+
+.dishes--date-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 1.65rem;
+
+  border: solid 1px var(--clrLine);
+  border-radius: 0.35rem;
+
+  align-items: center;
+
+  .arrow-button:disabled mat-icon {
+    color: var(--clrDisabled);
+    background-color: var(--clrDisabledBackground);
+  }
+}
+
+.dish-table {
+  td, th {
+    vertical-align: middle;
+  }
+}
+
+.button-add {
+  margin: 2rem 0 0.65rem 0;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+/*
+* Table style
+*/
+table {
+  background-color: var(--clrBackground);
+  position: relative;
+  top: 2rem;
+}
+
+th, td {
+  padding: 0.5rem 0;
+  vertical-align: middle;
+}
+
+th {
+  border-bottom: 1px solid var(--clrNeutral);
+}
+
+.mat-mdc-paginator {
+  background-color: var(--clrBackground);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+/*
+* Badge Style
+*/
+.mat-badge-medium.mat-badge-above .mat-badge-content {
+  position: absolute;
+  transform: translateX(25%);
+}
+
+.mat-mdc-paginator {
+  background-color: var(--clrBackground);
+}
+
+.arrow-button:has(.icon-button) {
+  scale: 1.25;
+}
+

@@ -1,0 +1,32 @@
+<div class="dialog-container">
+  <section class="section">
+    <h2>"{{data.meals[0].meal.name}}" absagen</h2>
+    <hr class="bg-neutral"/>
+    <p>
+      Wählen sie die Nutzer aus, deren Gerichte sie stornieren wollen.
+    </p>
+    <mat-form-field appearance="fill">
+      <mat-label>Nutzer</mat-label>
+      <mat-select [formControl]="userSelection" multiple>
+        <mat-option (click)="allSelected=false" *ngFor="let order of data.meals" [value]="order" style="width: 100%">
+          <div style="display: flex; width: 100%">
+            <div>
+              <p *ngIf="order.guestName"> {{order.guestName}}</p>
+            </div>
+            <div>
+              <p style="position: absolute; right: 1rem" *ngIf="order.guestName">(Gast von {{order.profile.name}})</p>
+            </div>
+            <div style="">
+              <p *ngIf="!order.guestName"> {{order.profile.name}}</p>
+            </div>
+          </div>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-checkbox (click)="selectAll()" [checked]="allSelected" color="primary">Alle Nutzer auswählen</mat-checkbox>
+    <div class="button-container">
+      <button (click)="closeDialog(false)" mat-stroked-button>Abbrechen</button>
+      <button (click)="closeDialog(true)" color="primary" mat-flat-button>Bestätigen</button>
+    </div>
+  </section>
+</div>
