@@ -79,4 +79,28 @@ export class DateService {
 
     return startDate.add({days: daysToAdd});
   }
+
+  // This function takes a date object and returns a Temporal.PlainDate object with the same date.
+  public dateToTemporal(date: Date): Temporal.PlainDate {
+    return Temporal.PlainDate.from({year: date.getFullYear(), month: date.getMonth() + 1, day: date.getDate()});
+  }
+
+  //This function takes in a Temporal.PlainDate object and returns a Date object with the same date.
+  public temporalToDate(date: Temporal.PlainDate): Date {
+    return new Date(date.year, date.month - 1, date.day);
+  }
+
+  /**
+   * Returns the date before a given date.
+   * @param date The date to subtract days from.
+   * @param days The number of days to subtract. Defaults to 1 if not provided.
+   * @returns The date before a given date.
+   */
+  public getDayBefore(date: Temporal.PlainDate, days?: number) {
+    if(days) {
+      return date.subtract({days: days});
+    } else {
+      return date.subtract({days: 1});
+    }
+  }
 }

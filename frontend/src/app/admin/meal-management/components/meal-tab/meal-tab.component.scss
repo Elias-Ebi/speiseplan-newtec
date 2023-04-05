@@ -1,0 +1,45 @@
+.tab-content {
+  height: fit-content;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  /*
+  * Table style
+  */
+  table {
+    background-color: var(--clrBackground);
+    position: relative;
+    top: 2rem;
+  }
+
+  th, td {
+    padding: 0.5rem 0;
+    vertical-align: middle;
+  }
+
+  th {
+    border-bottom: 1px solid var(--clrNeutral);
+  }
+
+  /*
+  * Button Style
+  */
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: end;
+  }
+
+  .action-column {
+    text-align: right;
+  }
+
+  .button-add {
+    margin: 2rem 0 0.65rem 0;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+  }
+}

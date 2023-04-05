@@ -1,0 +1,48 @@
+<div class="main-content">
+  <div class="section">
+    <div class="section-headline-container">
+      <h2>Gerichteverwaltung</h2>
+      <button (click)="editDefaultSettings()" class="standard-settings-button" color="primary" mat-flat-button>
+        <mat-icon>tune</mat-icon>
+        Standardwerte anpassen
+      </button>
+    </div>
+
+    <hr class="bg-neutral"/>
+  </div>
+
+  <div class="dishes--date-container">
+    <button (click)="getPreviousCalendarWeek()" [disabled]="this.calendarWeekIndex == 0" class="arrow-button"
+            mat-icon-button>
+      <mat-icon class="icon-button">chevron_left</mat-icon>
+    </button>
+
+    <h2>{{ currentlyDisplayedWeek.span }}</h2>
+
+    <button (click)="getNextCalendarWeek()" [disabled]="this.calendarWeekIndex == MAX_FOLLOWING_WEEKS"
+            class="arrow-button"
+            mat-icon-button>
+      <mat-icon class="icon-button">chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <div class="dishes--week-tabs-container">
+    <mat-tab-group data-cy="tab-group" #tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="currentTab" animationDuration="0ms">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0" label="Montag">
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="monday" [currentTab]="0" class="meal-tab"></app-meal-tab>
+      </mat-tab>
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 1" label="Dienstag">
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="tuesday" [currentTab]="1" class="meal-tab"></app-meal-tab>
+      </mat-tab>
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 2" label="Mittwoch">
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="wednesday" [currentTab]="2" class="meal-tab"></app-meal-tab>
+      </mat-tab>
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 3" label="Donnerstag">
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="thursday" [currentTab]="3" class="meal-tab"></app-meal-tab>
+      </mat-tab>
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 4" label="Freitag">
+        <app-meal-tab [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="friday" [currentTab]="4" class="meal-tab"></app-meal-tab>
+      </mat-tab>
+      </mat-tab-group>
+    </div>
+</div>

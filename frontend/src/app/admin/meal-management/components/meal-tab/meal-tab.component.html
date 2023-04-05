@@ -1,0 +1,61 @@
+<div class="tab-content">
+  <table [dataSource]="dataSource" class="bg-background" id="table-monday" mat-table>
+    <ng-container matColumnDef="title">
+      <th *matHeaderCellDef mat-header-cell style="width: 20%">
+        <h2>Gericht</h2>
+      </th>
+      <td *matCellDef="let element" mat-cell>{{ element.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th *matHeaderCellDef mat-header-cell style="width: 50%">
+        <h2>Beschreibung</h2>
+      </th>
+      <td *matCellDef="let element" mat-cell>
+        {{ element.description }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <th *matHeaderCellDef mat-header-cell style="width: 25%">
+        <h2>Kategorie</h2>
+      </th>
+      <td *matCellDef="let element" mat-cell>
+        {{ getCategoryName(element.categoryId) }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action">
+      <th *matHeaderCellDef class="clr-primary fs-body-bold" mat-header-cell style="width: 5%">
+        <h2>Aktionen</h2>
+      </th>
+      <td *matCellDef="let element" mat-cell>
+        <div class="action-buttons">
+          <button (click)="edit(element)" class="icon-button-outlined meal-edit-button" mat-icon-button>
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button (click)="delete(element)" class="icon-button meal-delete-button" mat-icon-button>
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+    <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+    <tr *matNoDataRow class="mat-row">
+      <td class="mat-cell" colspan="4" style="
+            padding-top: 1rem;
+            padding-left: 1rem;
+            padding-bottom: 1rem;
+          ">
+        {{ "Es sind keine Daten vorhanden." }}
+      </td>
+    </tr>
+  </table>
+
+  <button id="meal-monday-add-button" (click)="create()" class="button-add" color="primary" mat-flat-button>
+    <mat-icon>add</mat-icon>Gericht hinzufügen
+  </button>
+</div>

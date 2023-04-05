@@ -143,7 +143,7 @@ export class ApiService {
     const response = this.httpClient.get<number[]>(`${environment.apiUrl}/meals/meal-counter/${mondayDate.toString()}`);
     return lastValueFrom(response);
   }
-  
+
   async getDefaultValues(): Promise<DefaultValues> {
     const response = this.httpClient.get<DefaultValues>(`${environment.apiUrl}/meals/default-values`);
     return lastValueFrom(response);
@@ -157,6 +157,12 @@ export class ApiService {
   async deleteMultipleOrdersAdmin(orders: Order[]): Promise<Order> {
     const body = {orders: orders}
     const response = this.httpClient.post<Order>(`${environment.apiUrl}/orders/multiple-orders/delete/admin/`, body)
+    return lastValueFrom(response);
+  }
+
+  async deleteMultipleOrdersByIdAndInform(ordersId: string[]): Promise<Order[]> {
+    const body = {ordersId: ordersId};
+    const response = this.httpClient.post<Order[]>(`${environment.apiUrl}/orders/multiple-orders/deleteByIdAndInform`, body);
     return lastValueFrom(response);
   }
 
