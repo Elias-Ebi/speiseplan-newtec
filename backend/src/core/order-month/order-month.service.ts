@@ -7,7 +7,7 @@ import {Temporal} from '@js-temporal/polyfill';
 
 @Injectable()
 export class OrderMonthService {
-    private monthsToGoBack: 5;
+    private monthsToGoBack: number = 5;
 
     constructor(@InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>, private authService: AuthService) {
     }
@@ -31,7 +31,7 @@ export class OrderMonthService {
 
     async getHistory(email: string): Promise<OrderMonth[]> {
         const currentDate = Temporal.Now.plainDateISO();
-        const fromDate = currentDate.add({months: -this.monthsToGoBack});
+        const fromDate = currentDate.subtract({months: this.monthsToGoBack});
 
         const options: FindOptionsWhere<OrderMonth> = {
             profile: {email}
@@ -52,7 +52,7 @@ export class OrderMonthService {
 
     async monthOverview(): Promise<OrderMonth[]> {
         const currentDate = Temporal.Now.plainDateISO();
-        const fromDate = currentDate.add({months: -this.monthsToGoBack});
+        const fromDate = currentDate.subtract({months: this.monthsToGoBack});
 
         return this.orderMonthRepository
             .createQueryBuilder('orderMonth')
@@ -68,7 +68,7 @@ export class OrderMonthService {
 
     async guestMonthOverview(): Promise<OrderMonth[]> {
         const currentDate = Temporal.Now.plainDateISO();
-        const fromDate = currentDate.add({months: -this.monthsToGoBack});
+        const fromDate = currentDate.subtract({months: this.monthsToGoBack});
 
         return this.orderMonthRepository
             .createQueryBuilder('orderMonth')
