@@ -5,6 +5,12 @@
   display: flex;
   justify-content: space-between;
   align-items: start;
+
+  transition: margin 300ms ease-in-out;
+}
+
+.ui-container:has(.edit-button.active) {
+  margin-bottom: 2rem;
 }
 
 /*
@@ -48,6 +54,35 @@ th {
 
   &:hover {
     background-color: var(--clrLightGrey);
+  }
+}
+
+/*
+* Multiple Selection Style
+*/
+.list-container {
+  position: relative;
+  width: 100%;
+
+
+  .slide {
+    position: absolute;
+    right: 0;
+  }
+
+  .edit-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 0;
+  }
+
+  .edit-button.active {
+    position: absolute;
+    right: 0;
+    top: 2.25rem;
+    opacity: 1;
+    transition: opacity 100ms ease-in-out 250ms;
   }
 }
 

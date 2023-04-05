@@ -49,6 +49,9 @@ export class ChooseMealDialogComponent implements OnInit {
 
   categories: Category[];
 
+  MAX_DESC_LENGTH = 100;
+  MAX_MEAL_LENGTH = 25;
+
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;
   // @ts-ignore
@@ -125,5 +128,35 @@ export class ChooseMealDialogComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.dishes);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  minimalize(description: string, max_length: number): string {
+    return description.length > max_length
+      ? description.substring(0, max_length - 4) + ' ...'
+      : description;
+  }
+
+  extend(description: string, max_length: number): string {
+    let normalizedDescription = '';
+    if (description.length > max_length) {
+      if (description.includes(" ")) {
+        normalizedDescription = description.replace(" ", "\n");
+      } else {
+        for (let i = 0; i < description.length; i++) {
+          if (i % max_length === 0 && i != 0) {
+            normalizedDescription += description[i] + "\n";
+          } else {
+            normalizedDescription += description[i];
+          }
+        }
+      }
+    } else {
+      normalizedDescription = description;
+    }
+    return normalizedDescription;
+  }
+
+  toggleShowMore(element: any): boolean {
+    return (element.showMore = !element.showMore);
   }
 }

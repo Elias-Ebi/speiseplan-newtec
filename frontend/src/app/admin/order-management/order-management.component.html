@@ -92,6 +92,7 @@
 
         <div class="list-container">
           <mat-slide-toggle
+            class="slide"
             (change)="toggleEditMode()"
             [checked]="editMultipleOrders"
             color="primary"
@@ -101,8 +102,9 @@
           </mat-slide-toggle>
 
           <button
+            class="edit-button"
             (click)="openCancelMultipleDialog()"
-            *ngIf="editMultipleOrders"
+            [class.active]="editMultipleOrders"
             [disabled]="checkedOrders.length === 0"
             color="primary"
             mat-flat-button

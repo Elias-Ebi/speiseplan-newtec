@@ -1,6 +1,15 @@
 .main-content {
-  .standard-settings-button {
-    width: fit-content;
+  .top-button-group {
+    display: flex;
+    gap: 0.5rem;
+
+    .standard-settings-button {
+      width: fit-content;
+    }
+
+    .notify-user-button {
+      width: fit-content;
+    }
   }
 }
 
@@ -62,14 +71,19 @@ th {
   justify-content: end;
 }
 
-.action-column {
-  text-align: right;
+/*
+* Badge Style
+*/
+.mat-badge-medium.mat-badge-above .mat-badge-content {
+  position: absolute;
+  transform: translateX(25%);
+}
+
+.mat-mdc-paginator {
+  background-color: var(--clrBackground);
 }
 
 .arrow-button:has(.icon-button) {
   scale: 1.25;
 }
 
-.meal-tab {
-
-}

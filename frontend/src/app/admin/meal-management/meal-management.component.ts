@@ -1,28 +1,21 @@
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Temporal } from '@js-temporal/polyfill';
 import { MonthNamePipe } from '../../shared/pipes/month-name.pipe';
-import { JsonPipe } from '@angular/common';
+import { CommonModule, JsonPipe } from '@angular/common';
 import { WeekdayNamePipe } from '../../shared/pipes/weekday-name.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { ChooseMealDialogComponent } from './dialogs/choose-meal-dialog/choose-meal-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MealTemplate } from 'src/app/shared/models/meal-template';
 import { ApiService } from 'src/app/shared/services/api.service';
-import { Meal } from 'src/app/shared/models/meal';
 import { CalendarWeek } from 'src/app/shared/models/calendar-week';
-import { AddMealDialogComponent } from './dialogs/add-meal-dialog/add-meal-dialog.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { DeleteMealDialogComponent } from './dialogs/delete-meal-dialog/delete-meal-dialog.component';
 import { DefaultSettingsDialogComponent } from './dialogs/default-settings-dialog/default-settings-dialog.component';
-import { CategoryService } from "../../shared/services/category.service";
-import { SnackbarService } from "../../shared/services/snackbar.service";
 import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-dish-management',
@@ -30,12 +23,12 @@ import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
   templateUrl: './meal-management.component.html',
   styleUrls: ['./meal-management.component.scss'],
   imports: [
+    CommonModule,
     MonthNamePipe,
     JsonPipe,
     WeekdayNamePipe,
     MatIconModule,
     MatTabsModule,
-    MatTableModule,
     MatButtonModule,
     MatDialogModule,
     MatTooltipModule,
@@ -43,7 +36,8 @@ import { MealTabComponent } from "./components/meal-tab/meal-tab.component";
     ReactiveFormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MealTabComponent
+    MealTabComponent,
+    MatBadgeModule
   ]
 })
 export class MealManagementComponent implements OnInit {
@@ -62,11 +56,10 @@ export class MealManagementComponent implements OnInit {
   calendarWeekIndex = 0;
   maxPossibleTabIndex = 0;
 
+  weekCounter: number[] = [0, 0, 0, 0, 0];
+
   constructor(
     public dialog: MatDialog,
-    private api: ApiService,
-    private snackbarService: SnackbarService,
-    private categoryService: CategoryService
   ) {
   }
 
@@ -89,12 +82,15 @@ export class MealManagementComponent implements OnInit {
     }
   }
 
+  setWeekCounter(event: number[]) {
+    this.weekCounter = event;
+  }
+
   editDefaultSettings() {
     this.dialog.open(DefaultSettingsDialogComponent, { autoFocus: false });
   }
 
   async onTabChange(event: MatTabChangeEvent) {
-    console.log('Tab geändert:', event);
     this.mealTabComponents.get(event.index)?.onTabChange(event)
   }
 
@@ -123,7 +119,7 @@ export class MealManagementComponent implements OnInit {
       this.weekdayProperty = this.getWeekdayPropertyFromIndex(this.currentTab);
       let lastIndex = this.tabGroup.selectedIndex ? this.tabGroup.selectedIndex : this.currentTab;
       if (this.calendarWeekIndex == 0) {
-        if(lastIndex <= this.maxPossibleTabIndex) {
+        if (lastIndex <= this.maxPossibleTabIndex) {
           this.tabGroup.selectedIndex = this.maxPossibleTabIndex;
         }
       }
@@ -136,7 +132,6 @@ export class MealManagementComponent implements OnInit {
   }
 
   getWeekdayPropertyFromIndex(index: number): string {
-    //TODO:handle else case better
     if (index == 0) {
       return 'monday';
     } else if (index == 1) {
