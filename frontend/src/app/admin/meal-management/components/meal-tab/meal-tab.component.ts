@@ -45,7 +45,7 @@ export class MealTabComponent implements OnInit, OnChanges {
   displayedColumns: string[] = ['title', 'description', 'category', 'action'];
 
   MAX_DESC_LENGTH = 100;
-  MAX_MEAL_LENGTH = 20;
+  MAX_MEAL_LENGTH = 25;
 
   constructor(
     private categoryService: CategoryService,
@@ -163,6 +163,7 @@ export class MealTabComponent implements OnInit, OnChanges {
   delete(meal: Meal) {
     const dialogRef = this.dialog.open(DeleteMealDialogComponent, {
       data: { name: meal.name },
+      autoFocus: false
     });
 
     dialogRef
@@ -174,7 +175,7 @@ export class MealTabComponent implements OnInit, OnChanges {
 
         await this.api.deleteMeal(meal.id)
           .then(() => {
-            this.snackbarService.success('Gericht erfolgreich gelöscht!');
+            this.snackbarService.error('Gericht erfolgreich gelöscht!');
           })
           .catch(() => {
             this.snackbarService.error('Gericht konnte nicht gelöscht werden.');

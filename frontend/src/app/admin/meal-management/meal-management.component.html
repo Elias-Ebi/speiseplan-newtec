@@ -2,10 +2,16 @@
   <div class="section">
     <div class="section-headline-container">
       <h2>Gerichteverwaltung</h2>
-      <button (click)="editDefaultSettings()" class="standard-settings-button" color="primary" mat-flat-button>
-        <mat-icon>tune</mat-icon>
-        Standardwerte anpassen
-      </button>
+      <div class="top-button-group">
+        <button class="notify-users-button" color="primary" mat-stroked-button>
+          <mat-icon>notifications</mat-icon>
+          Nutzer benachrichtigen
+        </button>
+        <button (click)="editDefaultSettings()" class="standard-settings-button" color="primary" mat-flat-button>
+          <mat-icon>tune</mat-icon>
+          Standardwerte anpassen
+        </button>
+      </div>
     </div>
 
     <hr class="bg-neutral"/>

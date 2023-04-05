@@ -1,6 +1,15 @@
 .main-content {
-  .standard-settings-button {
-    width: fit-content;
+  .top-button-group {
+    display: flex;
+    gap: 0.5rem;
+
+    .standard-settings-button {
+      width: fit-content;
+    }
+
+    .notify-user-button {
+      width: fit-content;
+    }
   }
 }
 

@@ -50,7 +50,7 @@ export class ChooseMealDialogComponent implements OnInit {
   categories: Category[];
 
   MAX_DESC_LENGTH = 100;
-  MAX_MEAL_LENGTH = 20;
+  MAX_MEAL_LENGTH = 25;
 
   // @ts-ignore
   @ViewChild(MatPaginator) paginator: MatPaginator;

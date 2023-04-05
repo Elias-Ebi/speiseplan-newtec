@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IconSnackbarComponent } from '../components/icon-snackbar/icon-snackbar.component';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,26 @@ export class SnackbarService {
   }
 
   success(message: string) {
-    this.snackBar.open(message, '', {
+    const snackType = 'Success';
+    this.snackBar.openFromComponent(IconSnackbarComponent, {
+      duration: this.duration,
+      data: { message, snackType },
+      panelClass: 'success-snackbar'
+    });
+  }
+
+  error(message: string) {
+    const snackType = 'Error';
+    this.snackBar.openFromComponent(IconSnackbarComponent, {
+      duration: this.duration,
+      data: { message, snackType },
+      //panelClass: 'error-snackbar'
+    });
+  }
+
+  /*
+  success(message: string) {
+    this.snackBar.open(''+message, '', {
       duration: this.duration,
       panelClass: 'success-snackbar'
     });
@@ -22,4 +42,5 @@ export class SnackbarService {
       duration: this.duration
     });
   }
+  */
 }
