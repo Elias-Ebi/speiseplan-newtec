@@ -23,8 +23,12 @@ services:
     networks:
       - web
     labels:
+      - "traefik.enable.true"
       - "traefik.http.routers.frontend.rule=Host(`XXXXXX`) && PathPrefix(`/`)"
-      - "traefik.http.services.frontend.loadbalancer.server.port=4200"
+      - "traefik.http.routers.angular-frontend.entrypoints=websecure"
+      - "traefik.http.routers.angular-frontend.tls=true"
+      - "traefik.http.routers.angular-frontend.tls.certresolver=myresolver"
+
 
 
   backend:
