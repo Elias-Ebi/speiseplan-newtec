@@ -24,7 +24,7 @@ services:
       - web
     labels:
       - "traefik.enable.true"
-      - "traefik.http.routers.frontend.rule=Host(`XXXXXX`) && PathPrefix(`/`)"
+      - "traefik.http.routers.frontend.rule=Host(`XXXXXX`) && PathPrefixStrip:/angular-app;PathPrefix:/angular-app"
       - "traefik.http.routers.angular-frontend.entrypoints=websecure"
       - "traefik.http.routers.angular-frontend.tls=true"
       - "traefik.http.routers.angular-frontend.tls.certresolver=myresolver"
@@ -47,9 +47,9 @@ services:
     container_name: traefik
     image: traefik
     command:
-      - "--api=true"
+      - "--api.insecure=true"
       - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
+ #     - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.web-secure.address=:443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"

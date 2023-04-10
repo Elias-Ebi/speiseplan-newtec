@@ -7,3 +7,4 @@ EXPOSE 4200
 RUN npm install
 #fixme this is dev server
 CMD ng serve --host 0.0.0.0 --disable-host-check
+#CMD ng build --prod --base-href /angular-app/
