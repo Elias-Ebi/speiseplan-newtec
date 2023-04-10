@@ -3,6 +3,7 @@
 ## Setup
 ***This is not a final release! Be aware that some components might use default passwords!***
 - In `frontend/src/app/environment.ts` you have to replace *localhost* in the apiUrl with the ip of your server.
+- In `docker-compose.yml`, under *frontend:labels*, replace the 'XXXXXXX' with the Host-IP
 
 ### On Windows
 - Install Docker Desktop with WSL enabled
