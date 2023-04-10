@@ -290,4 +290,18 @@ export class AuthService {
 
     return this.profileRepository.save(profile);
   }
+
+  async notifyUsers(): Promise<Profile[]> {
+    const profiles = await this.profileRepository.find();
+
+    if(!profiles) {
+      return [];
+    }
+
+    profiles.forEach(profile => {
+      this.emailService.notifyUsers(profile);
+    });
+
+    return profiles;
+  }
 }

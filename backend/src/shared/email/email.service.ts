@@ -2,6 +2,7 @@ import {Injectable, Logger} from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import {Order} from "../../data/entitites/order.entity";
 import {MonthOverviewOrderMonth} from "../../data/other-models/month-overview.models";
+import { Profile } from 'src/data/entitites/profile.entity';
 
 @Injectable()
 export class EmailService {
@@ -164,6 +165,24 @@ export class EmailService {
         });
     }
 
+    notifyUsers(profile: Profile) {
+        const email = profile.email;
+        const mailOptions = {
+            from: this.email,
+            to: email,
+            subject: 'Neue Gerichte verfügbar',
+            html: this.newMealsAvailableText(profile)
+        }
+
+        this.client.sendMail(mailOptions, (error: Error, info: any) => {
+            if(error) {
+                this.logger.log(error);
+            } else {
+                this.logger.log('Email sent: ' + info.response);
+            }
+        });
+    }
+
     private resetPasswordText(resetLink: string): string {
         return (
             `Sehr geehrter Nutzer, 
@@ -233,5 +252,16 @@ export class EmailService {
                 Dein Speiseplan-Team`
             )
         }
+    }
+
+    private newMealsAvailableText(profile: Profile) {
+        return (
+            `Hallo ${profile.name},
+            <br><br>
+            es sind neue Gerichte verfügbar. Schau doch gerne mal vorbei.
+            <br><br>
+            Viele Grüße<br>
+            Dein Speiseplan-Team`
+        );
     }
 }

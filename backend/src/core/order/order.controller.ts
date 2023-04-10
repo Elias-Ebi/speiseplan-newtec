@@ -22,7 +22,7 @@ export class OrderController {
   @Put('banditplates/offer/:id')
   async offerAsBanditplate(@Param('id') id: string, @Request() req): Promise<Order> {
     const user = req.user as AuthUser;
-    const time = Temporal.Now.plainDateTimeISO();
+    const time = Temporal.Now.plainDateISO();
     return this.orderService.offerAsBanditplate(time, id, user);
   }
 

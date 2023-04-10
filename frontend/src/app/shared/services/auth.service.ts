@@ -79,4 +79,9 @@ export class AuthService {
   setProfile(profile: Profile) {
     this.profileSource$.next(profile);
   }
+
+  async notifyUsers(): Promise<Profile[]> {
+    const response = this.httpClient.get<Profile[]>(`${environment.apiUrl}/auth/notify-users`);
+    return lastValueFrom(response);
+  }
 }

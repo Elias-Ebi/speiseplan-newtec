@@ -1,6 +1,6 @@
 import {BadRequestException, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {FindManyOptions, FindOneOptions, LessThan, MoreThan, Repository} from 'typeorm';
+import {FindManyOptions, FindOneOptions, LessThan, MoreThan, MoreThanOrEqual, Repository} from 'typeorm';
 import {Order} from '../../data/entitites/order.entity';
 import {AuthUser} from '../../auth/models/AuthUser';
 import {Meal} from '../../data/entitites/meal.entity';
@@ -28,10 +28,11 @@ export class OrderService {
   }
 
   async getBanditPlates(time: PlainDateTime): Promise<Order[]> {
+    const date = time.toPlainDate()
     const options: FindManyOptions<Order> = {
       where: {
         meal: {
-          delivery: MoreThan(time.toString()),
+          date: MoreThanOrEqual(date.toString()),
           orderable: LessThan(time.toString())
         },
         isBanditplate: true
@@ -45,7 +46,7 @@ export class OrderService {
     return this.orderRepository.find(options);
   }
 
-  async offerAsBanditplate(time: PlainDateTime, id: string, user: AuthUser): Promise<Order> {
+  async offerAsBanditplate(time: PlainDate, id: string, user: AuthUser): Promise<Order> {
     const order = await this.get(id);
 
     if (!this.canEdit(order, user)) {
@@ -56,9 +57,9 @@ export class OrderService {
       throw new BadRequestException('Order already offered.');
     }
 
-    const orderable = PlainDateTime.from(order.meal.orderable);
-    const delivery = PlainDateTime.from(order.meal.delivery);
-    if (!this.isAfter(time, orderable) && !this.isBefore(time, delivery)) {
+    const orderable = PlainDate.from(order.meal.orderable);
+    const delivery = PlainDate.from(order.meal.date);
+    if (!this.isAfterDate(time, orderable) && !this.isBeforeDate(time, delivery)) {
       throw new BadRequestException('Order can not be offered at the moment.');
     }
 
@@ -83,7 +84,7 @@ export class OrderService {
     }
 
     const orderable = PlainDateTime.from(order.meal.orderable);
-    const delivery = PlainDateTime.from(order.meal.delivery);
+    const delivery = PlainDateTime.from(order.meal.date);
     if (!this.isAfter(time, orderable) && !this.isBefore(time, delivery)) {
       throw new BadRequestException('Order can not be taken at the moment.');
     }
@@ -114,13 +115,14 @@ export class OrderService {
   }
 
   async getUnchangeable(time: PlainDateTime, email: string): Promise<Order[]> {
+    const date = time.toPlainDate()
     const options: FindManyOptions<Order> = {
       where: {
         profile: {
           email
         },
         meal: {
-          delivery: MoreThan(time.toString()),
+          date: MoreThanOrEqual(date.toString()),
           orderable: LessThan(time.toString())
         }
       },
@@ -128,7 +130,6 @@ export class OrderService {
         meal: true
       }
     };
-
     return this.orderRepository.find(options);
   }
 
@@ -399,4 +400,13 @@ export class OrderService {
   private isBefore(time1: PlainDateTime, time2: PlainDateTime): boolean {
     return PlainDateTime.compare(time1, time2) === -1;
   }
+
+  private isAfterDate(date1: PlainDate, date2: PlainDate): boolean {
+    return PlainDate.compare(date1, date2) === 1;
+  }
+
+  private isBeforeDate(date1: PlainDate, date2: PlainDate): boolean {
+    return PlainDate.compare(date1, date2) === -1;
+  }
+
 }
