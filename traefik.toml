@@ -4,7 +4,7 @@
 [entryPoints]
   [entryPoints.web]
     address = ":80"
-  [entryPoints.web-secure]
+  [entryPoints.websecure]
     address = ":443"
 
 [certificatesResolvers.myresolver.acme]
