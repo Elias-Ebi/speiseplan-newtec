@@ -74,8 +74,9 @@
       </tr>
       <tr *matNoDataRow>
         <td class="no-data">
-          {{searchInput.value.length == 0 && !getCategoryName(category.id) ?
-          "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
+          {{searchInput.value.length == 0 && getCategoryName(category.value) ?
+          "Es sind keine Gerichte der Kategorie \"" + getCategoryName(category.value) + "\" vorhanden." :
+          searchInput.value.length != 0 ?
           "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" +
           getCategoryName(category.value) + "\""
           }}

@@ -1,5 +1,5 @@
 <div class="tab-content">
-  <table [dataSource]="dataSource" class="bg-background" id="table-monday" mat-table>
+  <table [dataSource]="dataSource" class="bg-background" mat-table>
     <ng-container matColumnDef="title">
       <th *matHeaderCellDef mat-header-cell>
         <h2>Gericht</h2>
@@ -52,7 +52,7 @@
 
     <tr *matNoDataRow>
       <td>
-        {{ "Es sind keine Daten vorhanden." }}
+        {{ "Es sind aktuell keine Gerichte für " + getNoDataDay(currentTab) + " vorhanden." }}
       </td>
     </tr>
   </table>
