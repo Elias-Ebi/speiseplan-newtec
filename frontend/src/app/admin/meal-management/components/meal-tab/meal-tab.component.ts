@@ -121,7 +121,7 @@ export class MealTabComponent implements OnInit, OnChanges {
       },
       autoFocus: false,
     });
-    
+
     dialogRef
       .afterClosed()
       .subscribe(async (mealData: { mealToAdd: any; useTemplate: boolean }) => {
@@ -237,9 +237,5 @@ export class MealTabComponent implements OnInit, OnChanges {
       normalizedDescription = description;
     }
     return normalizedDescription;
-  }
-
-  toggleShowMore(element: any): boolean {
-    return (element.showMore = !element.showMore);
   }
 }

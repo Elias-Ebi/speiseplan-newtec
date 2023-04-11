@@ -164,8 +164,4 @@ export class ChooseMealDialogComponent implements OnInit {
     }
     return normalizedDescription;
   }
-
-  toggleShowMore(element: any): boolean {
-    return (element.showMore = !element.showMore);
-  }
 }
