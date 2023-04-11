@@ -34,7 +34,7 @@
   <div class="dishes--week-tabs-container">
     <mat-tab-group data-cy="tab-group" #tabs (selectedTabChange)="onTabChange($event)" [selectedIndex]="currentTab"
       animationDuration="0ms">
-      <mat-tab id="table-monday" [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0" label="Montag">
+      <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 0" label="Montag">
         <ng-template mat-tab-label>
           <span [matBadge]="weekCounter[0] > 0 ? weekCounter[0] : ''" matBadgePosition="after" matBadgeOverlap="false"
             matBadgeSize="medium" matBadgeColor="primary">Montag</span>

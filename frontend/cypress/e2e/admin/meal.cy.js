@@ -63,9 +63,9 @@ describe('visit app', () => {
     cy.get('.arrow-button').last().click();
 
     // count elemets: to check if the number of saved meals is really one higher when 'save' button was clicked
+    cy.wait(2000);
     let countOfElements = 0;
     cy.get('#table-monday').find('tr').then($elements => {
-      console.log('new length: ',  $elements.length);
       countOfElements = $elements.length;
     }).then(() => {
 
