@@ -22,12 +22,20 @@
       <li>
         <mat-icon [matMenuTriggerFor]="accMenu" class="account-icon">account_circle</mat-icon>
         <mat-menu #accMenu>
-          <button (click)="changePassword()" mat-menu-item>Passwort ändern</button>
-          <button (click)="changeName()" mat-menu-item>Name ändern</button>
-          <button (click)="logout()" mat-menu-item>Logout</button>
+          <button (click)="changePassword()" mat-menu-item>
+            <mat-icon>lock_outline</mat-icon>
+            <span>Passwort ändern</span>
+          </button>
+          <button (click)="changeName()" mat-menu-item>
+            <mat-icon>manage_accounts</mat-icon>
+            Name ändern
+          </button>
+          <button (click)="logout()" mat-menu-item>
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
         </mat-menu>
       </li>
     </ul>
   </div>
 </nav>
-
