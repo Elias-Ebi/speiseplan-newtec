@@ -2,7 +2,7 @@
 
 ## Setup
 ***This is not a final release! Be aware that some components might use default passwords!***
-- In `frontend/src/app/environment.ts` you have to replace *localhost* in the apiUrl with the domain of your server.
+- In `frontend/src/app/environment.ts` you have to replace *localhost* in the apiUrl with the ***IP-address*** of your server.
 - In `traefik.toml`, replace the example-mail-address with a valid mail-address you own
 - In `docker-compose.yml`, under *frontend:labels*, replace the 'XXXXXXX' with the Host-IP and the example-mail-address with the same as in the *traefik.toml*.
 - In `docker-compose.yml`, replace the default login credentials for postgres and pgadmin
