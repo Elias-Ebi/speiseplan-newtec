@@ -17,8 +17,16 @@
 }
 
 .spinner-dialog .mdc-dialog__surface.mdc-dialog__surface.mdc-dialog__surface {
-  border-radius: 2.5rem;
-  padding: 1rem;
+  position: relative;
+  top: 6rem;
+  //border-radius: 2.5rem;
+  //padding: 1rem;
+  background: var(--clrBackground);
+  box-shadow: none;
+}
+
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--clrPrimary);
 }
 
 .mat-button-toggle-checked.mat-button-toggle-appearance-standard {

@@ -1,0 +1,19 @@
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  gap: 2rem;
+
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 6rem);
+  transform: translate(-50%, -50%);
+
+  background-color: var(--clrBackground);
+
+  padding: 1rem 1rem;
+  border-radius: 0.5rem;
+
+  color: var(--clrPrimary);
+}
