@@ -30,11 +30,10 @@ describe('visit app', () => {
   })
 */
 
-
-/*
+  /*
   it('navigate to admin view', () => {
     cy.wait(1000)
-    cy.get('p').contains('Admin-Bereich').click();
+    cy.get('p').contains('Zu Admin wechseln').click();
   })
 
   it('navigate to meal management', () => {
@@ -54,7 +53,7 @@ describe('visit app', () => {
     cy.wait(1000);
     cy.get('.arrow-button').last().should('be.not.disabled');
   })
-
+  */
 
   it('add meal', () => {
     cy.visit('http://localhost:4200/admin/meal-management');
@@ -92,6 +91,7 @@ describe('visit app', () => {
   })
 
 
+  /*
   it('edit meal', () => {
     cy.visit('http://localhost:4200/admin/meal-management');
     cy.wait(1000);

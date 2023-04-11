@@ -8,7 +8,7 @@
 
   <mat-form-field>
     <mat-label>Passwort</mat-label>
-    <input formControlName="password" matInput required [type]="getInputType()">
+    <input id="login-password-input" formControlName="password" matInput required [type]="getInputType()">
     <button type="button" (click)="toggleHide()" mat-icon-button matSuffix>
       <mat-icon class="clr-primary">{{getVisibilityIcon()}}</mat-icon>
     </button>
