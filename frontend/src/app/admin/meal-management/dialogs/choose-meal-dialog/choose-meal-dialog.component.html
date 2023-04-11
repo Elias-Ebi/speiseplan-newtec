@@ -7,7 +7,7 @@
       <mat-icon matPrefix>search</mat-icon>
       <input #searchInput (keyup)="applySearch($event)" matInput>
       <span matSuffix>
-        <button *ngIf="searchInput.value" mat-icon-button (click)="searchInput.value = ''">
+        <button *ngIf="searchInput.value" mat-icon-button (click)="removeSearch($event, searchInput)">
           <mat-icon>close</mat-icon>
         </button>
       </span>
