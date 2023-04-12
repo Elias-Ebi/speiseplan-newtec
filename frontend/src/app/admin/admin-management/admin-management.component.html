@@ -8,20 +8,22 @@
     </button>
   </div>
 
-  <hr class="bg-neutral"/>
+  <hr class="bg-neutral" />
 
   <div class="list-container">
+    <div class="grid align-center">
+      <h2 class="span-5">E-Mail</h2>
+      <h2 class="span-5">Name</h2>
+      <h2 class="span-2 justify-self-end">Aktion</h2>
+    </div>
+    <hr class="bg-neutral" />
     <ng-container *ngFor="let admin of admins; let last = last">
       <div class="grid align-center">
-        <p class="span-5">{{admin.email}}</p>
-        <p class="span-5">{{admin.name}}</p>
-        <button
-          (click)="delete(admin)"
-          [disabled]="admins.length === 1"
-          class="span-2 justify-self-end icon-button"
-          mat-icon-button
-        >
-          <mat-icon>delete</mat-icon>
+        <p class="span-5"><mat-icon>mail</mat-icon>{{admin.email}}</p>
+        <p class="span-5"><mat-icon>person</mat-icon>{{admin.name}}</p>
+        <button (click)="delete(admin)" [disabled]="admins.length === 1" class="span-2 justify-self-end icon-button"
+          mat-icon-button>
+          <mat-icon>key_off</mat-icon>
         </button>
       </div>
 

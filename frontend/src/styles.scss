@@ -140,10 +140,14 @@ app-order-card {
   cursor: pointer;
 
   &:hover {
-    background-color: var(--clrLightBlue);
+    background-color: var(--clrHover);
   }
 
   &.selected {
     background-color: var(--clrLightBlue);
+  }
+
+  &.selected:hover {
+    background-color: var(--clrHover);
   }
 }

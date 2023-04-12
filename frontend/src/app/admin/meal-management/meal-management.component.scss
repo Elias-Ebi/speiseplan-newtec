@@ -76,7 +76,13 @@ th {
 */
 .mat-badge-medium.mat-badge-above .mat-badge-content {
   position: absolute;
-  transform: translateX(25%);
+  transform: translate(25%, 0);
+}
+
+.mat-badge-content {
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: var(--fwRegular);
 }
 
 .mat-mdc-paginator {

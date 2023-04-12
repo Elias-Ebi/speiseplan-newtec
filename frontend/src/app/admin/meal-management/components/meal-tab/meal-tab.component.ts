@@ -121,7 +121,7 @@ export class MealTabComponent implements OnInit, OnChanges {
       },
       autoFocus: false,
     });
-    
+
     dialogRef
       .afterClosed()
       .subscribe(async (mealData: { mealToAdd: any; useTemplate: boolean }) => {
@@ -144,10 +144,22 @@ export class MealTabComponent implements OnInit, OnChanges {
               this.currentlyDisplayedWeek[this.weekdayProperty].dishes.push(
                 mealData.mealToAdd
               );
-              await this.api.addMeal(mealData.mealToAdd);
+              await this.api.addMeal(mealData.mealToAdd)
+                .then(() => {
+                  this.snackbarService.success('Gericht erfolgreich hinzugefügt!');
+                })
+                .catch(() => {
+                  this.snackbarService.error('Gericht konnte nicht hinzugefügt werden.');
+                });
             } else {
               mealData.mealToAdd.id = mealToEdit.id;
-              await this.api.updateMeal(mealData.mealToAdd);
+              await this.api.updateMeal(mealData.mealToAdd)
+                .then(() => {
+                  this.snackbarService.success('Gericht erfolgreich bearbeitet!');
+                })
+                .catch(() => {
+                  this.snackbarService.error('Gericht konnte nicht bearbeitet werden.');
+                });
             }
             await this.updateTableSource();
           }
@@ -239,7 +251,19 @@ export class MealTabComponent implements OnInit, OnChanges {
     return normalizedDescription;
   }
 
-  toggleShowMore(element: any): boolean {
-    return (element.showMore = !element.showMore);
+  getNoDataDay(index: number) {
+    if (index == 0) {
+      return 'Montag';
+    } else if (index == 1) {
+      return 'Dienstag';
+    } else if (index == 2) {
+      return 'Mittwoch';
+    } else if (index == 3) {
+      return 'Donnerstag';
+    } else if (index == 4) {
+      return 'Freitag';
+    } else {
+      throw new Error('Unknown index');
+    }
   }
 }

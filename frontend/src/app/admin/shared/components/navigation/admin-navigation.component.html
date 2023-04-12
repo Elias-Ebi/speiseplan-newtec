@@ -11,9 +11,9 @@
 
     <!-- Links -->
     <ul class="links-container">
-        <li routerLinkActive="selected" routerLink="/admin/meal-management">
-            <p>Gerichte</p>
-        </li>
+      <li routerLinkActive="selected" routerLink="/admin/meal-management">
+        <p>Gerichte</p>
+      </li>
 
       <li routerLinkActive="selected" routerLink="/admin/order-management">
         <p>Bestellungen</p>
@@ -30,10 +30,12 @@
       <li>
         <mat-icon [matMenuTriggerFor]="accMenu" class="account-icon">account_circle</mat-icon>
         <mat-menu #accMenu>
-          <button (click)="logout()" mat-menu-item>Logout</button>
+          <button (click)="logout()" mat-menu-item>
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
         </mat-menu>
       </li>
     </ul>
   </div>
 </nav>
-

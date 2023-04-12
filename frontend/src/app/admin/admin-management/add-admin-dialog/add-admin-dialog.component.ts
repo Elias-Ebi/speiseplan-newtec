@@ -10,11 +10,12 @@ import { ApiService } from "../../../shared/services/api.service";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { sortByString } from "../../../user/shared/utils";
 import { map, Observable, startWith } from "rxjs";
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-add-admin-dialog',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatAutocompleteModule, FormsModule, ReactiveFormsModule, MatIconModule],
   templateUrl: './add-admin-dialog.component.html',
   styleUrls: ['./add-admin-dialog.component.scss']
 })
@@ -40,6 +41,11 @@ export class AddAdminDialogComponent implements OnInit {
       startWith(''),
       map(value => this.validateInput(value || ''))
     )
+  }
+
+  resetInput(input: any) {
+    input.value = '';
+    this.inputControl.setValue('');
   }
 
   validateInput(value: string): boolean {

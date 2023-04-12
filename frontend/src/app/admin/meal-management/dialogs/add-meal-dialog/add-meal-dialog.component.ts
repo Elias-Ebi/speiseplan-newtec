@@ -37,7 +37,6 @@ import { DateService } from 'src/app/shared/services/date.service';
   styleUrls: ['./add-meal-dialog.component.scss'],
 })
 export class AddMealDialogComponent implements OnInit {
-  MAX_LENGTH_TITLE: number = 40;
   orderTime: string = '00:00';
   deliveryTime: string = '00:00';
   isFormValid = false;
@@ -53,7 +52,6 @@ export class AddMealDialogComponent implements OnInit {
   maxDate: Date = new Date();
   total: number = 0;
   categories: Category[];
-
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -100,7 +98,7 @@ export class AddMealDialogComponent implements OnInit {
   setOrderableDate() {
     let date = new Date(this.deliveryDate.getFullYear(), this.deliveryDate.getMonth(), this.deliveryDate.getDate());
     let temporal = this.dateService.dateToTemporal(date);
-    if(this.data.weekday === 'monday') {
+    if (this.data.weekday === 'monday') {
       temporal = this.dateService.getDayBefore(temporal, 3);
       date = this.dateService.temporalToDate(temporal);
     } else {
@@ -133,13 +131,13 @@ export class AddMealDialogComponent implements OnInit {
     };
 
     this.matDialogRef.close(
-      {mealToAdd: meal, useTemplate: false}
+      { mealToAdd: meal, useTemplate: false }
     );
   }
 
   openTemplateDialog() {
     this.matDialogRef.close(
-      {mealToAdd: {}, useTemplate: true}
+      { mealToAdd: {}, useTemplate: true }
     );
   }
 
