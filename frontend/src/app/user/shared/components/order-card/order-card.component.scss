@@ -12,10 +12,14 @@
   justify-content: space-between;
 }
 
+.title {
+  width: 80%;
+}
+
 .main-header {
   display: flex;
   gap: 1.25rem;
-  align-items: center;
+  align-items: start;
 }
 
 .food-icon {
