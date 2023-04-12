@@ -1,12 +1,14 @@
 .card {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
   padding: 1rem;
+  width: 100%;
 }
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
 }
 
@@ -26,4 +28,5 @@
   height: max-content;
   font-size: 2rem;
   color: var(--clrSuccess);
+  overflow: visible;
 }
