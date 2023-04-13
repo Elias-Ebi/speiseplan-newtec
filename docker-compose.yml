@@ -84,7 +84,7 @@ services:
       - web
     labels:
       - "traefik.http.routers.pgadmin.entrypoints=pgadminport"
-      - "traefik.http.routers.pgadmin.rule=Host(`speiseplan-nt.informatik.uni-ulm.de`)"
+      - "traefik.http.routers.pgadmin.rule=Host(`XXXXXXX`)"                         # <---- Replace with own domain
       - "traefik.http.routers.pgadmin.tls.certresolver=myresolver"
       - "traefik.http.routers.pgadmin.tls=true"
 
