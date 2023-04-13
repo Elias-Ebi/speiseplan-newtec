@@ -33,6 +33,9 @@ export class AppComponent implements OnInit {
 
         if (this.loadingInstances === 1) {
           this.dialogRef = this.dialog.open(LoadingSpinnerDialogComponent, {
+            minWidth: '100%',
+            height: '100vh',
+            hasBackdrop: false,
             disableClose: true,
             panelClass: 'spinner-dialog'
           })

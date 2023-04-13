@@ -69,7 +69,7 @@ export class ChooseMealDialogComponent implements OnInit {
 
   async ngOnInit() {
     this.dishes = await this.api.getMealTemplate();
-    this.dishes.sort((a,b) => {
+    this.dishes.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
     this.dataSource = new MatTableDataSource(this.dishes);
@@ -87,6 +87,13 @@ export class ChooseMealDialogComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  removeSearch(event: Event, searchInput: any) {
+    this.dataSource = new MatTableDataSource(this.dishes);
+    this.dataSource.paginator = this.paginator;
+    (event.target as HTMLInputElement).value = '';
+    searchInput.value = '';
   }
 
   applyFilter(event: any) {
@@ -125,7 +132,7 @@ export class ChooseMealDialogComponent implements OnInit {
   async onClickDelete(row: any) {
     await this.api.deleteMealTemplate(row.id);
     this.dishes = await this.api.getMealTemplate();
-    this.dishes.sort((a,b) => {
+    this.dishes.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
     this.dataSource = new MatTableDataSource(this.dishes);
@@ -156,9 +163,5 @@ export class ChooseMealDialogComponent implements OnInit {
       normalizedDescription = description;
     }
     return normalizedDescription;
-  }
-
-  toggleShowMore(element: any): boolean {
-    return (element.showMore = !element.showMore);
   }
 }
