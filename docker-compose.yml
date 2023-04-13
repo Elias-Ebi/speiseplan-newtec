@@ -83,6 +83,7 @@ services:
     networks:
       - web
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.entrypoints=pgadminport"
       - "traefik.http.routers.pgadmin.rule=Host(`XXXXXXX`)"                         # <---- Replace with own domain
       - "traefik.http.routers.pgadmin.tls.certresolver=myresolver"
