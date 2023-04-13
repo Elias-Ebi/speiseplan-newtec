@@ -28,8 +28,6 @@ services:
       - "traefik.http.routers.frontend.tls=true"
 
 
-
-
   backend:
     container_name: backend
     build: ./backend
