@@ -16,32 +16,35 @@ services:
   frontend:
     container_name: frontend
     build: ./frontend
-    ports:
-      - "4200:4200"
     depends_on:
       - backend
     networks:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`XXXXXX`) && PathPrefix(`/`)"
-      - "traefik.http.routers.angular-frontend.entrypoints=websecure"
-      - "traefik.http.routers.angular-frontend.tls=true"
-      - "traefik.http.routers.angular-frontend.tls.certresolver=myresolver"
+      - "traefik.http.routers.frontend.rule=Host(`XXXXXX`)"                       # <---- Replace with own domain
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+      - "traefik.http.routers.frontend.tls=true"
+
 
 
 
   backend:
     container_name: backend
     build: ./backend
-    ports:
-      - "8443:3000"
     env_file:
       - backend/.env
     depends_on:
       - postgres
     networks:
       - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.entrypoints=backendport"
+      - "traefik.http.routers.backend.rule=Host(`XXXXXXX`)"                       # <---- Replace with own domain
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.routers.backend.tls=true"
 
   traefik:
     container_name: traefik
@@ -49,17 +52,24 @@ services:
     command:
       - "--api.insecure=true"
       - "--providers.docker=true"
- #     - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web-secure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.pgadminport.address=:8000"
+      - "--entrypoints.backendport.address=:8443"
       - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=youremail@example.com"
+      - "--certificatesresolvers.myresolver.acme.email=yourMail@example.com"      # <---- Replace with own mail
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
       - "443:443"
+      - "127.0.0.1:8080:8080"
+      - "8443:8443"
+      - "8000:8000"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./letsencrypt:/letsencrypt
     networks:
       - web
@@ -72,8 +82,13 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     volumes:
       - pgadmin:/var/lib/pgadmin
-    ports:
-      - "8000:80"
+    networks:
+      - web
+    labels:
+      - "traefik.http.routers.pgadmin.entrypoints=pgadminport"
+      - "traefik.http.routers.pgadmin.rule=Host(`speiseplan-nt.informatik.uni-ulm.de`)"
+      - "traefik.http.routers.pgadmin.tls.certresolver=myresolver"
+      - "traefik.http.routers.pgadmin.tls=true"
 
 networks:
   web:
