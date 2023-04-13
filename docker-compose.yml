@@ -5,8 +5,8 @@ services:
     container_name: database
     image: postgres
     environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root                                                         # <---- Replace
+      POSTGRES_PASSWORD: root                                                     # <---- Replace
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -76,15 +76,16 @@ services:
     container_name: pgadmin
     image: dpage/pgadmin4
     environment:
-      PGADMIN_DEFAULT_EMAIL: root@newtec.de
-      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_DEFAULT_EMAIL: root@newtec.de                                       # <---- Replace
+      PGADMIN_DEFAULT_PASSWORD: root                                              # <---- Replace
     volumes:
       - pgadmin:/var/lib/pgadmin
     networks:
       - web
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.pgadmin.entrypoints=pgadminport"
-      - "traefik.http.routers.pgadmin.rule=Host(`XXXXXXX`)"                         # <---- Replace with own domain
+      - "traefik.http.routers.pgadmin.rule=Host(`XXXXXXX`)"                       # <---- Replace with own domain
       - "traefik.http.routers.pgadmin.tls.certresolver=myresolver"
       - "traefik.http.routers.pgadmin.tls=true"
 
