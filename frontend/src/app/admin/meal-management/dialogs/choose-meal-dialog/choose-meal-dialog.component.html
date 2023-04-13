@@ -77,8 +77,9 @@
           {{searchInput.value.length == 0 && getCategoryName(category.value) ?
           "Es sind keine Gerichte der Kategorie \"" + getCategoryName(category.value) + "\" vorhanden." :
           searchInput.value.length != 0 ?
-          "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" +
-          getCategoryName(category.value) + "\""
+          "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : getCategoryName(category.value) !== undefined
+          ? "Es existiert kein Eintrag mit \"" +
+          getCategoryName(category.value) + "\"" : "Es liegen aktuell keine Gerichtevorlagen vor."
           }}
         </td>
       </tr>
