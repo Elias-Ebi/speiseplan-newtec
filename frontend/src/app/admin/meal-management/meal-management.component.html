@@ -48,9 +48,9 @@
           <span [matBadge]="weekCounter[1] > 0 ? weekCounter[1] : ''" matBadgePosition="after" matBadgeOverlap="false"
             matBadgeSize="medium" matBadgeColor="primary">Dienstag</span>
         </ng-template>
-        <app-meal-tab (weekCounterEmitter)="setWeekCounter($event)" [calendarWeekIndex]="calendarWeekIndex"
-          [currentlyDisplayedWeek]="currentlyDisplayedWeek" weekdayProperty="tuesday" [currentTab]="1"
-          class="meal-tab"></app-meal-tab>
+        <app-meal-tab id="table-tuesday" (weekCounterEmitter)="setWeekCounter($event)"
+          [calendarWeekIndex]="calendarWeekIndex" [currentlyDisplayedWeek]="currentlyDisplayedWeek"
+          weekdayProperty="tuesday" [currentTab]="1" class="meal-tab"></app-meal-tab>
       </mat-tab>
       <mat-tab [disabled]="calendarWeekIndex === 0 && maxPossibleTabIndex > 2" label="Mittwoch">
         <ng-template mat-tab-label>

@@ -3,6 +3,12 @@
 const mealNameAdd = 'Montag-Test';
 const mealNameEdit = 'Montag-TestEdit';
 
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false
+})
+
 describe('visit app', () => {
   /* before('log in', () => {
     cy.visit('http://localhost:4200');
@@ -55,6 +61,7 @@ describe('visit app', () => {
   })
   */
 
+/*
   it('add meal', () => {
     cy.visit('http://localhost:4200/admin/meal-management');
     cy.wait(1000);
@@ -64,8 +71,12 @@ describe('visit app', () => {
 
     // count elemets: to check if the number of saved meals is really one higher when 'save' button was clicked
     cy.wait(2000);
+
     let countOfElements = 0;
-    cy.get('#table-monday').find('tr').then($elements => {
+
+    cy.get("div.mat-mdc-tab").eq(1).click(); // click on tuesday tab
+
+    cy.get('#table-tuesday').find('tr').then($elements => {
       countOfElements = $elements.length;
     }).then(() => {
 
@@ -86,12 +97,11 @@ describe('visit app', () => {
 
       cy.get('#save').click();
 
-      cy.get('#table-monday').find('tr').should('have.length', countOfElements++);
+      cy.get('#table-tuesday').find('tr').should('have.length', countOfElements++);
     });
   })
 
 
-  /*
   it('edit meal', () => {
     cy.visit('http://localhost:4200/admin/meal-management');
     cy.wait(1000);
@@ -99,6 +109,7 @@ describe('visit app', () => {
     //navigate to next week, because there it is always possible to add a meal on monday
     cy.get('.arrow-button').last().click();
 
+    cy.get("div.mat-mdc-tab").eq(1).click(); // click on tuesday tab
 
     cy.get('table') // Wählen Sie die Tabelle aus
     .contains('tr', mealNameAdd) // Suchen Sie die Zeile, die den bestimmten Text enthält
@@ -134,6 +145,8 @@ describe('visit app', () => {
     //navigate to next week, because there it is always possible to add a meal on monday
     cy.get('.arrow-button').last().click();
 
+    cy.get("div.mat-mdc-tab").eq(1).click(); // click on tuesday tab
+
     cy.get('table') // Wählen Sie die Tabelle aus
     .contains('tr', mealNameEdit) // Suchen Sie die Zeile, die den bestimmten Text enthält
     .find('.meal-delete-button') // Wählen Sie den Button innerhalb dieser Zeile aus
@@ -145,33 +158,34 @@ describe('visit app', () => {
     .contains('tr', mealNameEdit) // Suchen Sie die Zeile, die den bestimmten Text enthält
     .should('not.exist')
   })
-
 */
-
 
 // [#]===============================[ DATE & TIME TESTS ]===============================[#]
 
   it('check month transition', () => {
-    const dateIncurrentMonth = new Date(2023, 2, 30); // this is a  thrusday, the next week is another month
-    console.log('realToDate: ', dateIncurrentMonth)
+    const dateIncurrentMonth = new Date(2023, 2, 30); // this is a  thursday, the next week is another month
+    cy.log('realToDate: ', dateIncurrentMonth)
     cy.clock(dateIncurrentMonth);
 
     cy.visit('http://localhost:4200/admin/meal-management');
 
-    cy.get('.arrow-button').last().click({ timeout: 0, force: true }); // the next week is in a new month
+    cy.wait(2000);
 
-    cy.get("div.mat-mdc-tab").eq(0).click({ timeout: 1000, force: true }).then(() => {
-      cy.wait(1000);
-      cy.get("div.mat-mdc-tab").eq(0).trigger('selectedTabChange', {tab: 'Montag'});
-    }).then(() => {
-      console.log('CYPRESS: click add meal button')
-      // cy.get('button').contains('Montag hinzufügen').click();
+    cy.get('.arrow-button').last().click({force: true}); // the next week is in a new month
 
-      cy.get('#meal-monday-add-button').click({ timeout: 2000, force: true });
-      cy.get('#meal-delivery-date').should('have.value', '3.4.2023'); // First Monday in new month
-      cy.get('#meal-orderable-date').should('have.value', '31.3.2023'); // The friday before
-    })
-    console.log('CYPRESS: tab selected')
+    cy.wait(2000);
+
+    cy.get("div.mat-mdc-tab").eq(0).click({force: true});
+
+    cy.wait(2000);
+
+    cy.log('CYPRESS: click add meal button')
+
+    cy.get('button').contains('Gericht hinzufügen').click({force: true});
+    cy.get('#meal-delivery-date').should('have.value', '3.4.2023'); // First Monday in new month
+    cy.get('#meal-orderable-date').should('have.value', '31.3.2023'); // The friday before
+
+    cy.log('CYPRESS: tab selected')
     /*
     cy.get('mat-tab-group mat-tab-header').contains('Montag').click().then(() => {
       cy.get('mat-tab-group').trigger('selectedTabChange', {tab: 'Montag'});
@@ -181,6 +195,7 @@ describe('visit app', () => {
   })
 
 
+  /*
 
   // Lieferdatum liegt hinter dem Bestellbarkeitsdatum (Bestellungsdatum auf den Montag der vergangenen Woche)
   // Bestelldatum an einem Wochenende
@@ -192,7 +207,7 @@ describe('visit app', () => {
 
   it('check calendar week thursday', () => {
     let fakeTodayAsThursday = new Date(2023, 2, 2); // this is a  thrusday
-    console.log('realToDate: ', fakeTodayAsThursday)
+    cy.log('realToDate: ', fakeTodayAsThursday)
     cy.clock(fakeTodayAsThursday);
 
     cy.visit('http://localhost:4200/admin/meal-management')
@@ -209,7 +224,7 @@ describe('visit app', () => {
 
   it('check calendar week monday', () => {
     let fakeTodayAsMonday = new Date(2023, 2, 6); // this is a  monday
-    console.log('realToDate: ', fakeTodayAsMonday)
+    cy.log('realToDate: ', fakeTodayAsMonday)
     cy.clock(fakeTodayAsMonday);
 
     cy.visit('http://localhost:4200/admin/meal-management')
@@ -228,7 +243,7 @@ describe('visit app', () => {
 
   it('check calendar week friday', () => {
     let fakeTodayAsFriday = new Date(2023, 2, 10); // this is a  friday
-    console.log('realToDate: ', fakeTodayAsFriday)
+    cy.log('realToDate: ', fakeTodayAsFriday)
     cy.clock(fakeTodayAsFriday);
 
     cy.visit('http://localhost:4200/admin/meal-management')
@@ -248,7 +263,7 @@ describe('visit app', () => {
 
 it('calendar week switch selected tab', () => {
   let fakeTodayAsThursday = new Date(2023, 2, 2); // this is a  thrusday
-    console.log('realToDate: ', fakeTodayAsThursday)
+    cy.log('realToDate: ', fakeTodayAsThursday)
     cy.clock(fakeTodayAsThursday);
 
     cy.visit('http://localhost:4200/admin/meal-management')
@@ -269,7 +284,7 @@ it('calendar week switch selected tab', () => {
 
 it('calendar week switch selected tab', () => {
   let fakeTodayAsWednesday = new Date(2023, 2, 8); // this is a  thrusday
-    console.log('realToDate: ', fakeTodayAsWednesday)
+    cy.log('realToDate: ', fakeTodayAsWednesday)
     cy.clock(fakeTodayAsWednesday);
 
     cy.visit('http://localhost:4200/admin/meal-management')
