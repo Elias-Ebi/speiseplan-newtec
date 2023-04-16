@@ -7,16 +7,16 @@
     <mat-hint *ngIf="emailInvalid" class="clr-error">E-Mail ungültig!</mat-hint>
   </mat-form-field>
 
-  <mat-form-field [class.invalidEmail]="emailInvalid" (click)="passwordInvalid = false">
+  <mat-form-field (click)="passwordInvalid = false">
     <mat-label>Passwort</mat-label>
     <input formControlName="password" matInput required [type]="getInputType()">
     <button type="button" (click)="toggleHide()" mat-icon-button matSuffix>
-      <mat-icon class="clr-primary">{{getVisibilityIcon()}}</mat-icon>
+      <mat-icon [ngClass]="passwordInvalid ? 'clr-error' : 'clr-primary'">{{getVisibilityIcon()}}</mat-icon>
     </button>
-    <mat-hint *ngIf="passwordInvalid" class="clr-error">Passwort ungültig!</mat-hint>
+    <mat-hint *ngIf=" passwordInvalid" class="clr-error">Passwort ungültig!</mat-hint>
   </mat-form-field>
 
-  <p [class.invalidPassword]="passwordInvalid" class="clr-primary link reset-password" routerLink="/auth/reset">Passwort
+  <p class="clr-primary link reset-password" routerLink="/auth/reset">Passwort
     zurücksetzen</p>
 
   <button (click)="onSubmit()" class="login-button" color="primary" mat-flat-button>Login</button>
