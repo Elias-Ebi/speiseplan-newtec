@@ -19,4 +19,4 @@ describe('visit app', () => {
     cy.wait(1000);
   })
 
-}
+});
