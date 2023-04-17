@@ -16,7 +16,7 @@ import { EmailService } from 'src/shared/email/email.service';
 import { Temporal } from '@js-temporal/polyfill';
 import { HashService } from 'src/shared/hash/hash.service';
 import { ResetPasswordToken } from 'src/data/entitites/reset-password-token.entity';
-import { DataCleanupService } from 'src/shared/cleanup/data-cleanup.service';
+import { SchedulingService } from 'src/shared/cleanup/scheduling.service';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,7 @@ export class AuthService {
     private jwtService: JwtService,
     private emailService: EmailService,
     private hashService: HashService,
-    private dataCleanupService: DataCleanupService,
+    private dataCleanupService: SchedulingService,
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile) private profileRepository: Repository<Profile>,
     @InjectRepository(ResetPasswordToken) private resetPasswordTokenRepository: Repository<ResetPasswordToken>

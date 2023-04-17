@@ -12,7 +12,7 @@ import { Profile } from '../data/entitites/profile.entity';
 import { EmailService } from 'src/shared/email/email.service';
 import { HashService } from 'src/shared/hash/hash.service';
 import { ResetPasswordToken } from 'src/data/entitites/reset-password-token.entity';
-import { DataCleanupService } from 'src/shared/cleanup/data-cleanup.service';
+import { SchedulingService } from 'src/shared/cleanup/scheduling.service';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { DataCleanupService } from 'src/shared/cleanup/data-cleanup.service';
     TypeOrmModule.forFeature([User, Profile, ResetPasswordToken]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService, HashService, DataCleanupService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, EmailService, HashService, SchedulingService],
   exports: [AuthService]
 })
 export class AuthModule {
