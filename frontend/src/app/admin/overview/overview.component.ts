@@ -24,6 +24,7 @@ interface jsPDFWithPlugin extends jsPDF {
   autoTable: (options: UserOptions) => jsPDF;
 }
 import {MatListModule} from "@angular/material/list";
+import { CategoryService } from 'src/app/shared/services/category.service';
 
 @Component({
   selector: 'app-overview',
@@ -41,7 +42,8 @@ export class OverviewComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private apiService: ApiService,
-    private dateService: DateService) {
+    private dateService: DateService,
+    private categoryService: CategoryService) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -95,9 +97,11 @@ export class OverviewComponent implements OnInit {
   exportAsPDF(day: PlainDate) {
     const indentationLeft = 30;
     const fontSize = 10;
+    const mediumfontSize = 11;
     const lineHeight = 15;
     const doc = new jsPDF('portrait', 'px', 'a4') as jsPDFWithPlugin;
     const title = 'Tagesübersicht  -  ' + day.toLocaleString();
+    doc.setProperties({title: 'tagesuebersicht' + day.toString()})
     doc.text(title, indentationLeft, 50);
     doc.setDrawColor(86,86,86);
     doc.line(indentationLeft, 65, 415, 65);
@@ -108,54 +112,65 @@ export class OverviewComponent implements OnInit {
     doc.text(text, indentationLeft, 80);
 
     const dayData = this.dataMap.get(day);
-    let body: string[][] = []
-    let tableCounter = 0;
     let finalY = 80;
+    let dishesByCategory: any[][] = [];
+    const numberOfCategories = this.categoryService.getAllCategories().length
+
+    for(let i = 0; i < numberOfCategories; i++){
+      dishesByCategory.push([])
+    }
+
     dayData?.forEach(d => {
-      let body: string[][] = []
-      let tableSum = 0;
+      const currentCategory = this.categoryService.getCategory(d[0].meal.categoryId);
+      if (currentCategory) {
+        dishesByCategory[currentCategory.orderIndex].push(d)
+      } else {
+        throw new Error('Invalid category');
+      }
+    })
+    
+    // ----------------------- all dishes by category ----------------------- //
+    dishesByCategory.forEach((category)=> { 
+      if (category.length === 0) {
+        // skip if there are no dishes in this category
+        return;
+      }
+      doc.setFontSize(mediumfontSize);
+      const categoryName = this.categoryService.getCategory((category[0][0].meal.categoryId))?.name;
+      doc.text('Kategorie: ' + categoryName, indentationLeft, finalY + 25);
+      doc.setDrawColor(192,192,192);
+      doc.line(indentationLeft, finalY + 30, 415, finalY + 30);
+      finalY = finalY + 10;
+      // ----------------------- all dishes of one category ----------------------- //
+      category.forEach((dish: Order[]) => { 
+
+        let body: string[][] = []
         // fill table entries for current meal
-        d.forEach((entry) => {
+        // ----------------------- all orders for on dish ----------------------- //
+        dish.forEach((entry) => { 
           let buyer = entry.guestName? (entry.guestName+ ' (Gast von ' +  entry.profile.name + ')') : entry.profile.name;
-          body.push(['', buyer,  '' + entry.meal.total.toFixed(2) + ' €' ])
-          // add sum row
-          tableSum = tableSum + entry.meal.total;
-          tableCounter ++;
+          body.push(['', buyer,  '' ])
         })
-
-        var options = {
-          didParseCell: function(data: any) {
-            if (data.column.index === data.table.columns.length - 1) {
-              data.cell.styles = { align: "right" };
-            }
-
-            if (data.cell.raw === 'Summe:   ') {
-              data.cell.styles = { halign: "right" };
-            }
-          },
-        };
-
+        
         // draw table
         doc.autoTable({
           columnStyles: {
-            0: {cellWidth: 120} as Partial<Styles>,
-            1: {cellWidth: 200} as Partial<Styles>,
-            2: {cellWidth: 50} as Partial<Styles>
+            0: {cellWidth: 150} as Partial<Styles>,
+            1: {cellWidth: 150} as Partial<Styles>
           },
           theme: 'plain',
-          startY: finalY + 50,
-          head: [[d[0].meal.name, 'Besteller', 'Preis' ]],
+          startY: finalY + 20,
+          head: [[dish[0].meal.name, 'Besteller' ]],
           body: body,
-          foot: [['', 'Summe:   ', tableSum.toFixed(2) + ' €']],
-          didParseCell: options.didParseCell
         })
         finalY = (doc as any).lastAutoTable.finalY;
-    });
+      });
+    })
 
     this.openPrintDialog(doc);
   }
 
-  public openPrintDialog(pdf: any): void {
+  public openPrintDialog(pdf: jsPDFWithPlugin): void {
     const blob = new Blob([pdf.output('blob')], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const printWindow = window.open(url, '_blank', 'fullscreen=yes');

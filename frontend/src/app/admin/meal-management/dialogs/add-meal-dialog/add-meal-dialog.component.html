@@ -16,7 +16,8 @@
   <div class="form">
     <mat-form-field id="meal-name">
       <mat-label>Gericht</mat-label>
-      <input (change)="validate()" [(ngModel)]="name" matInput>
+      <input #mealTitle (change)="validate()" [(ngModel)]="name" matInput [maxlength]="MAX_LENGTH_TITLE">
+      <mat-hint align="end" class="clr-primary">{{mealTitle.value.length}} / {{MAX_LENGTH_TITLE}}</mat-hint>
     </mat-form-field>
 
     <mat-form-field id="meal-description">
