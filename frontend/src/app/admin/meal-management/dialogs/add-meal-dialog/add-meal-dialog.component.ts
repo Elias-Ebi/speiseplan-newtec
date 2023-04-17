@@ -54,7 +54,6 @@ export class AddMealDialogComponent implements OnInit {
   total: number = 0;
   categories: Category[];
 
-
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { weekday: string, deliveryDate: Date, selectedMealTemplate: MealTemplate | undefined, mealToEdit: Meal | undefined },
@@ -100,7 +99,7 @@ export class AddMealDialogComponent implements OnInit {
   setOrderableDate() {
     let date = new Date(this.deliveryDate.getFullYear(), this.deliveryDate.getMonth(), this.deliveryDate.getDate());
     let temporal = this.dateService.dateToTemporal(date);
-    if(this.data.weekday === 'monday') {
+    if (this.data.weekday === 'monday') {
       temporal = this.dateService.getDayBefore(temporal, 3);
       date = this.dateService.temporalToDate(temporal);
     } else {
@@ -133,13 +132,13 @@ export class AddMealDialogComponent implements OnInit {
     };
 
     this.matDialogRef.close(
-      {mealToAdd: meal, useTemplate: false}
+      { mealToAdd: meal, useTemplate: false }
     );
   }
 
   openTemplateDialog() {
     this.matDialogRef.close(
-      {mealToAdd: {}, useTemplate: true}
+      { mealToAdd: {}, useTemplate: true }
     );
   }
 

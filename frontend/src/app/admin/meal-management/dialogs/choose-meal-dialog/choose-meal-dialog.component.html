@@ -7,7 +7,7 @@
       <mat-icon matPrefix>search</mat-icon>
       <input #searchInput (keyup)="applySearch($event)" matInput>
       <span matSuffix>
-        <button *ngIf="searchInput.value" mat-icon-button (click)="searchInput.value = ''">
+        <button *ngIf="searchInput.value" mat-icon-button (click)="removeSearch($event, searchInput)">
           <mat-icon>close</mat-icon>
         </button>
       </span>
@@ -31,13 +31,9 @@
           <h2>Gericht</h2>
         </th>
         <td *matCellDef="let element" mat-cell>
-          <p *ngIf="element.name.length <= MAX_MEAL_LENGTH">{{ element.name }}</p>
-          <p *ngIf="element.name.length > MAX_MEAL_LENGTH && !element.showMore">{{minimalize(element.name,
-            MAX_MEAL_LENGTH)}}<span class="show-hide-text" (click)="toggleShowMore(element)"><br>mehr anzeigen</span>
+          <p class="extended-text">
+            {{extend(element.name, MAX_MEAL_LENGTH)}}
           </p>
-          <p *ngIf="element.name.length > MAX_MEAL_LENGTH && element.showMore" class="extended-text">
-            {{extend(element.name, MAX_MEAL_LENGTH)}}<span class="show-hide-text"
-              (click)="toggleShowMore(element)">weniger anzeigen</span></p>
         </td>
       </ng-container>
 
@@ -46,13 +42,9 @@
           <h2>Beschreibung</h2>
         </th>
         <td *matCellDef="let element" mat-cell>
-          <p *ngIf="element.description.length <= MAX_DESC_LENGTH">{{ element.description }}</p>
-          <p *ngIf="element.description.length > MAX_DESC_LENGTH && !element.showMore">{{minimalize(element.description,
-            MAX_DESC_LENGTH)}}<span class="show-hide-text" (click)="toggleShowMore(element)"><br>mehr anzeigen</span>
+          <p class="extended-text">
+            {{extend(element.description, MAX_DESC_LENGTH)}}
           </p>
-          <p *ngIf="element.description.length > MAX_DESC_LENGTH && element.showMore" class="extended-text">
-            {{extend(element.description, MAX_DESC_LENGTH)}}<span class="show-hide-text"
-              (click)="toggleShowMore(element)">weniger anzeigen</span></p>
         </td>
       </ng-container>
 
@@ -82,10 +74,12 @@
       </tr>
       <tr *matNoDataRow>
         <td class="no-data">
-          {{searchInput.value.length == 0 && !getCategoryName(category.id) ?
-          "Es sind keine Gerichte vorhanden." : searchInput.value.length != 0 ?
-          "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : "Es existiert kein Eintrag mit \"" +
-          getCategoryName(category.value) + "\""
+          {{searchInput.value.length == 0 && getCategoryName(category.value) ?
+          "Es sind keine Gerichte der Kategorie \"" + getCategoryName(category.value) + "\" vorhanden." :
+          searchInput.value.length != 0 ?
+          "Es existiert kein Eintrag mit \"" + searchInput.value + "\"" : getCategoryName(category.value) !== undefined
+          ? "Es existiert kein Eintrag mit \"" +
+          getCategoryName(category.value) + "\"" : "Es liegen aktuell keine Gerichtevorlagen vor."
           }}
         </td>
       </tr>

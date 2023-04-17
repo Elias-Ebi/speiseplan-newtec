@@ -22,7 +22,7 @@
 
     <mat-form-field id="meal-description">
       <mat-label>Beschreibung</mat-label>
-      <input (change)="validate()" [(ngModel)]="description" matInput maxlength="70">
+      <input (change)="validate()" [(ngModel)]="description" matInput>
     </mat-form-field>
 
     <mat-form-field id="meal-category">
@@ -49,15 +49,9 @@
     <div class="date-time-row">
       <mat-form-field (click)="orderable.open()">
         <mat-label>Bestellfrist-Datum</mat-label>
-        <input id="meal-orderable-date"
-          (dateChange)="validate()"
-          [(ngModel)]="orderableDate"
-          [matDatepickerFilter]="dateWeekendFilter"
-          [matDatepicker]="orderable"
-          [max]="maxDate"
-          [min]="minDate"
-          matInput
-        >
+        <input id="meal-orderable-date" (dateChange)="validate()" [(ngModel)]="orderableDate"
+          [matDatepickerFilter]="dateWeekendFilter" [matDatepicker]="orderable" [max]="maxDate" [min]="minDate"
+          matInput>
         <mat-datepicker-toggle [for]="orderable" matIconSuffix></mat-datepicker-toggle>
         <mat-datepicker #orderable></mat-datepicker>
       </mat-form-field>
@@ -76,6 +70,7 @@
 
   <div class="dialog-action-button-container">
     <button (click)="closeDialog()" color="primary" mat-stroked-button>Abbrechen</button>
-    <button id="save" (click)="createMeal()" [disabled]="!isFormValid" color="primary" mat-flat-button>Speichern</button>
+    <button id="save" (click)="createMeal()" [disabled]="!isFormValid" color="primary"
+      mat-flat-button>Speichern</button>
   </div>
 </div>
