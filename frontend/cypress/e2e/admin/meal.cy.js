@@ -1,4 +1,5 @@
 /// <reference types="cypress" />
+import { Temporal } from '@js-temporal/polyfill';
 
 const mealNameAdd = 'Montag-Test';
 const mealNameEdit = 'Montag-TestEdit';
@@ -186,24 +187,64 @@ describe('visit app', () => {
     cy.get('#meal-orderable-date').should('have.value', '31.3.2023'); // The friday before
 
     cy.log('CYPRESS: tab selected')
-    /*
-    cy.get('mat-tab-group mat-tab-header').contains('Montag').click().then(() => {
-      cy.get('mat-tab-group').trigger('selectedTabChange', {tab: 'Montag'});
-    });
-    */
-   // cy.get('div[role=tab]').eq(0).click({ timeout: 2000, force: true }); // open monday tab
   })
 
 
-  /*
+  it('check year transition', () => {
+    const dateInCurrentYear = new Date(2022, 11, 29); // this is a  thursday, the next week is in another year
+    cy.log('realToDate: ', dateInCurrentYear)
+    cy.clock(dateInCurrentYear);
+
+    cy.visit('http://localhost:4200/admin/meal-management');
+
+    cy.wait(2000);
+
+    cy.get('.arrow-button').last().click({force: true}); // the next week is in a new year
+
+    cy.wait(2000);
+
+    cy.get("div.mat-mdc-tab").eq(0).click({force: true});
+
+    cy.wait(2000);
+
+    cy.log('CYPRESS: click add meal button')
+
+    cy.get('button').contains('Gericht hinzufügen').click({force: true});
+    cy.get('#meal-delivery-date').should('have.value', '2.1.2023'); // First Monday in new year
+    cy.get('#meal-orderable-date').should('have.value', '30.12.2022'); // The friday before
+
+    cy.log('CYPRESS: tab selected')
+  })
+
 
   // Lieferdatum liegt hinter dem Bestellbarkeitsdatum (Bestellungsdatum auf den Montag der vergangenen Woche)
   // Bestelldatum an einem Wochenende
   // Lieferdatum muss ungleich bestellbarkeitsdatum sein
   it('check date requirements', () => {
+    cy.visit('http://localhost:4200/admin/meal-management');
+    cy.wait(1000);
 
+    cy.get('button').contains('Gericht hinzufügen').click({force: true});
+    cy.get('#meal-delivery-date').invoke('val').then(deliveryValue => {
+      cy.get('#meal-orderable-date').invoke('val').then(orderableValue => {
+        const deliverySplit = deliveryValue.split('.');
+        const deliveryYear = deliverySplit[2];
+        const deliveryMonth = deliverySplit[1].padStart(2, '0');
+        const deliveryDay = deliverySplit[0].padStart(2, '0');
 
-  })
+        const orderableSplit = orderableValue.split('.');
+        const orderableYear = orderableSplit[2];
+        const orderableMonth = orderableSplit[1].padStart(2, '0');
+        const orderableDay = orderableSplit[0].padStart(2, '0');
+
+        const deliveryDate = Temporal.PlainDate.from({ year: deliveryYear, month: deliveryMonth, day: deliveryDay });
+        const orderableDate = Temporal.PlainDate.from({ year: orderableYear, month: orderableMonth, day: orderableDay });
+
+        // expect 1: deliveryDate must be before orderable Date
+        expect(Temporal.PlainDate.compare(deliveryDate, orderableDate)).to.equal(1);
+      })
+    })
+  });
 
   it('check calendar week thursday', () => {
     let fakeTodayAsThursday = new Date(2023, 2, 2); // this is a  thrusday
@@ -221,6 +262,7 @@ describe('visit app', () => {
     cy.get('div[role=tab]').eq(4).should('have.attr', 'aria-selected', 'true') // this should be the friday tab
     cy.get('div[role=tab]').eq(4).should('be.not.disabled'); // this should be the friday tab
   })
+
 
   it('check calendar week monday', () => {
     let fakeTodayAsMonday = new Date(2023, 2, 6); // this is a  monday
@@ -260,18 +302,40 @@ describe('visit app', () => {
   })
 
 
+  it('check calendar week weekend', () => {
+    let fakeTodayAsSaturday = new Date(2023, 2, 11); // this is a  saturday
+    cy.log('realToDate: ', fakeTodayAsSaturday)
+    cy.clock(fakeTodayAsSaturday);
 
-it('calendar week switch selected tab', () => {
-  let fakeTodayAsThursday = new Date(2023, 2, 2); // this is a  thrusday
+    cy.visit('http://localhost:4200/admin/meal-management')
+    cy.wait(1000)
+
+    // every tab should be activated and monday selected
+    cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-disabled', 'false') // this should be the monday tab
+    cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-selected', 'true') // this should be the monday tab
+    cy.get('div[role=tab]').eq(1).should('have.attr', 'aria-disabled', 'false'); // this should be the tuesday tab
+    cy.get('div[role=tab]').eq(2).should('have.attr', 'aria-disabled', 'false') // this should be the wednesday tab
+    cy.get('div[role=tab]').eq(3).should('have.attr', 'aria-disabled', 'false') // this should be the thursday tab
+    cy.get('div[role=tab]').eq(4).should('have.attr', 'aria-disabled', 'false') // this should be the friday tab
+
+    // check if following week is the first displayed calendar week
+    // current date 11.03.2023 calendarweek = 10
+    // exprected calendarweek = 11
+    cy.get('.calendar-week-container').children('h2').contains('KW 11');
+  })
+
+
+  it('calendar week switch selected tab', () => {
+    let fakeTodayAsThursday = new Date(2023, 2, 2); // this is a  thrusday
     cy.log('realToDate: ', fakeTodayAsThursday)
     cy.clock(fakeTodayAsThursday);
 
     cy.visit('http://localhost:4200/admin/meal-management')
     cy.wait(1000)
 
-    cy.get('.arrow-button').last().click();
-    cy.get('div[role=tab]').eq(1).click();
-    cy.get('.arrow-button').first().click();
+    cy.get('.arrow-button').last().click({force: true});
+    cy.get('div[role=tab]').eq(1).click({force: true});
+    cy.get('.arrow-button').first().click({force: true});
 
     // check if aria-selected of friday tab is true, every other tab:  aria-disabled
     cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-disabled', 'true') // this should be the monday tab
@@ -280,19 +344,20 @@ it('calendar week switch selected tab', () => {
     cy.get('div[role=tab]').eq(3).should('have.attr', 'aria-disabled', 'true') // this should be the thursday tab
     cy.get('div[role=tab]').eq(4).should('have.attr', 'aria-selected', 'true') // this should be the friday tab
     cy.get('div[role=tab]').eq(4).should('be.not.disabled'); // this should be the friday tab
-})
+  })
 
-it('calendar week switch selected tab', () => {
-  let fakeTodayAsWednesday = new Date(2023, 2, 8); // this is a  thrusday
+
+  it('calendar week switch selected tab', () => {
+    let fakeTodayAsWednesday = new Date(2023, 2, 8); // this is a  thrusday
     cy.log('realToDate: ', fakeTodayAsWednesday)
     cy.clock(fakeTodayAsWednesday);
 
     cy.visit('http://localhost:4200/admin/meal-management')
     cy.wait(1000)
 
-    cy.get('.arrow-button').last().click();
-    cy.get('div[role=tab]').eq(1).click();
-    cy.get('.arrow-button').first().click();
+    cy.get('.arrow-button').last().click({force: true});
+    cy.get('div[role=tab]').eq(1).click({force: true});
+    cy.get('.arrow-button').first().click({force: true});
 
     // check if aria-selected of friday tab is true, every other tab:  aria-disabled
     cy.get('div[role=tab]').eq(0).should('have.attr', 'aria-disabled', 'true') // this should be the monday tab
@@ -301,28 +366,27 @@ it('calendar week switch selected tab', () => {
     cy.get('div[role=tab]').eq(4).should('have.attr', 'aria-disabled', 'false') // this should be the thursday tab
     cy.get('div[role=tab]').eq(3).should('have.attr', 'aria-selected', 'true') // this should be the friday tab
     cy.get('div[role=tab]').eq(3).should('be.not.disabled'); // this should be the friday tab
-})
+  })
 
+  /*
   // ------- to test: --------
   /*  Switching KW:
-        * not possible to go to passed week ✔
-        * only two weeks into the future ✔
-        * tab is not accessible if the day in current week has passed ✔
+  * not possible to go to passed week ✔
+  * only two weeks into the future ✔
+  * tab is not accessible if the day in current week has passed ✔
 
-      Adding dishes
-        * Adding meal correctly
-        * if a meal is generated, it has to be listed in the given kw & tab (multiple meals on same day, check badge)
-        * edit meal
-        * delete meal (delete all meals that were added before?)
+  Adding dishes
+  * Adding meal correctly ✔
+  * if a meal is generated, it has to be listed in the given kw & tab (multiple meals on same day, check badge) ✔
+  * edit meal ✔
+  * delete meal (delete all meals that were added before?) ✔
 
-        * Check if tabs work properly when current day is on a weekend
+  * Check if tabs work properly when current day is on a weekend ✔
 
-        * adding the same meal twice
-        * check if confirmation button is disabled if it shoul be (one input field missing, contradicting date/time )
+  * check if confirmation button is disabled if it shoul be (one input field missing, contradicting date/time )
         * is it possible to input something into the input fields, that should not be possible?
-        * canceling the adding process
 
-        * Check if orderabledate and deliverydate are set properly on month and year transitions
+        * Check if orderabledate and deliverydate are set properly on month and year transitions  ✔
 
       Adding templates
         * opening the dialog

@@ -95,7 +95,7 @@ export class MealManagementComponent implements OnInit {
 
   async notifyUsers() {
     const notify = await this.authService.notifyUsers();
-    if(notify) {
+    if (notify) {
       this.snackBarService.success('Benachrichtigung erfolgreich versendet');
     } else {
       this.snackBarService.error('Benachrichtigung konnte nicht versendet werden');

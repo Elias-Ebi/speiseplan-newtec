@@ -14,8 +14,8 @@ describe('visit app', () => {
     cy.get('button').contains('Login').click();
   })
 
-  it('use meal', () => {
-    cy.visit('http://localhost:4200/admin/meal-management');
+  it('use buyer filter', () => {
+    cy.visit('http://localhost:4200/admin/order-management');
     cy.wait(1000);
   })
 
