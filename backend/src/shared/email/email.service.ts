@@ -73,7 +73,7 @@ export class EmailService {
             `Hallo liebe Mensafreunde,
             <br><br>
             <u>${mealName}</u> wurde gerade als Räuberteller angeboten.<br>
-            Falls du lust hast dir diesen zu schnappen, klicke auf folgenden Link: <a href="https://www.newtec.de/">Speiseplan</a>
+            Falls du Lust hast, dir diesen zu schnappen, dann hol ihn Dir im Speiseplan-Dashboard!
             <br><br>
             Guten Hunger<br>
             Euer Speiseplan-Team ;)`
