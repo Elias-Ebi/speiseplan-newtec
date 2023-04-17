@@ -101,7 +101,8 @@ export class OverviewComponent implements OnInit {
     const lineHeight = 15;
     const doc = new jsPDF('portrait', 'px', 'a4') as jsPDFWithPlugin;
     const title = 'Tagesübersicht  -  ' + day.toLocaleString();
-    doc.setProperties({title: 'tagesuebersicht' + day.toString()})
+    const filename = 'tagesuebersicht' + day.toString()
+    doc.setProperties({title: filename})
     doc.text(title, indentationLeft, 50);
     doc.setDrawColor(86,86,86);
     doc.line(indentationLeft, 65, 415, 65);
@@ -146,12 +147,15 @@ export class OverviewComponent implements OnInit {
 
         let body: string[][] = []
         // fill table entries for current meal
-        // ----------------------- all orders for on dish ----------------------- //
+        // ----------------------- all orders for one dish ----------------------- //
         dish.forEach((entry) => { 
           let buyer = entry.guestName? (entry.guestName+ ' (Gast von ' +  entry.profile.name + ')') : entry.profile.name;
-          body.push(['', buyer,  '' ])
+          body.push(['', buyer])
         })
         
+        // sort by buyer
+        const sortedBody = this.sortTable(body)
+
         // draw table
         doc.autoTable({
           columnStyles: {
@@ -161,12 +165,12 @@ export class OverviewComponent implements OnInit {
           theme: 'plain',
           startY: finalY + 20,
           head: [[dish[0].meal.name, 'Besteller' ]],
-          body: body,
+          body: sortedBody,
         })
         finalY = (doc as any).lastAutoTable.finalY;
       });
     })
-
+    doc.save(filename + '.pdf')
     this.openPrintDialog(doc);
   }
 
@@ -176,4 +180,17 @@ export class OverviewComponent implements OnInit {
     const printWindow = window.open(url, '_blank', 'fullscreen=yes');
   }
 
+  sortTable(array: string[][]) {
+    return array.sort((a, b) => {
+      const nameA = a[1].toUpperCase();
+      const nameB = b[1].toUpperCase(); 
+      if (nameA < nameB) {
+        return -1; // a soll vor b stehen
+      }
+      if (nameA > nameB) {
+        return 1; // a soll nach b stehen
+      }
+      return 0; // Namen sind gleich, Reihenfolge bleibt wie sie ist
+    });
+  }
 }
