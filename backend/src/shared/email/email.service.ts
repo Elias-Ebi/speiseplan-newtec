@@ -73,7 +73,7 @@ export class EmailService {
             `Hallo liebe Mensafreunde,
             <br><br>
             <u>${mealName}</u> wurde gerade als Räuberteller angeboten.<br>
-            Falls du Lust hast, dir diesen zu schnappen, dann hol ihn Dir im Speiseplan-Dashboard
+            Falls du Lust hast, dir diesen zu schnappen, dann hol ihn Dir im Speiseplan-Dashboard!
             <br><br>
             Guten Hunger<br>
             Euer Speiseplan-Team ;)`
