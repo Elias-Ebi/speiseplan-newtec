@@ -13,13 +13,18 @@
 }
 
 .title {
-  width: 80%;
+  width: 100%;
+
+  .name {
+    word-wrap: break-word;
+  }
 }
 
 .main-header {
   display: flex;
   gap: 1.25rem;
   align-items: start;
+  width: 90%;
 }
 
 .food-icon {
