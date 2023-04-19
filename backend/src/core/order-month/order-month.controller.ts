@@ -7,6 +7,8 @@ import {Order} from "../../data/entitites/order.entity";
 import {OrderService} from "../order/order.service";
 import {MonthOverviewOrderMonth} from "../../data/other-models/month-overview.models";
 import {EmailService} from "../../shared/email/email.service";
+import {Cron} from "@nestjs/schedule";
+import {Temporal} from "@js-temporal/polyfill";
 
 @Controller('order-month')
 export class OrderMonthController {
@@ -54,5 +56,33 @@ export class OrderMonthController {
   @AdminOnly()
   async sendPaymentReminders(@Body('monthOverviewOrderMonth') monthOverviewOrderMonth: MonthOverviewOrderMonth[]){
     this.emailService.sendNewPaymentReminder(monthOverviewOrderMonth);
+  }
+
+  @Cron('0 4 1 * *')
+  private async monthlyPaymentReminder(){
+    const orderMonths = await this.orderMonths();
+    const currentMonth = Temporal.Now.plainDateISO();
+    const lastMonth = currentMonth.subtract({ months: 1 });
+
+    const filteredOrderMonths = orderMonths
+        .filter((om) => {
+          const omDate = Temporal.PlainDate.from({ year: om.year, month: om.month, day: 1 });
+          return omDate.month === lastMonth.month && omDate.year === lastMonth.year && !om.paid
+        });
+
+    const months: MonthOverviewOrderMonth[] = filteredOrderMonths.map((om) => {
+      return {
+        id: om.id,
+        profile: om.profile,
+        yearMonth: `${om.year}-${om.month.toString().padStart(2, '0')}`,
+        month: om.month,
+        year: om.year,
+        orders: om.orders,
+        total: om.total,
+        paid: om.paid,
+      };
+    })
+
+    this.sendPaymentReminders(months);
   }
 }

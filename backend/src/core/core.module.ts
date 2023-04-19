@@ -14,9 +14,10 @@ import {MealTemplate} from 'src/data/entitites/meal-template.entity';
 import {DefaultValues} from 'src/data/entitites/default-values.entity';
 import {SharedModule} from '../shared/shared.module';
 import { ResetPasswordToken } from 'src/data/entitites/reset-password-token.entity';
+import {ScheduleModule} from "@nestjs/schedule/dist";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Meal, Order, OrderMonth, MealTemplate, DefaultValues, ResetPasswordToken]), AuthModule, SharedModule],
+  imports: [ScheduleModule.forRoot(), TypeOrmModule.forFeature([Meal, Order, OrderMonth, MealTemplate, DefaultValues, ResetPasswordToken]), AuthModule, SharedModule],
   controllers: [MealController, OrderController, OrderMonthController],
   providers: [MealService, OrderService, OrderMonthService]
 })

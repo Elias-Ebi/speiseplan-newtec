@@ -9,7 +9,7 @@ import { HashService } from './hash/hash.service';
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    TypeOrmModule.forFeature([ResetPasswordToken]),
+    TypeOrmModule.forFeature([ResetPasswordToken])
   ],
   providers: [EmailService, HashService, SchedulingService], exports: [EmailService, HashService, SchedulingService]
 })
