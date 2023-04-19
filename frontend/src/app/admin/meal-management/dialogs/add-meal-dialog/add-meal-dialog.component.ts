@@ -37,6 +37,7 @@ import { DateService } from 'src/app/shared/services/date.service';
   styleUrls: ['./add-meal-dialog.component.scss'],
 })
 export class AddMealDialogComponent implements OnInit {
+  MAX_LENGTH_TITLE: number = 40;
   orderTime: string = '00:00';
   deliveryTime: string = '00:00';
   isFormValid = false;

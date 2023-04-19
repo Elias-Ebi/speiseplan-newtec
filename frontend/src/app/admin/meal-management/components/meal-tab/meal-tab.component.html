@@ -5,9 +5,7 @@
         <h2>Gericht</h2>
       </th>
       <td *matCellDef="let element" mat-cell>
-        <p class="extended-text">
-          {{extend(element.name, MAX_MEAL_LENGTH)}}
-        </p>
+        {{element.name}}
       </td>
     </ng-container>
 
@@ -16,9 +14,7 @@
         <h2>Beschreibung</h2>
       </th>
       <td *matCellDef="let element" mat-cell>
-        <p class="extended-text">
-          {{extend(element.description, MAX_DESC_LENGTH)}}
-        </p>
+        {{element.description}}
       </td>
     </ng-container>
 
