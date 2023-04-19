@@ -5,6 +5,7 @@
 - In `docker-compose.yml`, under *frontend:labels* and *backend:labels*, replace the 'XXXXXXX' with the Host-Domain.
 - In `docker-compose.yml`, under *traefik:command* replace the example-mail with your own mail-address. This will be used for the certificate.
 - In `docker-compose.yml`, replace the default login credentials for postgres and pgadmin.
+- In `backend/src/environment.ts`, replace 'XXXXXXX' with a random string.
 
 ### On Windows
 - Install Docker Desktop with WSL enabled.k

@@ -1,6 +1,3 @@
 export const environment ={
-    dbUrl: 'abc',
-    jwtSecretKey: 'xyz',
-    synchronize: true,
-    migrationsRun: true,
+    jwtSecretKey: 'XXXXXXX',  // <---- replace with random string of sufficient length
 }
