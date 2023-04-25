@@ -6,9 +6,9 @@ import { ResetPasswordToken } from "src/data/entitites/reset-password-token.enti
 import { LessThan, Repository } from "typeorm";
 
 @Injectable()
-export class DataCleanupService {
+export class SchedulingService {
     constructor(
-        @InjectRepository(ResetPasswordToken) private resetPasswordTokenRepository: Repository<ResetPasswordToken>
+        @InjectRepository(ResetPasswordToken) private resetPasswordTokenRepository: Repository<ResetPasswordToken>,
     ) {}
 
     // Deletes all entries in password token table older than 24 hours

@@ -7,7 +7,7 @@ import {Temporal} from '@js-temporal/polyfill';
 
 @Injectable()
 export class OrderMonthService {
-    private monthsToGoBack: number = 5;
+    private monthsToGoBack = 5;
 
     constructor(@InjectRepository(OrderMonth) private orderMonthRepository: Repository<OrderMonth>, private authService: AuthService) {
     }
