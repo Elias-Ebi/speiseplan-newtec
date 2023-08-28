@@ -49,7 +49,7 @@ export class OrderController {
 
   @Get('admin/changeable')
   @AdminOnly()
-  async getAllChangeableAdmin() {
+  async getAllChangeableAdmin(): Promise<Order[]> {
     const time = Temporal.Now.plainDateTimeISO();
     return this.orderService.getAllChangeableAdmin(time);
   }

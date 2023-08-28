@@ -26,7 +26,7 @@ export class OrderMonthController {
   }
 
   @Get('guest-month-overview')
-//  @AdminOnly()
+  @AdminOnly()
   async guestOrderMonths(): Promise<Order[]> {
     const orderMonthsWithGuests =  await this.orderMonthService.guestMonthOverview();
 
